@@ -1,11 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
         <title>Telefarma - Buscar Producto X</title>
-        <link rel="stylesheet" href="<%=request.getContextPath()%>/src/main/webapp/res/bootstrap/css/bootstrap.min.css">
-        <link rel="stylesheet" href="<%=request.getContextPath()%>/src/main/webapp/res/css/estilos.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css" type="text/css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css" type="text/css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
@@ -53,7 +54,7 @@
         </nav>
 
         <!--Menú usuario-->
-        <div class="offcanvas offcanvas-end text-center" tabindex="-1" id="offcanvasWithBackdrop"
+        <div class="offcanvas offcanvas-end text-center" tabindex="-1" id="menuDeUsuario"
              aria-labelledby="offcanvasWithBackdropLabel">
             <div class="d-flex align-items-center flex-column mb-3 vh-100">
                 <div class="p-2 w-100">
@@ -68,7 +69,7 @@
                         <div class="d-flex flex-column">
                             <div class="my-2">
                                 <h4 class="mb-3">Paco Perez</h4>
-                                <img src="../res/img/images.png"
+                                <img src="${pageContext.request.contextPath}/res/img/images.png"
                                      class="rounded-circle mx-auto d-block mb-3 h-25 w-50" alt="profile image">
                             </div>
                             <div class="mb-3">
@@ -121,7 +122,7 @@
                                         <h6>Prednisona</h6>
                                     </div>
                                     <div class="card-body d-flex flex-column">
-                                        <img src="../res/img/prednisona.jpg" class="card-img-top"
+                                        <img src="${pageContext.request.contextPath}/res/img/prednisona.jpg" class="card-img-top"
                                              aria-label="Producto">
                                         <div class="mt-auto">
                                             <div class="d-flex justify-content-around">
@@ -138,7 +139,7 @@
                                         <h6>Paracetamol</h6>
                                     </div>
                                     <div class="card-body d-flex flex-column">
-                                        <img src="../res/img/paracetamol.jpg" class="card-img-top"
+                                        <img src="${pageContext.request.contextPath}/res/img/paracetamol.jpg" class="card-img-top"
                                              aria-label="Producto">
                                         <div class="mt-auto">
                                             <div class="d-flex justify-content-around">
@@ -149,6 +150,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <
                         </div>
                     </div>
                 </div>
@@ -176,7 +178,7 @@
         </main>
 
         <!--JS-->
-        <script src="<%=request.getContextPath()%>/src/main/webapp/res/bootstrap/js/bootstrap.min.js"></script>
+        <script src="${pageContext.request.contextPath}/res/bootstrap/js/bootstrap.min.js"></script>
     </body>
 
 </html>
