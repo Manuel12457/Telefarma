@@ -1,0 +1,625 @@
+/*Generales*/
+
+.logo-header {
+    color: #f57f00;
+    border-color: rgba(247, 127, 0, 0);
+    font-family: 'Pacifico', cursive;
+    font-size: 30px
+}
+.bg-tele {
+    background-color: rgba(245, 127, 0, 0.87) !important;
+}
+
+hr {
+    opacity: .12;
+}
+
+input, select {
+    box-shadow: none !important;
+    border: 1px solid #ced4da !important;
+}
+
+
+/*Tele radius*/
+
+.form-check-input:checked {
+    background-color: #f57f00;
+    border-color: #f57f00;
+}
+
+/*Pestañas farmacia*/
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: #495057;
+    background-color: rgba(245, 127, 0, 0.87);
+    border-color: #dee2e6 #dee2e6 #fff
+}
+
+/*Boton Telefarma*/
+
+.btn-tele {
+    border-color: rgba(245, 127, 0, 0.87);
+    background-color: rgba(245, 127, 0, 0.87);
+    color: white;
+}
+
+.btn-tele:hover {
+    color: #fff;
+    background-color: rgba(234, 119, 2, 0.87);
+    border-color: rgba(211, 114, 1, 0.87)
+}
+
+.btn-check:focus + .btn-tele, .btn-tele:focus {
+    color: #fff;
+    background-color: rgba(234, 119, 2, 0.87);
+    border-color: rgba(211, 114, 1, 0.87);
+    box-shadow: 0 0 0 .20rem rgba(253, 151, 49, 0.5)
+}
+
+.btn-check:active + .btn-tele, .btn-check:checked + .btn-tele, .btn-tele.active, .btn-tele:active, .show > .btn-tele.dropdown-toggle {
+    color: #fff;
+    background-color: rgba(211, 114, 1, 0.87);
+    border-color: rgba(203, 109, 0, 0.87)
+}
+
+.btn-check:active + .btn-tele:focus, .btn-check:checked + .btn-tele:focus, .btn-tele.active:focus, .btn-tele:active:focus, .show > .btn-tele.dropdown-toggle:focus {
+    box-shadow: 0 0 0 .20rem rgba(253, 151, 49, 0.5)
+}
+
+.btn-tele.disabled, .btn-tele:disabled {
+    color: #fff;
+    border-color: rgba(245, 127, 0, 0.87);
+    background-color: rgba(245, 127, 0, 0.87);
+}
+
+.btn-tele-inverso {
+    background-color: white;
+    color: #f57f00;
+}
+
+.btn-tele-inverso:hover {
+    color: rgba(225, 114, 1, 0.87);
+}
+
+.btn-check:focus + .btn-tele-inverso, .btn-tele-inverso:focus {
+    color: rgba(225, 114, 1, 0.87);
+}
+
+.btn-check:active + .btn-tele-inverso, .btn-check:checked + .btn-tele-inverso, .btn-tele-inverso.active, .btn-tele-inverso:active, .show > .btn-tele-inverso.dropdown-toggle {
+    color: #f57f00;
+}
+
+.btn-check:active + .btn-tele-inverso:focus, .btn-check:checked + .btn-tele-inverso:focus, .btn-tele-inverso.active:focus, .btn-tele-inverso:active:focus, .show > .btn-tele-inverso.dropdown-toggle:focus {
+    box-shadow: 0 0 0 .20rem rgba(253, 151, 49, 0.5)
+}
+
+
+/*Desactivar sombra de botones*/
+
+.btn:focus, .btn:active, .page-link:focus {
+    box-shadow: none !important;
+    outline: 0;
+}
+
+/*Paginacion naranja*/
+
+.page-link {
+    position: relative;
+    display: block;
+    color: #f57f00;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
+}
+
+.page-link:hover {
+    z-index: 2;
+    border-color: rgba(211, 114, 1, 0.87);
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+    color: #f57f00
+}
+
+.page-link:focus {
+    z-index: 3;
+    border-color: rgba(201, 201, 201, 0.87);
+    background-color: #e9ecef;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(253, 151, 49, 0.5);
+    color: #f57f00
+}
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #f57f00;
+    border-color: #f57f00
+}
+
+.page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #dee2e6
+}
+
+/*Sidebar*/
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 78px;
+    padding: 6px 14px;
+    z-index: 99;
+    transition: all 0.5s ease;
+}
+
+.sidebar.active {
+    width: 240px;
+}
+
+.sidebar .logo-content .logo {
+    color: #f57f00;
+    display: flex;
+    height: 50px;
+    width: 100%;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s ease;
+}
+
+.sidebar.active .logo-content .logo {
+    opacity: 1;
+    pointer-events: none;
+}
+
+.sidebar .logo-content .logo .logo-name {
+    font-size: 24px;
+    font-weight: 400;
+    font-family: 'Pacifico', cursive;
+    pointer-events: none;
+}
+
+.sidebar.active .logo-content .logo .logo-name {
+    font-size: 24px;
+    font-weight: 400;
+    font-family: 'Pacifico', cursive;
+    cursor: pointer;
+    pointer-events: all;
+}
+
+.sidebar #btn-sidebar {
+    position: absolute;
+    color: #f57f00;
+    top: 6px;
+    left: 50%;
+    font-size: 22px;
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    line-height: 50px;
+    transform: translateX(-50%);
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+.sidebar.active #btn-sidebar {
+    left: 90%;
+}
+
+.sidebar ul {
+    margin-top: 20px;
+    padding-left: 0px;
+}
+
+.sidebar ul li {
+    position: relative;
+    height: 50px;
+    width: 100%;
+    margin: 5px 0;
+    list-style: none;
+    line-height: 50px;
+}
+
+.sidebar ul li a {
+    color: #f57f00;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 12px;
+    white-space: nowrap;
+    transition: all 0.4s ease;
+}
+
+.sidebar ul li a:hover {
+    color: white;
+    background: #f57f00;
+}
+
+.sidebar ul li i {
+    font-size: 18px;
+    height: 50px;
+    min-width: 50px;
+    border-radius: 12px;
+    line-height: 50px;
+    text-align: center;
+}
+
+.sidebar .links_name {
+    font-size: 15px;
+    font-weight: 400;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.sidebar.active .links_name {
+    transition: 0s;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.sidebar .content {
+    position: absolute;
+    color: #f57f00;
+    bottom: 15px;
+    left: 0;
+    width: 100%;
+}
+
+.sidebar .content .user {
+    position: relative;
+    padding: 10px 6px;
+    height: 60px;
+    background: none;
+    transition: all 0.4s ease;
+}
+
+.sidebar.active .content .user {
+}
+
+.content .user .user-details {
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: all 0.4s ease;
+    padding-left: 15px;
+}
+
+.sidebar.active .user .user-details {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.content .user .user-details img {
+    height: 45px;
+    width: 45px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.name-job {
+    margin-left: 10px;
+}
+
+.user-details .name {
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.user-details .job {
+    font-size: 12px;
+}
+
+#log_out {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 50px;
+    line-height: 50px;
+    font-size: 20px;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.4s ease;
+}
+
+.sidebar.active .user #log_out {
+    left: 80%;
+    background: none;
+}
+
+.container-transition {
+    position: absolute;
+    height: 100%;
+    width: calc(100% - 78px);
+    left: 78px;
+    transition: all 0.5s ease;
+}
+
+.sidebar.active ~ .container-transition {
+    z-index: 100;
+    width: calc(100% - 240px);
+    left: 240px;
+}
+
+.container-transition .text {
+    font-size: 25px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.container-transition p {
+    margin-bottom: 15px;
+}
+
+/*Tabla Hsitorial*/
+
+.cell-1 {
+    border-collapse: separate;
+    border-spacing: 0 4em;
+    background: #ffffff;
+    background-clip: padding-box;
+}
+
+thead {
+    background: #dddcdc
+}
+
+td {
+    vertical-align: middle;
+}
+
+.table-elipse {
+    cursor: pointer
+}
+
+#demo {
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s 0.1s ease-in-out;
+    transition: all 0.3s ease-in-out
+}
+
+.row-child {
+    background-color: rgb(114, 114, 114);
+    color: #fff;
+    text-align: center;
+}
+
+.row-child-rows {
+    background-color: rgb(168, 168, 168);
+    color: #fff;
+    text-align: center;
+}
+
+/*Registro*/
+
+.card-registration .select-input.form-control[readonly]:not([disabled]) {
+    font-size: 1rem;
+    line-height: 2.15;
+    padding-left: .75em;
+    padding-right: .75em;
+}
+.card-registration .select-arrow {
+    top: 13px;
+}
+
+/*Botón flotante*/
+
+.btn-float {
+    font-size: 20px;
+    color: white;
+    border-radius:50px;
+    background-color: rgba(245, 127, 0, 0.87);
+    position: fixed;
+    width:60px;
+    height:60px;
+    bottom:40px;
+    right:21px;
+    transition: all 300ms ease 0ms;
+    box-shadow: 2px 2px 3px #999;
+    text-align:center;
+}
+
+.my-float{
+    margin-top:18px;
+}
+
+.btn-float:hover {
+    background-color: rgba(245, 127, 0, 0.87);
+    box-shadow: 0px 4px 9px rgba(0, 0, 0, 0.3);
+    transform: translateY(-6px);
+    color: white;
+}
+
+/*Botón close*/
+
+.btn-close {
+    opacity: .80
+}
+
+.btn-close:hover {
+    opacity: 1;
+    box-shadow: none;
+}
+
+/*Cards tele*/
+
+.container-sidebar {
+    display: flex;
+    height: 100vh !important;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 5px 10px rgba(37, 35, 33, 0.16);
+}
+
+.card-header-tele {
+    background-color: #f17f07;
+    color: white;
+}
+
+.card-w-sidebar {
+    width: 95%;
+    margin: auto;
+}
+
+/*Farmacias interfaz usuario*/
+
+.dist-name {
+    border-bottom: 1px solid #dee2e6 !important;
+    padding-bottom: .5rem !important;
+    color: #f57f00
+}
+
+.card-farmacia {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem !important;
+    padding-bottom: 1rem !important;
+    height: 100% !important;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+    color: white;
+    border: none;
+    justify-content: end;
+    cursor: pointer
+}
+
+.card-farmacia h2 {
+    font-size: calc(1.375rem + 1.5vw);
+    line-height: 1;
+    font-weight: 700;
+    margin-top: 3rem;
+    margin-bottom: .5rem;
+    padding-top: 3rem;
+    text-shadow: .5px .5px #2b2b2b;
+}
+
+.card-farmacia ul {
+    display: flex;
+    justify-content: end;
+}
+
+.card-farmacia ul li {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem
+}
+
+.card-farmacia ul li small {
+    text-shadow: .5px .5px #2b2b2b;
+}
+
+.f1 {
+    background-image: url('../img/national-cancer-institute-byGTytEGjBo-unsplash.jpg');
+    background-size: cover;
+}
+
+.f2 {
+    background-image: url('../img/tbel-abuseridze-eBW1nlFdZFw-unsplash.jpg');
+    background-size: cover;
+}
+
+.f3 {
+    background-image: url('../img/national-cancer-institute-cw2Zn2ZQ9YQ-unsplash.jpg');
+    background-size: cover;
+}
+
+/*Productos de una farmacia*/
+
+.card-producto {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
+    cursor: pointer
+}
+
+.card-producto .card-header {
+    background-color: #f8f9fa;
+    text-align: center;
+}
+
+.card-producto .card-header h6 {
+    margin-bottom: 0;
+}
+
+/*Carrito*/
+
+.row-carrito {
+    text-align: center;
+    justify-content: center;
+    height: 155px;
+}
+
+.img-carrito {
+    max-width: 160px;
+    max-height: 160px;
+    object-fit: contain;
+}
+
+.cart-item-thumb {
+    display: flex;
+    width: 10rem;
+    height: 160px;
+    vertical-align: top;
+}
+
+.cart-item-thumb>img {
+    display: block;
+    width: 100%
+}
+
+.cart-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    background-color: rgba(245, 127, 0, 0.87);
+    border: 1px solid white;
+    border-radius: .5rem;
+    /*background-image: url('../img/bgfar2.jpg');*/
+    /*background-size: cover;*/
+}
+
+.font-size-lgr {
+    font-size: larger;
+}
+
+.font-size-lg {
+    font-size: large;
+}
+
+.font-size-sm {
+    font-size: medium;
+}
+
+/*Contador de cantidad*/
+
+/*-->Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/*--> Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/*Detalles producto*/
+
+.img-detalles {
+    max-width: 100%;
+    height: 420px;
+    object-fit: scale-down;
+}

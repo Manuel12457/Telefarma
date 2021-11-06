@@ -1,0 +1,28 @@
+a {
+  font-size: 14px;
+  color: darkcyan;
+}
+
+body {
+  background-image: url('../img/freestocks-0-HAIyTj7Xw-unsplash.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%;
+}
+
+.responsive-login {
+  width: 75%;
+}
+@media screen and (max-width: 992px) {
+  .responsive-login { width:100%; }
+}
+
+.responsive-form {
+  width: 60%;
+}
+@media screen and (max-width: 992px) {
+  .responsive-form { width:100%; }
+}
+
+
+
