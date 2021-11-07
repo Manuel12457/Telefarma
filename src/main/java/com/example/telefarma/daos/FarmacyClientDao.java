@@ -13,7 +13,7 @@ public class FarmacyClientDao {
     String pass = "root";
     String url = "jdbc:mysql://localhost:3306/telefarma";
 
-    public ArrayList<String> listarDistritosLimite(int paginaDistritoCliente) {
+    public ArrayList<String> listarDistritosLimite(int paginaDistritoCliente,int limite) {
 
         ArrayList<String> listaDistritosPagina = new ArrayList<>();
 
@@ -25,7 +25,7 @@ public class FarmacyClientDao {
                 "select distinct d.name from telefarma.district d\n" +
                 "inner join telefarma.client c on (d.name != c.District_name)\n" +
                 "where c.idClient = 1\n" +
-                "limit " + paginaDistritoCliente*3 + ",3;";
+                "limit " + paginaDistritoCliente*limite + "," + limite + ";";
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
              Statement stmt = conn.createStatement();
@@ -76,7 +76,7 @@ public class FarmacyClientDao {
         return listaFarmaciasClientePorDistrito;
     }
 
-    public ArrayList<BFarmaciasCliente> listarFarmaciasClientePorDistritoLimite(String distrito) {
+    public ArrayList<BFarmaciasCliente> listarFarmaciasClientePorDistritoLimite(String distrito, int limite) {
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -89,7 +89,7 @@ public class FarmacyClientDao {
         /*OBTENGO LAS FARMACIAS DE LOS DISTRITOS QUE SE MOSTRARAN POR PAGINA*/
         String sqlObtenerFarmacias = "select name, address, District_name from telefarma.pharmacy\n" +
                 "where isBanned = 0 and District_name = '" + distrito + "'\n" +
-                "limit 3;";
+                "limit "+limite+";";
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
              Statement stmt = conn.createStatement();

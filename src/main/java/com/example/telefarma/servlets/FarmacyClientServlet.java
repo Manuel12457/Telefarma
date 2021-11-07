@@ -22,18 +22,26 @@ public class FarmacyClientServlet extends HttpServlet {
         } else {
             paginaDistritoCliente = Integer.parseInt(paginaDistritoClienteStr);
         }
+        request.setAttribute("pagActual",paginaDistritoCliente);
 
+        int limitedistritos = 3;
         FarmacyClientDao farmacyClientDao = new FarmacyClientDao();
-        ArrayList<String> distritos =  farmacyClientDao.listarDistritosLimite(paginaDistritoCliente);
+        ArrayList<String> distritos = farmacyClientDao.listarDistritosLimite(paginaDistritoCliente, limitedistritos);
+        int numDistritos =  farmacyClientDao.listarDistritosLimite(0, 1000).size();
 
+        System.out.println("Hay"+numDistritos+"distritos");
+        request.setAttribute("pagTotales", (int)Math.ceil((double)numDistritos/limitedistritos));
+        request.setAttribute("numDistritos", limitedistritos);
         request.setAttribute("listaDistritosAMostrar", distritos);
 
         ArrayList<ArrayList<BFarmaciasCliente>> listaFarmacias = new ArrayList<ArrayList<BFarmaciasCliente>>();
 
+        int tamano = 0, limitefarmacias = 3;
         for (String d : distritos) {
-            ArrayList<BFarmaciasCliente> farmaciasCliente = farmacyClientDao.listarFarmaciasClientePorDistritoLimite(d);
+            ArrayList<BFarmaciasCliente> farmaciasCliente = farmacyClientDao.listarFarmaciasClientePorDistritoLimite(d,limitefarmacias);
             listaFarmacias.add(farmaciasCliente);
         }
+
         request.setAttribute("listaFarmacias", listaFarmacias);
 
         RequestDispatcher view = request.getRequestDispatcher("/cliente/mostrarFarmaciasCliente.jsp");
