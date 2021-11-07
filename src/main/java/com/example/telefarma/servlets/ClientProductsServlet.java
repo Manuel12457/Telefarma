@@ -8,7 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-@WebServlet(name = "helloServlet", value = "/hello-servlet")
+@WebServlet(name = "clientServelet", value = "")
 public class ClientProductsServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -28,8 +28,11 @@ public class ClientProductsServlet extends HttpServlet {
             busqueda = "";
         }
 
+        System.out.println(pagina);
+
         ClientProductsDao clientProductsDao = new ClientProductsDao();
-        request.setAttribute("ListaProductosBusqueda", clientProductsDao.listarProductosBusqueda(pagina,busqueda));
+        request.setAttribute("listaProductosBusqueda", clientProductsDao.listarProductosBusqueda(pagina,busqueda));
+
         RequestDispatcher view = request.getRequestDispatcher("/cliente/buscadorProductos.jsp");
         view.forward(request,response);
 

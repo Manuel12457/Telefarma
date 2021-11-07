@@ -13,18 +13,11 @@ public class FarmacyClientDao {
     String pass = "root";
     String url = "jdbc:mysql://localhost:3306/telefarma";
 
-    public ArrayList<BFarmaciasCliente> listarFarmaciasCliente(int paginaDistritoCliente) {
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    public ArrayList<String> listarDistritosLimite(int paginaDistritoCliente) {
 
         ArrayList<String> listaDistritosPagina = new ArrayList<>();
-        ArrayList<BFarmaciasCliente> listaFarmaciasCliente = new ArrayList<>();
 
-        /*OBTENGO LOS DISTRITOS QUE SE MOSTRARAN EN UNA PAGINA*/
+        /*OBTENGO TODOS LOS DISTRITOS (PRIMERO EL DEL CLIENTE ACTUAL)*/
         String sqlObtenerDistritos = "select distinct d.name from telefarma.district d\n" +
                 "inner join telefarma.client c on (d.name = c.District_name)\n" +
                 "where c.idClient = 1\n" +
@@ -46,9 +39,23 @@ public class FarmacyClientDao {
             e.printStackTrace();
         }
 
+        return listaDistritosPagina;
+
+    }
+
+    public ArrayList<BFarmaciasCliente> listarFarmaciasClientePorDistrito(String distrito) {
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<BFarmaciasCliente> listaFarmaciasClientePorDistrito = new ArrayList<>();
+
         /*OBTENGO LAS FARMACIAS DE LOS DISTRITOS QUE SE MOSTRARAN POR PAGINA*/
         String sqlObtenerFarmacias = "select name, address, District_name from telefarma.pharmacy\n" +
-                "where isBanned = 0 and District_name in ('" + listaDistritosPagina.get(1) + "', '" + listaDistritosPagina.get(2) + "', '" + listaDistritosPagina.get(3) + "');";
+                "where isBanned = 0 and District_name = '" + distrito + "';";
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
              Statement stmt = conn.createStatement();
@@ -59,14 +66,48 @@ public class FarmacyClientDao {
                 bFarmaciasCliente.setNombreFarmacia(rs.getString(1));
                 bFarmaciasCliente.setDireccionFarmacia(rs.getString(2));
                 bFarmaciasCliente.setDistritoFarmacia(rs.getString(3));
-                listaFarmaciasCliente.add(bFarmaciasCliente);
+                listaFarmaciasClientePorDistrito.add(bFarmaciasCliente);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return listaFarmaciasCliente;
+        return listaFarmaciasClientePorDistrito;
+    }
+
+    public ArrayList<BFarmaciasCliente> listarFarmaciasClientePorDistritoLimite(String distrito) {
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<BFarmaciasCliente> listaFarmaciasClientePorDistrito = new ArrayList<>();
+
+        /*OBTENGO LAS FARMACIAS DE LOS DISTRITOS QUE SE MOSTRARAN POR PAGINA*/
+        String sqlObtenerFarmacias = "select name, address, District_name from telefarma.pharmacy\n" +
+                "where isBanned = 0 and District_name = '" + distrito + "'\n" +
+                "limit 3;";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sqlObtenerFarmacias)) {
+
+            while (rs.next()) {
+                BFarmaciasCliente bFarmaciasCliente = new BFarmaciasCliente();
+                bFarmaciasCliente.setNombreFarmacia(rs.getString(1));
+                bFarmaciasCliente.setDireccionFarmacia(rs.getString(2));
+                bFarmaciasCliente.setDistritoFarmacia(rs.getString(3));
+                listaFarmaciasClientePorDistrito.add(bFarmaciasCliente);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listaFarmaciasClientePorDistrito;
     }
 
 }

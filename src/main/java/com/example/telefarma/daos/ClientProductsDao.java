@@ -21,10 +21,17 @@ public class ClientProductsDao {
 
         ArrayList<BProductosBuscador> listaProductosBuscador = new ArrayList<>();
 
-        String sql = "select p.idProduct,p.name,stock,price,photo from product p\n" +
-                "inner join pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
-                "where lower(p.name) like '%" + busqueda + "%' and f.idPharmacy=1\n" +
-                "limit " + pagina*16 + ",16;";
+        String sql = "select f.name,f.District_name,p.idProduct,p.name,stock,price from telefarma.product p\n" +
+                "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
+                "inner join telefarma.client c on (c.District_name=f.District_name)\n" +
+                "where lower(p.name) like '%"+ busqueda +"%' and isBanned = 0 and idClient=1\n" +
+                "union\n" +
+                "select f.name,f.District_name,p.idProduct,p.name,stock,price from telefarma.product p\n" +
+                "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
+                "inner join telefarma.client c on (c.District_name!=f.District_name)\n" +
+                "where lower(p.name) like '%"+ busqueda +"%' and isBanned = 0 and idClient=1\n" +
+                "order by District_name\n" +
+                "limit " + pagina*16 + ",16";
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
              Statement stmt = conn.createStatement();
@@ -38,7 +45,6 @@ public class ClientProductsDao {
                 productoBuscador.setNombreProducto(rs.getString(4));
                 productoBuscador.setStock(rs.getInt(5));
                 productoBuscador.setPrecio(rs.getDouble(6));
-                /*Falta foto*/
                 listaProductosBuscador.add(productoBuscador);
             }
 

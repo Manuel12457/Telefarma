@@ -1,4 +1,6 @@
+<%@ page import="com.example.telefarma.beans.BProductosBuscador" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<jsp:useBean id="listaProductosBusqueda" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BProductosBuscador>"/>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -111,46 +113,35 @@
                     <div class="row mb-3">
                         <h4 class="pb-2 border-bottom d-flex justify-content-start" style="color: #f57f00">Resultados de búsqueda: "Producto"</h4>
                     </div>
-
-
                     <!--Productos-->
                     <div class="container">
                         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+                            <%--Loop de productos--%>
+                            <% for (BProductosBuscador producto : listaProductosBusqueda) { %>
                             <div class="col">
                                 <div onclick="location.href='usuarioDetallesProducto.html'" class="card card-producto">
                                     <div class="card-header">
-                                        <h6>Prednisona</h6>
+                                        <h6><%= producto.getNombreProducto() %></h6>
                                     </div>
                                     <div class="card-body d-flex flex-column">
-                                        <img src="${pageContext.request.contextPath}/res/img/prednisona.jpg" class="card-img-top"
+                                        <img src="${pageContext.request.contextPath}/Image?id=<%= producto.getIdProducto() %>" class="card-img-top"
                                              aria-label="Producto">
                                         <div class="mt-auto">
                                             <div class="d-flex justify-content-around">
-                                                <h5 class="text-dark">S/ 25.90</h5>
-                                                <h5 class="text-dark">Stock: 19</h5>
+                                                <h6 class="text-dark">Farmacia: <%= producto.getNombreFarmacia() %></h6>
+                                            </div>
+                                            <div class="d-flex justify-content-around">
+                                                <h6 class="text-dark">Distrito: <%= producto.getDistritoFarmacia() %></h6>
+                                            </div>
+                                            <div class="d-flex justify-content-around">
+                                                <h5 class="text-dark">S/ <%= producto.getPrecio() %></h5>
+                                                <h5 class="text-dark">Stock: <%= producto.getStock() %></h5>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col">
-                                <div onclick="location.href='usuarioDetallesProducto.html'" class="card card-producto">
-                                    <div class="card-header">
-                                        <h6>Paracetamol</h6>
-                                    </div>
-                                    <div class="card-body d-flex flex-column">
-                                        <img src="${pageContext.request.contextPath}/res/img/paracetamol.jpg" class="card-img-top"
-                                             aria-label="Producto">
-                                        <div class="mt-auto">
-                                            <div class="d-flex justify-content-around">
-                                                <h5 class="text-dark">S/ 25.90</h5>
-                                                <h5 class="text-dark">Stock: 19</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <
+                            <% } %>
                         </div>
                     </div>
                 </div>
@@ -163,11 +154,11 @@
                             <li class="page-item disabled">
                                 <a class="page-link">Anterior</a>
                             </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item active"><a class="page-link" href="<%= request.getContextPath() %>?pagina=0">1</a></li>
                             <li class="page-item" aria-current="page">
-                                <a class="page-link" href="#">2</a>
+                                <a class="page-link" href="<%= request.getContextPath() %>?pagina=1">2</a>
                             </li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="<%= request.getContextPath() %>?pagina=2">3</a></li>
                             <li class="page-item">
                                 <a class="page-link" href="#">Siguiente</a>
                             </li>

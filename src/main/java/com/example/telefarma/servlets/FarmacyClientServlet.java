@@ -1,11 +1,13 @@
 package com.example.telefarma.servlets;
 
+import com.example.telefarma.beans.BFarmaciasCliente;
 import com.example.telefarma.daos.FarmacyClientDao;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.util.ArrayList;
 
 @WebServlet(name = "FarmacyClientServlet", value = "/FarmacyClientServlet")
 public class FarmacyClientServlet extends HttpServlet {
@@ -22,7 +24,18 @@ public class FarmacyClientServlet extends HttpServlet {
         }
 
         FarmacyClientDao farmacyClientDao = new FarmacyClientDao();
-        request.setAttribute("ListaFarmaciasCliente", farmacyClientDao.listarFarmaciasCliente(paginaDistritoCliente));
+        ArrayList<String> distritos =  farmacyClientDao.listarDistritosLimite(paginaDistritoCliente);
+
+        request.setAttribute("listaDistritosAMostrar", distritos);
+
+        ArrayList<ArrayList<BFarmaciasCliente>> listaFarmacias = new ArrayList<ArrayList<BFarmaciasCliente>>();
+
+        for (String d : distritos) {
+            ArrayList<BFarmaciasCliente> farmaciasCliente = farmacyClientDao.listarFarmaciasClientePorDistritoLimite(d);
+            listaFarmacias.add(farmaciasCliente);
+        }
+        request.setAttribute("listaFarmacias", listaFarmacias);
+
         RequestDispatcher view = request.getRequestDispatcher("/cliente/mostrarFarmaciasCliente.jsp");
         view.forward(request,response);
 
