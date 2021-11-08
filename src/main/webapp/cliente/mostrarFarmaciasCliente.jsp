@@ -41,6 +41,17 @@
                 <div class="row">
                     <h3><i class="fas fa-thumbtack fa-xs"></i>&nbsp;Farmacias cercanas a usted</h3>
                 </div>
+                <%
+                } else if (!otraFarmaciaMostrada) {
+                %>
+                <!--Otras farmacias-->
+                <div class="row">
+                    <h3><i class="fas fa-thumbtack fa-xs"></i>&nbsp;Otras farmacias</h3>
+                </div>
+                <%
+                        otraFarmaciaMostrada = true;
+                    }
+                %>
                 <div class="row">
                     <div class="container px-5 py-2" id="custom-cards-san-juan">
                         <!--Nombre distrito-->
@@ -73,50 +84,9 @@
                         </div>
                     </div>
                 </div>
-                    <%
-                        } else {
-                            if (!otraFarmaciaMostrada) {
-                    %>
-                <!--Otras farmacias-->
 
-                <div class="row">
-                    <h3><i class="fas fa-thumbtack fa-xs"></i>&nbsp;Otras farmacias</h3>
-                </div>
-                <%
-                        otraFarmaciaMostrada = true;
-                    }
-                %>
-                <div class="row">
-                    <div class="container px-5 py-2" id="custom-cards-san-miguel">
-                        <!--Nombre distrito-->
-                        <h4 class="dist-name"><%= listaFarmaciasDistrito.get(0).getDistritoFarmacia() %></h4>
-                        <!--Loop de farmacias-->
-                        <div class="row row-cols-1 row-cols-lg-3 g-4 py-3">
-                            <% for (BFarmaciasCliente farmacia : listaFarmaciasDistrito) {%>
-                            <div class="col">
-                                <div onclick="location.href='<%= request.getContextPath()%>/PharmacyAndProductsServlet?idPharmacy=<%= farmacia.getIdPharmacy() %>'" class="card card-farmacia f1">
-                                    <h2><%= farmacia.getNombreFarmacia() %></h2>
-                                    <ul>
-                                        <li>
-                                            <i class="fas fa-map-marker-alt fa-xs"></i>
-                                            <small>&nbsp;&nbsp;<%= farmacia.getDireccionFarmacia() %></small>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <%
-                                }
-                            %>
-                        </div>
-                        <!--Boton ver más-->
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-tele">Ver más</button>
-                        </div>
-                    </div>
-                </div>
                 <%
                             }
-                        }
                     }
                 %>
 

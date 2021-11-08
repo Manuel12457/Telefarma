@@ -70,7 +70,7 @@
             <div class="d-flex flex-column">
               <div class="my-2">
                 <h4 class="mb-3">Paco Perez</h4>
-                <img src="assets/img/images.png"
+                <img src="${pageContext.request.contextPath}/res/img/images.png"
                      class="rounded-circle mx-auto d-block mb-3 h-25 w-50" alt="profile image">
               </div>
               <div class="mb-3">
