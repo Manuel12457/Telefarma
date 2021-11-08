@@ -62,8 +62,8 @@
                                          aria-label="Producto">
                                     <div class="mt-auto">
                                         <div class="d-flex justify-content-around">
-                                            <h5 class="text-dark">S/ 25.90</h5>
-                                            <h5 class="text-dark">Stock: 19</h5>
+                                            <h5 class="text-dark">S/ <%= producto.getPrecio() %></h5>
+                                            <h5 class="text-dark">Stock: <%= producto.getStock() %></h5>
                                         </div>
                                     </div>
                                 </div>

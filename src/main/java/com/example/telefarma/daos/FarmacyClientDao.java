@@ -45,7 +45,6 @@ public class FarmacyClientDao {
         }
 
         return listaDistritosPagina;
-
     }
 
     public ArrayList<BFarmaciasCliente> listarFarmaciasClientePorDistrito(String distrito) {
