@@ -128,7 +128,7 @@
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
-                <jsp:param name="servlet" value="/FarmacyClientServlet"/>
+                <jsp:param name="servlet" value="/PharmacyClientServlet"/>
             </jsp:include>
         </main>
 

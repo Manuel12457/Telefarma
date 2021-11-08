@@ -42,13 +42,13 @@ public class InfoFarmaciayProductosDao {
 
     }
 
-    public ArrayList<BProductosBuscador> listaProductosFarmacia(int pagina, String busqueda) {
+    public ArrayList<BProductosBuscador> listaProductosFarmacia(int pagina, String busqueda, int idFarmacia) {
 
         ArrayList<BProductosBuscador> listaProductos = new ArrayList<>();
 
         String sql = "select p.idProduct, p.name,stock,price,photo from telefarma.product p\n" +
                 "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
-                "where lower(p.name) like '%" + busqueda + "%' and f.idPharmacy=1\n" +
+                "where lower(p.name) like '%" + busqueda + "%' and f.idPharmacy=" + idFarmacia + "\n" +
                 "limit " + 16*pagina + ",16;";
 
         try {

@@ -12,25 +12,16 @@ public class PharmacyandProductsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String paginaStr = request.getParameter("pagina");
-        String busqueda = request.getParameter("busqueda");
         String idFarmaciaStr = request.getParameter("farmacia");
         int idFarmacia = Integer.parseInt(idFarmaciaStr);
-        int pagina;
 
-        if (paginaStr == null) {
-            pagina = 0;
-        } else {
-            pagina = Integer.parseInt(paginaStr);
-        }
+        int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
 
-        if (busqueda == null) {
-            busqueda = "";
-        }
+        String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
 
         InfoFarmaciayProductosDao infoFarmaciayProductos = new InfoFarmaciayProductosDao();
         request.setAttribute("InfoFarmacia",infoFarmaciayProductos.datosFarmacia(idFarmacia));
-        request.setAttribute("ProductosDeLaFarmacia", infoFarmaciayProductos.listaProductosFarmacia(pagina,busqueda));
+        request.setAttribute("ProductosDeLaFarmacia", infoFarmaciayProductos.listaProductosFarmacia(pagina,busqueda,idFarmacia));
 
         RequestDispatcher view = request.getRequestDispatcher("/cliente/farmaciaYProductos.jsp");
         view.forward(request,response);

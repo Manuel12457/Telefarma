@@ -10,18 +10,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 @WebServlet(name = "FarmacyClientServlet", value = "/FarmacyClientServlet")
-public class FarmacyClientServlet extends HttpServlet {
+public class PharmacyClientServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String paginaDistritoClienteStr = request.getParameter("pagina");
-        int paginaDistritoCliente;
-
-        if (paginaDistritoClienteStr == null) {
-            paginaDistritoCliente = 0;
-        } else {
-            paginaDistritoCliente = Integer.parseInt(paginaDistritoClienteStr);
-        }
+        int paginaDistritoCliente = request.getParameter("pagina") == null ? 0: Integer.parseInt(request.getParameter("pagina"));
         request.setAttribute("pagActual",paginaDistritoCliente);
 
         int limitedistritos = 3;
