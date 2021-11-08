@@ -68,7 +68,7 @@
             <!--Paginación-->
             <%
                 String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-                String servlet = "/?busqueda="+busqueda+"&";
+                String servlet = "/ClientProductsServlet?busqueda="+busqueda+"&";
             %>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>

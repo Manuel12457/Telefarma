@@ -12,20 +12,15 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
       <title>Telefarma - Administrador</title>
       <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css">
+      <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css">
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-      <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css">
       <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
   </head>
   <body>
     <%--Cabecera de admin--%>
     <jsp:include page="BarraSuperiorAdmin.jsp"/>
-
-    <!--Botón flotante "+" para agregar farmacia-->
-    <a href="registroFarmacia.html" class="btn-float">
-      <i class="fas fa-plus my-float"></i>
-    </a>
 
     <main>
       <!--Alinear cabecera con contenido-->
@@ -108,6 +103,11 @@
           }%>
       </div>
     </main>
+
+    <!--Botón flotante "+" para agregar farmacia-->
+    <a href="registroFarmacia.html" class="btn-float">
+      <i class="fas fa-plus my-float"></i>
+    </a>
 
     <div class="modal fade" id="motivoBloqueo" tabindex="-1" aria-labelledby="conf_eliminar" aria-hidden="true">
       <div class="modal-dialog">
