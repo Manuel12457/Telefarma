@@ -7,17 +7,17 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-  <title>Telefarma - Administrador</title>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}res/bootstrap/css/bootstrap.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}res/css/estilos.css">
-  <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
-</head>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+      <title>Telefarma - Administrador</title>
+      <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css">
+      <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
+  </head>
 <body>
 <!--Usando un css, se invoca al boton flotante de agregar producto-->
 <a href="registroFarmacia.html" class="btn-flotante">
@@ -38,9 +38,9 @@
     <%
       byte byte0 = 0;
       String[] imgs = new String[3];
-      imgs[0]="res/img/national-cancer-institute-byGTytEGjBo-unsplash.jpg";
-      imgs[1]="res/img/tbel-abuseridze-eBW1nlFdZFw-unsplash.jpg";
-      imgs[2]="res/img/national-cancer-institute-cw2Zn2ZQ9YQ-unsplash.jpg";
+      imgs[0]= "/res/img/national-cancer-institute-byGTytEGjBo-unsplash.jpg";
+      imgs[1]= "/res/img/tbel-abuseridze-eBW1nlFdZFw-unsplash.jpg";
+      imgs[2]= "/res/img/national-cancer-institute-cw2Zn2ZQ9YQ-unsplash.jpg";
       int cardCount = 0;
       for (ArrayList<BFarmaciasAdmin> listaFarmaciasDistrito : listaListaFarmacias) {
     %>
