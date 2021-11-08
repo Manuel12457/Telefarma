@@ -22,8 +22,6 @@ public class PharmacyClientServlet extends HttpServlet {
         ArrayList<String> distritos = farmacyClientDao.listarDistritosLimite(paginaDistritoCliente, limitedistritos);
         int numDistritos =  farmacyClientDao.listarDistritosLimite(0, 1000).size();
 
-        System.out.println("Hay"+numDistritos+"distritos");
-
         request.setAttribute("pagTotales", (int)Math.ceil((double)numDistritos/limitedistritos));
         request.setAttribute("numDistritos", limitedistritos);
         request.setAttribute("listaDistritosAMostrar", distritos);
