@@ -75,7 +75,9 @@
                 </div>
             </div>
             <!--Paginación-->
-            <%String servlet = "/PharmacyAndProductsServlet?idPharmacy="+idFarma+"&";%>
+            <%
+                String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
+                String servlet = "/PharmacyAdminServlet?busqueda="+busqueda+"&idPharmacy="+idFarma+"&";%>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>

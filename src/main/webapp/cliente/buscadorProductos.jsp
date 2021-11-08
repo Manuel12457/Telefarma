@@ -66,10 +66,14 @@
                 </div>
             </div>
             <!--Paginación-->
+            <%
+                String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
+                String servlet = "/?busqueda="+busqueda+"&";
+            %>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
-                <jsp:param name="servlet" value="/?"/>
+                <jsp:param name="servlet" value="<%=servlet%>"/>
             </jsp:include>
         </main>
 
