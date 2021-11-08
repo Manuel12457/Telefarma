@@ -148,6 +148,6 @@
     </jsp:include>
 
     <%--JS--%>
-    <script src="${pageContext.request.contextPath}res/bootstrap/js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/res/bootstrap/js/bootstrap.min.js"></script>
   </body>
 </html>

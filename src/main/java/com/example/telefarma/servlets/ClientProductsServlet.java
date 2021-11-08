@@ -11,6 +11,7 @@ import javax.servlet.annotation.*;
 @WebServlet(name = "ClientProductsServelet", value = "/ClientProductsServlet")
 public class ClientProductsServlet extends HttpServlet {
 
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html");
 
@@ -29,5 +30,4 @@ public class ClientProductsServlet extends HttpServlet {
         view.forward(request,response);
 
     }
-
 }
