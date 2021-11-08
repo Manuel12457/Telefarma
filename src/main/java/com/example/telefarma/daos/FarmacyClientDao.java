@@ -54,7 +54,7 @@ public class FarmacyClientDao {
         ArrayList<BFarmaciasCliente> listaFarmaciasClientePorDistrito = new ArrayList<>();
 
         /*OBTENGO LAS FARMACIAS DE LOS DISTRITOS QUE SE MOSTRARAN POR PAGINA*/
-        String sqlObtenerFarmacias = "select name, address, District_name from telefarma.pharmacy\n" +
+        String sqlObtenerFarmacias = "select name, address, District_name, idPharmacy from telefarma.pharmacy\n" +
                 "where isBanned = 0 and District_name = '" + distrito + "';";
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
@@ -66,6 +66,7 @@ public class FarmacyClientDao {
                 bFarmaciasCliente.setNombreFarmacia(rs.getString(1));
                 bFarmaciasCliente.setDireccionFarmacia(rs.getString(2));
                 bFarmaciasCliente.setDistritoFarmacia(rs.getString(3));
+                bFarmaciasCliente.setIdPharmacy(rs.getInt(4));
                 listaFarmaciasClientePorDistrito.add(bFarmaciasCliente);
             }
 
@@ -87,7 +88,7 @@ public class FarmacyClientDao {
         ArrayList<BFarmaciasCliente> listaFarmaciasClientePorDistrito = new ArrayList<>();
 
         /*OBTENGO LAS FARMACIAS DE LOS DISTRITOS QUE SE MOSTRARAN POR PAGINA*/
-        String sqlObtenerFarmacias = "select name, address, District_name from telefarma.pharmacy\n" +
+        String sqlObtenerFarmacias = "select name, address, District_name, idPharmacy from telefarma.pharmacy\n" +
                 "where isBanned = 0 and District_name = '" + distrito + "'\n" +
                 "limit "+limite+";";
 
@@ -100,6 +101,7 @@ public class FarmacyClientDao {
                 bFarmaciasCliente.setNombreFarmacia(rs.getString(1));
                 bFarmaciasCliente.setDireccionFarmacia(rs.getString(2));
                 bFarmaciasCliente.setDistritoFarmacia(rs.getString(3));
+                bFarmaciasCliente.setIdPharmacy(rs.getInt(4));
                 listaFarmaciasClientePorDistrito.add(bFarmaciasCliente);
             }
 

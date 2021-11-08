@@ -18,7 +18,7 @@
       <div class="row w-100 align-items-center pe-sm-4 ps-0 my-2">
         <!--Logo telefarma-->
         <div class="col-md-3 col-sm-5 col-6 d-flex justify-content-center ps-xxl-2 ps-xl-5 ps-lg-4 ps-md-5 ps-2">
-          <a class="navbar-brand py-0" href="${pageContext.request.contextPath}/FarmacyClientServlet">
+          <a class="navbar-brand py-0" href="${pageContext.request.contextPath}/PharmacyClientServlet">
             <p class="logo-header mb-0">TeleFarma</p>
           </a>
         </div>

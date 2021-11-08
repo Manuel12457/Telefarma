@@ -5,6 +5,7 @@ public class BFarmaciasCliente {
     private String nombreFarmacia;
     private String direccionFarmacia;
     private String distritoFarmacia;
+    private int idPharmacy;
 
     public String getNombreFarmacia() {
         return nombreFarmacia;
@@ -28,5 +29,13 @@ public class BFarmaciasCliente {
 
     public void setDistritoFarmacia(String distritoFarmacia) {
         this.distritoFarmacia = distritoFarmacia;
+    }
+
+    public int getIdPharmacy() {
+        return idPharmacy;
+    }
+
+    public void setIdPharmacy(int idPharmacy) {
+        this.idPharmacy = idPharmacy;
     }
 }

@@ -53,7 +53,7 @@
 
                             %>
                             <div class="col">
-                                <div onclick="location.href='usuarioFarmaciaElegida.html'" class="card card-farmacia f1">
+                                <div onclick="location.href='<%= request.getContextPath()%>/PharmacyAndProductsServlet?idPharmacy=<%= farmacia.getIdPharmacy() %>'" class="card card-farmacia f1">
                                     <h2><%= farmacia.getNombreFarmacia() %></h2>
                                     <ul>
                                         <li>
@@ -90,12 +90,11 @@
                     <div class="container px-5 py-2" id="custom-cards-san-miguel">
                         <!--Nombre distrito-->
                         <h4 class="dist-name"><%= listaFarmaciasDistrito.get(0).getDistritoFarmacia() %></h4>
-                        <!--Farmacias-->
-                        <!--F1-->
+                        <!--Loop de farmacias-->
                         <div class="row row-cols-1 row-cols-lg-3 g-4 py-3">
                             <% for (BFarmaciasCliente farmacia : listaFarmaciasDistrito) {%>
                             <div class="col">
-                                <div onclick="location.href='usuarioFarmaciaElegida.html'" class="card card-farmacia f1">
+                                <div onclick="location.href='<%= request.getContextPath()%>/PharmacyAndProductsServlet?idPharmacy=<%= farmacia.getIdPharmacy() %>'" class="card card-farmacia f1">
                                     <h2><%= farmacia.getNombreFarmacia() %></h2>
                                     <ul>
                                         <li>
@@ -115,8 +114,6 @@
                         </div>
                     </div>
                 </div>
-
-
                 <%
                             }
                         }

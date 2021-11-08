@@ -14,24 +14,14 @@ public class ClientProductsServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html");
 
-        String paginaStr = request.getParameter("pagina");
-        String busqueda = request.getParameter("busqueda");
-        int pagina;
+        int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
+        String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
 
-        if (paginaStr == null) {
-            pagina = 0;
-        } else {
-            pagina = Integer.parseInt(paginaStr);
-        }
-        request.setAttribute("pagActual",pagina);
-
-        if (busqueda == null) {
-            busqueda = "";
-        }
         int limiteProductos = 16;
         ClientProductsDao clientProductsDao = new ClientProductsDao();
         request.setAttribute("listaProductosBusqueda", clientProductsDao.listarProductosBusqueda(pagina,busqueda,limiteProductos));
 
+        request.setAttribute("pagActual",pagina);
         int pagTotales= (int)Math.ceil((double)clientProductsDao.cantidadProductos()/limiteProductos);
         request.setAttribute("pagTotales",pagTotales);
 
