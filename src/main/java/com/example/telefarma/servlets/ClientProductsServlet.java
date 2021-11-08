@@ -23,15 +23,17 @@ public class ClientProductsServlet extends HttpServlet {
         } else {
             pagina = Integer.parseInt(paginaStr);
         }
+        request.setAttribute("pagActual",pagina);
 
         if (busqueda == null) {
             busqueda = "";
         }
-
-        System.out.println(pagina);
-
+        int limiteProductos = 16;
         ClientProductsDao clientProductsDao = new ClientProductsDao();
-        request.setAttribute("listaProductosBusqueda", clientProductsDao.listarProductosBusqueda(pagina,busqueda));
+        request.setAttribute("listaProductosBusqueda", clientProductsDao.listarProductosBusqueda(pagina,busqueda,limiteProductos));
+
+        int pagTotales= (int)Math.ceil((double)clientProductsDao.cantidadProductos()/limiteProductos);
+        request.setAttribute("pagTotales",pagTotales);
 
         RequestDispatcher view = request.getRequestDispatcher("/cliente/buscadorProductos.jsp");
         view.forward(request,response);

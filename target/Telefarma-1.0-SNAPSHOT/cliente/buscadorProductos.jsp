@@ -1,6 +1,9 @@
 <%@ page import="com.example.telefarma.beans.BProductosBuscador" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaProductosBusqueda" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BProductosBuscador>"/>
+<jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -63,25 +66,11 @@
                 </div>
             </div>
             <!--Paginación-->
-            <div class="container">
-                <div class="d-flex justify-content-center my-3">
-                    <nav aria-label="paginacion_productos">
-                        <ul class="pagination">
-                            <li class="page-item disabled">
-                                <a class="page-link">Anterior</a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="<%= request.getContextPath() %>?pagina=0">1</a></li>
-                            <li class="page-item" aria-current="page">
-                                <a class="page-link" href="<%= request.getContextPath() %>?pagina=1">2</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="<%= request.getContextPath() %>?pagina=2">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Siguiente</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
+            <jsp:include page="../paginacion.jsp">
+                <jsp:param name="pagActual" value="<%=pagActual%>"/>
+                <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
+                <jsp:param name="servlet" value="/"/>
+            </jsp:include>
         </main>
 
         <!--JS-->

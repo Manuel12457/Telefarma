@@ -11,7 +11,32 @@ public class ClientProductsDao {
     String pass = "root";
     String url = "jdbc:mysql://localhost:3306/telefarma";
 
-    public ArrayList<BProductosBuscador> listarProductosBusqueda(int pagina, String busqueda) {
+    public int cantidadProductos(){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int cantidad = 0;
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("select count(*) from product p\n" +
+                     "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
+                     "where f.isBanned=0;")) {
+
+            if(rs.next()) {
+                cantidad = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cantidad;
+    }
+
+    public ArrayList<BProductosBuscador> listarProductosBusqueda(int pagina, String busqueda, int limite) {
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -31,7 +56,7 @@ public class ClientProductsDao {
                 "inner join telefarma.client c on (c.District_name!=f.District_name)\n" +
                 "where lower(p.name) like '%"+ busqueda +"%' and isBanned = 0 and idClient=1\n" +
                 "order by District_name\n" +
-                "limit " + pagina*16 + ",16";
+                "limit " + pagina*limite + "," + limite + ";";
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
              Statement stmt = conn.createStatement();
