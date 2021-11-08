@@ -140,7 +140,7 @@
 <jsp:include page="../paginacion.jsp">
   <jsp:param name="pagActual" value="<%=pagActual%>"/>
   <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
-  <jsp:param name="servlet" value="/PharmacyAdminServlet"/>
+  <jsp:param name="servlet" value="/PharmacyAdminServlet?"/>
 </jsp:include>
 
 <script src="${pageContext.request.contextPath}res/bootstrap/js/bootstrap.min.js"></script>
