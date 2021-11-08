@@ -18,6 +18,7 @@ public class PharmacyAndProductsServlet extends HttpServlet {
         int idPharmacy = Integer.parseInt(request.getParameter("idPharmacy"));
 
         InfoFarmaciayProductosDao infoFarmaciayProductos = new InfoFarmaciayProductosDao();
+        request.setAttribute("idFarma",idPharmacy);
         request.setAttribute("infoFarmacia",infoFarmaciayProductos.datosFarmacia(idPharmacy));
         request.setAttribute("productosDeLaFarmacia", infoFarmaciayProductos.listaProductosFarmacia(pagina,busqueda,idPharmacy));
 

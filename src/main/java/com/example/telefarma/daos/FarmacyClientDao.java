@@ -13,6 +13,32 @@ public class FarmacyClientDao {
     String pass = "root";
     String url = "jdbc:mysql://localhost:3306/telefarma";
 
+    public int cantidadDistritosconFarmacia(){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int cantidad = 0;
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("select count(*) from (select d.name from district d\n" +
+                     "inner join telefarma.pharmacy f on (d.name=f.District_name)\n" +
+                     "where f.isBanned=0\n" +
+                     "group by d.name) DistritoConFarmacia;")) {
+
+            if(rs.next()) {
+                cantidad = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cantidad;
+    }
+
     public ArrayList<String> listarDistritosLimite(int paginaDistritoCliente,int limite) {
 
         ArrayList<String> listaDistritosPagina = new ArrayList<>();

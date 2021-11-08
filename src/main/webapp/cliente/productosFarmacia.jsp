@@ -4,6 +4,7 @@
 <jsp:useBean id="productosDeLaFarmacia" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BProductosBuscador>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="idFarma" scope="request" type="java.lang.Integer"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -74,10 +75,11 @@
                 </div>
             </div>
             <!--Paginación-->
+            <%String servlet = "/PharmacyAndProductsServlet?idPharmacy="+idFarma+"&";%>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
-                <jsp:param name="servlet" value="/PharmacyAndProductsServlet"/>
+                <jsp:param name="servlet" value="<%=servlet%>"/>
             </jsp:include>
         </main>
 
