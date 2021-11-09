@@ -12,7 +12,7 @@ public class ClientOrdersDao {
     String pass = "root";
     String url = "jdbc:mysql://localhost:3306/telefarma";
 
-    public ArrayList<BClientOrders> listarOrdenes(int pagina, int limite){
+    public ArrayList<BClientOrders> listarOrdenes(int pagina, int limite, int id){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -27,7 +27,7 @@ public class ClientOrdersDao {
                 "inner join product p on (p.idProduct=od.idProduct) \n" +
                 "inner join pharmacy f on (p.idPharmacy=f.idPharmacy) \n" +
                 "inner join client c on (o.idClient=c.idClient) \n"+
-                "where c.idClient=1\n" +
+                "where c.idClient="+id+"\n" +
                 "group by o.idOrder \n" +
                 "order by o.orderDate desc\n" +
                 "limit " + pagina*limite + "," + limite + ";";

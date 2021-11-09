@@ -1,8 +1,7 @@
 <%@ page import="com.example.telefarma.beans.BFarmaciasCliente" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="listaFarmacias" scope="request"
-             type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BFarmaciasCliente>>"/>
+<jsp:useBean id="listaFarmacias" scope="request" type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BFarmaciasCliente>>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 
@@ -23,7 +22,11 @@
 
     <body>
         <!--Barra de Navegación Superior-->
-        <jsp:include page="BarraSuperiorCliente.jsp"/>
+        <jsp:include page="../BarraSuperior.jsp">
+            <jsp:param name="tipoUsuario" value="cliente"/>
+            <jsp:param name="nombre" value="Paco Perez"/>
+            <jsp:param name="servletBusqueda" value="ClientProductsServlet"/>
+        </jsp:include>
 
         <!--Contenido de página-->
         <main>

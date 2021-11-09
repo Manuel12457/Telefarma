@@ -1,4 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%String tipoUsuario = request.getParameter("tipoUsuario");
+String nombre = request.getParameter("nombre");
+String servletBusqueda = request.getParameter("servletBusqueda");
+String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");%>
+
 <!--Cabecera Principal cliente-->
 <nav class="navbar navbar-expand-md fixed-top shadow-sm justify-content-center bg-white">
     <div class="row w-100 align-items-center pe-sm-4 ps-0 my-2">
@@ -10,23 +16,26 @@
         </div>
         <!--Buscador de productos-->
         <div class="col-md-7 d-none d-md-block ps-0"> <!--desaparece en menores a medium-->
-            <div class="input-group">
-                <div style="width: 40%">
-                    <input type="search" id="buscador_producto" class="form-control"
-                           placeholder="Busca un producto"/>
+            <form method="post" action="<%=request.getContextPath()+"/"+servletBusqueda%>?action=buscar">
+                <div class="input-group">
+                    <div style="width:40%">
+                        <input type="search" name="busqueda" class="form-control" placeholder="Busca un producto" value ="<%=busqueda%>"/>
+                    </div>
+                    <a role="button" class="btn btn-tele border-start-1 input-group-text">
+                        <i class="fas fa-search"></i>
+                    </a>
                 </div>
-                <a role="button" class="btn btn-tele border-start-1" href="#">
-                    <i class="fas fa-search"></i>
-                </a>
-            </div>
+            </form>
         </div>
         <!--Carrito-->
         <div class="col-md-1 col-sm-2 col-2 ms-sm-auto ms-auto d-flex justify-content-end">
+            <%if(tipoUsuario.equals("cliente")){%>
             <a class="btn btn-tele-inverso" role="button" href="usuarioCarrito.html">
                 <div style="font-size: 0.60rem"> <!--para cambios más precisos del tamaño-->
                     <i class="fas fa-cart-plus fa-3x"></i>
                 </div>
             </a>
+            <%}%>
         </div>
         <!--Menú usuario-->
         <div class="col-md-1 col-sm-2 col-2 d-flex justify-content-start ps-0">
@@ -58,10 +67,11 @@
             <div class="offcanvas-body p-3">
                 <div class="d-flex flex-column">
                     <div class="my-2">
-                        <h4 class="mb-3">Paco Perez</h4>
+                        <h4 class="mb-3"><%=nombre%></h4>
                         <img src="${pageContext.request.contextPath}/res/img/images.png"
                              class="rounded-circle mx-auto d-block mb-3 h-25 w-50" alt="profile image">
                     </div>
+                    <%if(tipoUsuario.equals("cliente")){%>
                     <div class="mb-3">
                         <div class="p-2">
                             <a href="usuarioEditar.html" class="text-dark text-decoration-none">
@@ -70,12 +80,13 @@
                             </a>
                         </div>
                         <div class="p-2">
-                            <a href="usuarioHistorial.html" class="text-dark text-decoration-none">
+                            <a href="<%=request.getContextPath()%>/ClientOrdersServlet" class="text-dark text-decoration-none">
                                 <span><i class="fas fa-list"></i></span>
                                 <span>Historial de compras</span>
                             </a>
                         </div>
                     </div>
+                    <%}%>
                 </div>
             </div>
         </div>

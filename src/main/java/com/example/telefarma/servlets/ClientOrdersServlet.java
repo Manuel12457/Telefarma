@@ -14,11 +14,13 @@ public class ClientOrdersServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
+        int idCliente = request.getParameter("id") == null ? 1 : Integer.parseInt(request.getParameter("id"));
+
         int limite = 12;
         ClientOrdersDao clientOrdersDao = new ClientOrdersDao();
 
-        ArrayList<BClientOrders> listaOrdenes = clientOrdersDao.listarOrdenes(pagina,limite);
-        int numOrdenes =  clientOrdersDao.listarOrdenes(0,1000).size();
+        ArrayList<BClientOrders> listaOrdenes = clientOrdersDao.listarOrdenes(pagina,limite,idCliente);
+        int numOrdenes =  clientOrdersDao.listarOrdenes(0,1000,idCliente).size();
 
         for(BClientOrders orden : listaOrdenes){
             clientOrdersDao.agregarOrderDetails(orden);

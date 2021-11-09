@@ -21,7 +21,10 @@
     </head>
     <body>
         <!--Barra de Navegación Superior-->
-        <jsp:include page="BarraSuperiorCliente.jsp"/>
+        <jsp:include page="../BarraSuperior.jsp">
+            <jsp:param name="tipoUsuario" value="cliente"/>
+            <jsp:param name="nombre" value="Paco Perez"/>
+        </jsp:include>
 
         <!--Contenido-->
         <main>

@@ -20,7 +20,10 @@
   </head>
   <body>
     <%--Cabecera de admin--%>
-    <jsp:include page="BarraSuperiorAdmin.jsp"/>
+      <jsp:include page="../BarraSuperior.jsp">
+        <jsp:param name="tipoUsuario" value="admin"/>
+        <jsp:param name="nombre" value="Admin"/>
+      </jsp:include>
 
     <main>
       <!--Alinear cabecera con contenido-->
