@@ -34,6 +34,15 @@ public class PharmacyAndProductsServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        switch(request.getParameter("action")) {
+            case "buscar":
+                String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
+                int idPharmacy = Integer.parseInt(request.getParameter("idPharmacy"));
+                response.sendRedirect(request.getContextPath()+"/PharmacyAndProductsServlet?busqueda="+busqueda+"&idPharmacy="+idPharmacy);
+                break;
 
+            default:
+                break;
+        }
     }
 }

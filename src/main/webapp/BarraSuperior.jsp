@@ -16,7 +16,7 @@ String busqueda = request.getParameter("busqueda") == null ? "" : request.getPar
         </div>
         <!--Buscador de productos-->
         <div class="col-md-7 d-none d-md-block ps-0"> <!--desaparece en menores a medium-->
-            <form method="post" action="<%=request.getContextPath()+"/"+servletBusqueda%>?action=buscar">
+            <form method="post" action="<%=request.getContextPath()%>/<%=servletBusqueda%>action=buscar">
                 <div class="input-group">
                     <div style="width:40%">
                         <input type="search" name="busqueda" class="form-control" placeholder="Busca un producto" value ="<%=busqueda%>"/>

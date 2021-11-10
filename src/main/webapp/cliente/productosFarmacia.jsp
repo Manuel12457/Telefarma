@@ -5,6 +5,7 @@
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="idFarma" scope="request" type="java.lang.Integer"/>
+<%String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,10 +21,12 @@
         <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
     </head>
     <body>
+        <%String servletBusqueda="PharmacyAndProductsServlet?idPharmacy="+idFarma+"&";%>
         <!--Barra de Navegación Superior-->
         <jsp:include page="../BarraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="Paco Perez"/>
+            <jsp:param name="servletBusqueda" value="<%=servletBusqueda%>"/>
         </jsp:include>
 
         <!--Contenido-->
@@ -48,7 +51,11 @@
                     </div>
                     <!--Titulo-->
                     <div class="row mb-3">
-                        <h4 class="pb-2 border-bottom d-flex justify-content-start" style="color: #f57f00">Productos disponibles</h4>
+                        <%if(busqueda.equals("")){%>
+                            <h4 class="pb-2 border-bottom d-flex justify-content-start" style="color: #f57f00">Productos disponibles</h4>
+                        <%}else{%>
+                            <h4 class="pb-2 border-bottom d-flex justify-content-start" style="color: #f57f00">Resultados de "<%=busqueda%>"</h4>
+                        <%}%>
                     </div>
                 </div>
                 <!--Productos-->
@@ -78,9 +85,7 @@
                 </div>
             </div>
             <!--Paginación-->
-            <%
-                String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-                String servlet = "/PharmacyAdminServlet?busqueda="+busqueda+"&idPharmacy="+idFarma+"&";%>
+            <%String servlet = "/PharmacyAdminServlet?busqueda="+busqueda+"&idPharmacy="+idFarma+"&";%>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
