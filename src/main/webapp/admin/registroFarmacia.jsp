@@ -1,25 +1,18 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: LENOVO
-  Date: 09/11/2021
-  Time: 07:54 p. m.
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <head>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
             <title>Telefarma - Registrar Farmacia</title>
-            <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+            <link rel="stylesheet" href="<%=request.getContextPath()%>/res/bootstrap/css/bootstrap.min.css">
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-            <link rel="stylesheet" href="assets/css/estilos.css">
+            <link rel="stylesheet" href="<%=request.getContextPath()%>/res/css/estilos.css">
             <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
-        </head>
     </head>
     <body>
 
@@ -47,7 +40,7 @@
                                         <div class="col-md-6">
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaMail">Correo</label>
-                                                <input type="text" name="correo" id="farmaMail" class="form-control"
+                                                <input type="email" name="correo" id="farmaMail" class="form-control"
                                                        placeholder="Ingrese el mail de la farmacia"/>
                                             </div>
                                         </div>
@@ -68,8 +61,16 @@
 
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaDistrict">Distrito</label>
-                                                <input type="text" name="distrito" id="farmaDistrict" class="form-control"
-                                                       placeholder="Ingrese el distrito de la farmacia"/>
+                                                <select class="form-select" name="distrito" id="farmaDistrict">
+                                                    <option value="" disabled selected>Ingrese el distrito de la farmacia</option>
+                                                    <%
+                                                    for (String distrito : listaDistritosSistema){
+                                                    %>
+                                                    <option value="<%=distrito%>"><%=distrito%></option>
+                                                    <%
+                                                        }
+                                                    %>
+                                                </select>
                                             </div>
                                         </div>
 
@@ -99,6 +100,6 @@
             </div>
         </section>
 
-        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="<%=request.getContextPath()%>/res/bootstrap/js/bootstrap.min.js"></script>
     </body>
 </html>

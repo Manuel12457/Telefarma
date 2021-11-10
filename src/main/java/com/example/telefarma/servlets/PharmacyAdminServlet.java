@@ -17,13 +17,14 @@ public class PharmacyAdminServlet extends HttpServlet {
         String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
         int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
         String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
+        PharmacyAdminDao pharmacyAdminDao = new PharmacyAdminDao();
 
         switch (accion) {
 
             case "":
 
                 int limitedistritos = 2;
-                PharmacyAdminDao pharmacyAdminDao = new PharmacyAdminDao();
+
                 ArrayList<String> distritos = pharmacyAdminDao.listarDistritosLimite(pagina,busqueda, limitedistritos);
                 int numDistritos =  pharmacyAdminDao.listarDistritosLimite(0, busqueda,1000).size();
 
@@ -46,6 +47,9 @@ public class PharmacyAdminServlet extends HttpServlet {
 
                 break;
             case "registrarForm":
+
+                ArrayList<String> distritosSistema = pharmacyAdminDao.listarDistritosEnSistema();
+                request.setAttribute("listaDistritosSistema", distritosSistema);
                 RequestDispatcher view2 = request.getRequestDispatcher("/admin/registroFarmacia.jsp");
                 view2.forward(request,response);
                 break;
@@ -68,12 +72,12 @@ public class PharmacyAdminServlet extends HttpServlet {
                 String correo = request.getParameter("correo");
                 String direccion = request.getParameter("direccion");
                 String distrito = request.getParameter("distrito");
-                if (pharmacyAdminDao.validarCorreoFarmacia(correo) && pharmacyAdminDao.validarRUCFarmacia(ruc)) {
+                if (pharmacyAdminDao.validarCorreoFarmacia(correo) && pharmacyAdminDao.validarRUCFarmacia(ruc) && distrito!=null) {
                     pharmacyAdminDao.registrarFarmacia(ruc,nombre,correo,direccion,distrito);
                     response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet");
                     System.out.println("REGISTRO EXITOSO");
                 } else {
-                    System.out.println("RUC O CORREO NO VALIDOS");
+                    System.out.println("RUC, CORREO O DISTRITO NO VALIDOS");
                     response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet");
                 }
                 break;

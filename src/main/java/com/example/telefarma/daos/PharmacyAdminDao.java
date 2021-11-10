@@ -78,6 +78,34 @@ public class PharmacyAdminDao {
         return listaFarmaciasAdminPorDistrito;
     }
 
+    public ArrayList<String> listarDistritosEnSistema() {
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<String> listaDistritos = new ArrayList<>();
+
+        /*OBTENGO LAS FARMACIAS DE LOS DISTRITOS QUE SE MOSTRARAN POR PAGINA*/
+        String sqlObtenerFarmacias = "select * from district;";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sqlObtenerFarmacias)) {
+
+            while (rs.next()) {
+                listaDistritos.add(rs.getString(1));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listaDistritos;
+    }
+
     public boolean validarCorreoFarmacia(String correo) {
 
         boolean correoUnico = true;
@@ -163,14 +191,14 @@ public class PharmacyAdminDao {
         String sql = "insert into telefarma.pharmacy (RUC,name,mail,address,District_name)\n" +
                 "values(?,?,?,?,?);";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
-            pstmt.setString(1,ruc);
-            pstmt.setString(2,nombre);
-            pstmt.setString(3,correo);
-            pstmt.setString(4,direccion);
-            pstmt.setString(5,distrito);
+            pstmt.setString(1, ruc);
+            pstmt.setString(2, nombre);
+            pstmt.setString(3, correo);
+            pstmt.setString(4, direccion);
+            pstmt.setString(5, distrito);
             System.out.println(pstmt);
             pstmt.executeUpdate();
 
