@@ -23,7 +23,7 @@
         <jsp:include page="../BarraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="Paco Perez"/>
-            <jsp:param name="servletBusqueda" value="ClientProductsServlet"/>
+            <jsp:param name="servletBusqueda" value="ClientProductsServlet?"/>
         </jsp:include>
 
         <!--Contenido-->

@@ -180,4 +180,37 @@ public class PharmacyAdminDao {
 
     }
 
+    public boolean farmaciaPuedeBanearse(int idFarmacia) {
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        boolean farmaciaPuedeBanearse = true;
+
+        String sql = "select o.idOrder,o.status from telefarma.orders o\n" +
+                "inner join telefarma.orderdetails od on (od.idOrder=o.idOrder)\n" +
+                "inner join telefarma.product p on (p.idProduct=od.idProduct)\n" +
+                "where o.status='Pendiente' and p.idPharmacy = ?\n" +
+                "group by o.idOrder;";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setInt(1,idFarmacia);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) { /*Se han encontrado resultados. No puede banearse*/
+                    farmaciaPuedeBanearse = false;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return farmaciaPuedeBanearse;
+    }
+
 }
