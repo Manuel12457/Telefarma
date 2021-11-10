@@ -78,4 +78,106 @@ public class PharmacyAdminDao {
         return listaFarmaciasAdminPorDistrito;
     }
 
+    public boolean validarCorreoFarmacia(String correo) {
+
+        boolean correoUnico = true;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        String sql = "select idClient as 'id',mail,'client' as 'tipo' from telefarma.client\n" +
+                "where mail = ?\n" +
+                "union\n" +
+                "select idPharmacy,mail,'pharmacy' from telefarma.pharmacy\n" +
+                "where mail = ?\n" +
+                "union\n" +
+                "select idAdmin,mail,'admin' from telefarma.administrator\n" +
+                "where mail = ?;";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setString(1,correo);
+            pstmt.setString(2,correo);
+            pstmt.setString(3,correo);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    if (rs.getString(2).equals(correo)) {
+                        correoUnico = false;
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return correoUnico;
+    }
+
+    public boolean validarRUCFarmacia(String ruc) {
+
+        boolean rucUnico = true;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        String sql = "select idPharmacy,RUC from pharmacy\n" +
+                "where RUC = ?;";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setString(1,ruc);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    if (rs.getString(2).equals(ruc)) {
+                        rucUnico = false;
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rucUnico;
+    }
+
+    public void registrarFarmacia(String ruc, String nombre, String correo, String direccion, String distrito) {
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        String sql = "insert into telefarma.pharmacy (RUC,name,mail,address,District_name)\n" +
+                "values(?,?,?,?,?);";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setString(1,ruc);
+            pstmt.setString(2,nombre);
+            pstmt.setString(3,correo);
+            pstmt.setString(4,direccion);
+            pstmt.setString(5,distrito);
+            System.out.println(pstmt);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

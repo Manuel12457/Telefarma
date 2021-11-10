@@ -108,7 +108,7 @@
     </main>
 
     <!--Botón flotante "+" para agregar farmacia-->
-    <a href="registroFarmacia.html" class="btn-float">
+    <a href="<%=request.getContextPath()%>/PharmacyAdminServlet?action=registrarForm" class="btn-float">
       <i class="fas fa-plus my-float"></i>
     </a>
 
@@ -133,7 +133,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-danger">Eliminar Farmacia</button>
+            <button type="button" class="btn btn-danger">Bloquear Farmacia</button>
           </div>
         </div>
       </div>
