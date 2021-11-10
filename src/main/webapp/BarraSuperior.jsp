@@ -21,9 +21,9 @@ String busqueda = request.getParameter("busqueda") == null ? "" : request.getPar
                     <div style="width:40%">
                         <input type="search" name="busqueda" class="form-control" placeholder="Busca un producto" value ="<%=busqueda%>"/>
                     </div>
-                    <a role="button" class="btn btn-tele border-start-1 input-group-text">
+                    <button role="button" class="btn btn-tele border-start-1 input-group-text">
                         <i class="fas fa-search"></i>
-                    </a>
+                    </button>
                 </div>
             </form>
         </div>
