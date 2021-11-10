@@ -24,6 +24,7 @@ public class ClientOrdersServlet extends HttpServlet {
 
         for(BClientOrders orden : listaOrdenes){
             clientOrdersDao.agregarOrderDetails(orden);
+            clientOrdersDao.agregarTimeDiff(orden);
         }
 
         request.setAttribute("pagActual",pagina);

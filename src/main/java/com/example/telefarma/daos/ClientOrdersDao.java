@@ -41,10 +41,10 @@ public class ClientOrdersDao {
                 BClientOrders clientOrders = new BClientOrders();
                 clientOrders.setIdOrder(rs.getString(1));
                 clientOrders.setFarmaciaAsociada(rs.getString(2));
-                String datetime_recojo = rs.getString(3);
-                clientOrders.setFechaRecojo(datetime_recojo.substring(0,10));
-                clientOrders.setHoraRecojo(datetime_recojo.substring(11,16));
-                //No envia fecha de orden al bean
+                String dtOrden = rs.getString(3);
+                clientOrders.setFechaOrden(dtOrden.substring(0,10)+" - "+dtOrden.substring(11,16));
+                String dtRecojo = rs.getString(4);
+                clientOrders.setFechaRecojo(dtRecojo.substring(0,10)+" - "+dtRecojo.substring(11,16));
                 clientOrders.setTotal(rs.getDouble(5));
                 clientOrders.setEstado(rs.getString(6));
                 listaOrdenes.add(clientOrders);
@@ -90,5 +90,37 @@ public class ClientOrdersDao {
         }
 
         orden.setListaDetails(listaDetails);
+    }
+
+    public void agregarTimeDiff(BClientOrders orden){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        String sql = "select pickUpDate,timestampdiff(SQL_TSI_HOUR,pickUpDate,now()) \n" +
+                "from telefarma.orders o \n" +
+                "where o.idOrder='"+orden.getIdOrder()+"' \n"+
+                "having now()<pickUpDate \n" +
+                "union \n" +
+                "select pickUpDate, (-1)*timestampdiff(SQL_TSI_HOUR,pickUpDate,now()) \n" +
+                "from telefarma.orders o \n" +
+                "where o.idOrder='"+orden.getIdOrder()+"' \n"+
+                "having now()>pickUpDate;";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while(rs.next()) {
+                orden.setTimeDiff(rs.getInt(2));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -6,9 +6,10 @@ public class BClientOrders {
     private String idOrder;
     private String farmaciaAsociada;
     private String fechaRecojo;
-    private String horaRecojo;
+    private String fechaOrden;
     private double total;
     private String estado;
+    private int timeDiff;
     ArrayList<BOrderDetails> listaDetails;
 
     public String getIdOrder() {
@@ -35,12 +36,12 @@ public class BClientOrders {
         this.fechaRecojo = fechaRecojo;
     }
 
-    public String getHoraRecojo() {
-        return horaRecojo;
+    public String getFechaOrden() {
+        return fechaOrden;
     }
 
-    public void setHoraRecojo(String horaRecojo) {
-        this.horaRecojo = horaRecojo;
+    public void setFechaOrden(String fechaOrden) {
+        this.fechaOrden = fechaOrden;
     }
 
     public double getTotal() {
@@ -57,6 +58,14 @@ public class BClientOrders {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public int getTimeDiff() {
+        return timeDiff;
+    }
+
+    public void setTimeDiff(int timeDiff) {
+        this.timeDiff = timeDiff;
     }
 
     public ArrayList<BOrderDetails> getListaDetails() {
