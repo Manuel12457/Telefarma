@@ -3,6 +3,7 @@
 <jsp:useBean id="listaProductosBusqueda" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BProductosBuscador>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
+<%String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +20,11 @@
     </head>
     <body>
         <!--Barra de Navegación Superior-->
-        <jsp:include page="BarraSuperiorCliente.jsp"/>
+        <jsp:include page="../BarraSuperior.jsp">
+            <jsp:param name="tipoUsuario" value="cliente"/>
+            <jsp:param name="nombre" value="Paco Perez"/>
+            <jsp:param name="servletBusqueda" value="ClientProductsServlet"/>
+        </jsp:include>
 
         <!--Contenido-->
         <main>
@@ -30,7 +35,7 @@
                 <div class="album pb-2">
                     <!--Título-->
                     <div class="row mb-3">
-                        <h4 class="pb-2 border-bottom d-flex justify-content-start" style="color: #f57f00">Resultados de búsqueda: "Producto"</h4>
+                        <h4 class="pb-2 border-bottom d-flex justify-content-start" style="color: #f57f00">Resultados de búsqueda: "<%=busqueda%>"</h4>
                     </div>
                     <!--Productos-->
                     <div class="container">
@@ -66,10 +71,13 @@
                 </div>
             </div>
             <!--Paginación-->
+            <%
+                String servlet = "/ClientProductsServlet?busqueda="+busqueda+"&";
+            %>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
-                <jsp:param name="servlet" value="/?"/>
+                <jsp:param name="servlet" value="<%=servlet%>"/>
             </jsp:include>
         </main>
 
