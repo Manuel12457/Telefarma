@@ -1,6 +1,5 @@
 package com.example.telefarma.servlets;
 
-import com.example.telefarma.daos.ClientProductsDao;
 import com.example.telefarma.daos.InfoFarmaciayProductosDao;
 
 import javax.servlet.*;

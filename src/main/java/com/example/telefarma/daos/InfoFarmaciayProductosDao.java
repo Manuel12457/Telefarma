@@ -74,6 +74,7 @@ public class InfoFarmaciayProductosDao {
         String sql = "select p.idProduct, p.name,stock,price,photo from telefarma.product p\n" +
                 "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
                 "where lower(p.name) like '%" + busqueda + "%' and f.idPharmacy=" + idFarmacia + "\n" +
+                "order by name\n" +
                 "limit " + limite*pagina + ","+limite+";";
 
         try {
