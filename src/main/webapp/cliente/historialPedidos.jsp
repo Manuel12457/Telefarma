@@ -155,9 +155,9 @@
                                                 </td>
                                                 <td colspan="2"><%=details.getProducto()%>
                                                 </td>
-                                                <td colspan="2">s/ <%=details.getPrecioUnit()%>
+                                                <td colspan="2">s/ <%=String.format("%.2f",details.getPrecioUnit())%>
                                                 </td>
-                                                <td colspan="2">s/ <%=details.getPrecioTotal()%>
+                                                <td colspan="2">s/ <%=String.format("%.2f",details.getPrecioTotal())%>
                                                 </td>
                                             </tr>
                                             <%
