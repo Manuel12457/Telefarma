@@ -112,10 +112,10 @@
                                                 <% /*Para cálculo de precio*/
                                                     Double precioTotal = 0.0;
                                                     for (BOrderDetails details : orden.getListaDetails()) {
-                                                        precioTotal = precioTotal + details.getPrecioUnit();
+                                                        precioTotal = precioTotal + details.getPrecioTotal();
                                                     }
                                                 %>
-                                                <td>s/ <%=precioTotal%>
+                                                <td>S/. <%=String.format("%.2f",precioTotal)%>
                                                 </td>
                                                 <%
                                                     String estado = orden.getEstado();
@@ -162,7 +162,7 @@
                                             </tr>
                                             <%
                                                 }
-                                                if (!estado.equals("Pendiente")) {
+                                                if (estado.equals("Pendiente")) {
                                             %>
                                             <tr id="dt-<%=count%>" class="collapse cell-1 row-child">
                                                 <td colspan="7">
