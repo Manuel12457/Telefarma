@@ -16,15 +16,16 @@ public class PharmacyAndProductsServlet extends HttpServlet {
         int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
         String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
         int idPharmacy = Integer.parseInt(request.getParameter("idPharmacy"));
+        int limiteProductos = 16;
 
         InfoFarmaciayProductosDao infoFarmaciayProductos = new InfoFarmaciayProductosDao();
         request.setAttribute("idFarma",idPharmacy);
         request.setAttribute("infoFarmacia",infoFarmaciayProductos.datosFarmacia(idPharmacy));
-        request.setAttribute("productosDeLaFarmacia", infoFarmaciayProductos.listaProductosFarmacia(pagina,busqueda,idPharmacy));
+        request.setAttribute("productosDeLaFarmacia", infoFarmaciayProductos.listaProductosFarmacia(pagina, busqueda,idPharmacy,limiteProductos));
 
-        int limiteProductos = 16;
+
         request.setAttribute("pagActual",pagina);
-        int pagTotales= (int)Math.ceil((double)infoFarmaciayProductos.listaProductosFarmacia(pagina,busqueda,idPharmacy).size()/limiteProductos);
+        int pagTotales= (int)Math.ceil((double)infoFarmaciayProductos.cantidadProductos(busqueda,idPharmacy)/limiteProductos);
         request.setAttribute("pagTotales",pagTotales);
 
         RequestDispatcher view = request.getRequestDispatcher("/cliente/productosFarmacia.jsp");

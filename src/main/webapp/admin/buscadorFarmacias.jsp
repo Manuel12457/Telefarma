@@ -23,6 +23,8 @@
       <jsp:include page="../BarraSuperior.jsp">
         <jsp:param name="tipoUsuario" value="admin"/>
         <jsp:param name="nombre" value="Admin"/>
+        <jsp:param name="servletBusqueda" value="PharmacyAdminServlet?"/>
+        <jsp:param name="busquedaPlaceholder" value="Busca una farmacia"/>
       </jsp:include>
 
     <main>
@@ -34,7 +36,6 @@
           <h3 class="text-dark">Farmacias registradas</h3>
         </div>
         <%
-          byte byte0 = 0;
           String[] imgs = new String[3];
           imgs[0]= "/res/img/national-cancer-institute-byGTytEGjBo-unsplash.jpg";
           imgs[1]= "/res/img/tbel-abuseridze-eBW1nlFdZFw-unsplash.jpg";

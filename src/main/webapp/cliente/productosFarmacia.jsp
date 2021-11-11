@@ -12,7 +12,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - Farmacia X</title>
+        <title>Telefarma - <%=infoFarmacia.get(0)%>></title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css" type="text/css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,12 +21,14 @@
         <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
     </head>
     <body>
-        <%String servletBusqueda="PharmacyAndProductsServlet?idPharmacy="+idFarma+"&";%>
+        <%String servletBusqueda="PharmacyAndProductsServlet?idPharmacy="+idFarma+"&";
+            String busquedaPlaceholder="Busca un producto en "+ infoFarmacia.get(0);%>
         <!--Barra de Navegación Superior-->
         <jsp:include page="../BarraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="Paco Perez"/>
             <jsp:param name="servletBusqueda" value="<%=servletBusqueda%>"/>
+            <jsp:param name="busquedaPlaceholder" value="<%=busquedaPlaceholder%>"/>
         </jsp:include>
 
         <!--Contenido-->
@@ -85,7 +87,7 @@
                 </div>
             </div>
             <!--Paginación-->
-            <%String servlet = "/PharmacyAdminServlet?busqueda="+busqueda+"&idPharmacy="+idFarma+"&";%>
+            <%String servlet = "/PharmacyAndProductsServlet?busqueda="+busqueda+"&idPharmacy="+idFarma+"&";%>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>

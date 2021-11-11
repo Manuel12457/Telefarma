@@ -7,7 +7,7 @@ public class BProducto {
     private String descripcion;
     private int stock;
     private double precio;
-    private int requierePrescripcion;
+    private boolean requierePrescripcion;
     private int idFarmacia;
 
     public int getIdProducto() {
@@ -50,11 +50,11 @@ public class BProducto {
         this.precio = precio;
     }
 
-    public int getRequierePrescripcion() {
+    public boolean getRequierePrescripcion() {
         return requierePrescripcion;
     }
 
-    public void setRequierePrescripcion(int requierePrescripcion) {
+    public void setRequierePrescripcion(boolean requierePrescripcion) {
         this.requierePrescripcion = requierePrescripcion;
     }
 

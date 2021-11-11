@@ -81,6 +81,13 @@ public class PharmacyAdminServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet");
                 }
                 break;
+            case "buscar":
+                String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
+
+                response.sendRedirect(request.getContextPath()+"/PharmacyAdminServlet?busqueda="+busqueda);
+                break;
+            default:
+                break;
         }
 
     }

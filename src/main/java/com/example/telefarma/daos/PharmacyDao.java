@@ -1,14 +1,78 @@
 package com.example.telefarma.daos;
 
 import com.example.telefarma.beans.BProducto;
+import com.example.telefarma.beans.BProductosBuscador;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class PharmacyDao {
 
     String user = "root";
     String pass = "root";
     String url = "jdbc:mysql://localhost:3306/telefarma";
+
+    public int cantidadProductos(String busqueda, int idFarmacia){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int cantidad = 0;
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("select count(*), p.name from product p " +
+                     "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy) " +
+                     "where lower(p.name) like '%"+busqueda +"%'and f.idPharmacy=" + idFarmacia + " ;")) {
+
+            if(rs.next()) {
+                cantidad = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cantidad;
+    }
+
+    public ArrayList<BProducto> listaProductosFarmacia(int pagina, String busqueda, int idFarmacia, int limite) {
+
+        ArrayList<BProducto> listaProductos = new ArrayList<>();
+
+        String sql = "select p.idProduct, p.name, p.description, p.stock, p.price, p.requiresPrescription from telefarma.product p\n" +
+                "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
+                "where lower(p.name) like '%" + busqueda + "%' and f.idPharmacy=" + idFarmacia + "\n" +
+                "limit " + limite*pagina + ","+limite+";";
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                BProducto producto = new BProducto();
+                producto.setIdProducto(rs.getInt(1));
+                producto.setNombre(rs.getString(2));
+                producto.setDescripcion(rs.getString(3));
+                producto.setStock(rs.getInt(4));
+                producto.setPrecio(rs.getDouble(5));
+                producto.setRequierePrescripcion(Byte.compare(rs.getByte(6), (byte) 0) != 0);
+                listaProductos.add(producto);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listaProductos;
+    }
 
     public void eliminarProducto(int idProducto, int idFarmacia) {
 
@@ -53,7 +117,7 @@ public class PharmacyDao {
             pstmt.setString(4,producto.getDescripcion());
             pstmt.setInt(5,producto.getStock());
             pstmt.setDouble(6,producto.getPrecio());
-            pstmt.setInt(7,producto.getRequierePrescripcion());
+            pstmt.setByte(7,producto.getRequierePrescripcion()?(byte)1:(byte)0);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -112,7 +176,7 @@ public class PharmacyDao {
             pstmt.setString(2,producto.getDescripcion());
             pstmt.setInt(3,producto.getStock());
             pstmt.setDouble(4,producto.getPrecio());
-            pstmt.setInt(5,producto.getRequierePrescripcion());
+            pstmt.setByte(5,producto.getRequierePrescripcion()?(byte)1:(byte)0);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {

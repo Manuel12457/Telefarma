@@ -42,14 +42,39 @@ public class InfoFarmaciayProductosDao {
 
     }
 
-    public ArrayList<BProductosBuscador> listaProductosFarmacia(int pagina, String busqueda, int idFarmacia) {
+    public int cantidadProductos(String busqueda, int idFarmacia){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int cantidad = 0;
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("select count(*), p.name from product p " +
+                     "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy) " +
+                     "where lower(p.name) like '%"+busqueda +"%'and f.idPharmacy=" + idFarmacia + " ;")) {
+
+            if(rs.next()) {
+                cantidad = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cantidad;
+    }
+
+    public ArrayList<BProductosBuscador> listaProductosFarmacia(int pagina, String busqueda, int idFarmacia,int limite) {
 
         ArrayList<BProductosBuscador> listaProductos = new ArrayList<>();
 
         String sql = "select p.idProduct, p.name,stock,price,photo from telefarma.product p\n" +
                 "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
                 "where lower(p.name) like '%" + busqueda + "%' and f.idPharmacy=" + idFarmacia + "\n" +
-                "limit " + 16*pagina + ",16;";
+                "limit " + limite*pagina + ","+limite+";";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");

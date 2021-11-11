@@ -3,7 +3,9 @@
 <%String tipoUsuario = request.getParameter("tipoUsuario");
 String nombre = request.getParameter("nombre");
 String servletBusqueda = request.getParameter("servletBusqueda");
-String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");%>
+String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
+String busquedaPlaceholder = request.getParameter("busquedaPlaceholder");%>
+
 
 <!--Cabecera Principal cliente-->
 <nav class="navbar navbar-expand-md fixed-top shadow-sm justify-content-center bg-white">
@@ -19,7 +21,7 @@ String busqueda = request.getParameter("busqueda") == null ? "" : request.getPar
             <form method="post" action="<%=request.getContextPath()%>/<%=servletBusqueda%>action=buscar">
                 <div class="input-group">
                     <div style="width:40%">
-                        <input type="search" name="busqueda" class="form-control" placeholder="Busca un producto" value ="<%=busqueda%>"/>
+                        <input type="search" name="busqueda" class="form-control" placeholder="<%=busquedaPlaceholder%>" value ="<%=busqueda%>"/>
                     </div>
                     <button role="button" class="btn btn-tele border-start-1 input-group-text">
                         <i class="fas fa-search"></i>
