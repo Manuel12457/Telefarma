@@ -12,12 +12,17 @@ public class PharmacyDao {
     String pass = "root";
     String url = "jdbc:mysql://localhost:3306/telefarma";
 
-    public int cantidadProductos(String busqueda, int idFarmacia){
+    private void agregarClase(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public int cantidadProductos(String busqueda, int idFarmacia){
+
+        this.agregarClase();
 
         int cantidad = 0;
 
@@ -46,11 +51,7 @@ public class PharmacyDao {
                 "where lower(p.name) like '%" + busqueda + "%' and f.idPharmacy=" + idFarmacia + "\n" +
                 "limit " + limite*pagina + ","+limite+";";
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
              Statement stmt = conn.createStatement();
@@ -76,11 +77,7 @@ public class PharmacyDao {
 
     public void eliminarProducto(int idProducto, int idFarmacia) {
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         String sql = "delete from telefarma.product where (idProduct=?) and (idPharmacy=?);";
 
@@ -99,11 +96,7 @@ public class PharmacyDao {
 
     public void registrarProducto(BProducto producto) {
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         String sql = "insert into telefarma.product (idProduct,idPharmacy,name,description,stock,price,requiresPrescription)\n" +
                 "values (?,?,?,?,?,?,?)";
@@ -128,11 +121,7 @@ public class PharmacyDao {
 
     public boolean posibleEliminarProducto(int idProducto) {
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         boolean esPosibleEliminarProducto = true;
 
@@ -161,11 +150,7 @@ public class PharmacyDao {
 
     public void editarProducto(BProducto producto) {
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         String sql = "update telefarma.product set name=?,description=?,stock=?,price=?,requiresPrescription=?";
 

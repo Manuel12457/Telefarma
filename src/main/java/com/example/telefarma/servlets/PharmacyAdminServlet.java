@@ -54,6 +54,14 @@ public class PharmacyAdminServlet extends HttpServlet {
                 view2.forward(request,response);
                 break;
 
+            case "noban":
+
+                break;
+
+            case "ban":
+
+                break;
+
         }
 
 
@@ -85,6 +93,18 @@ public class PharmacyAdminServlet extends HttpServlet {
                 String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
 
                 response.sendRedirect(request.getContextPath()+"/PharmacyAdminServlet?busqueda="+busqueda);
+                break;
+            case "banear":
+
+                int idFarma = request.getParameter("id") == null ? 1 : Integer.parseInt(request.getParameter("id"));
+
+                if(pharmacyAdminDao.conPedidosPendientes(idFarma)){
+                    response.sendRedirect(request.getContextPath()+"/PharmacyAdminServlet?accion=noban");
+                }else{
+                    String razon = request.getParameter("razon") == null ? "" : request.getParameter("razon");
+                    pharmacyAdminDao.banearFarmacia(idFarma,razon);
+                    response.sendRedirect(request.getContextPath()+"/PharmacyAdminServlet?accion=ban");
+                }
                 break;
             default:
                 break;

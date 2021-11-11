@@ -14,9 +14,19 @@ public class PharmacyAdminDao {
     String pass = "root";
     String url = "jdbc:mysql://localhost:3306/telefarma";
 
+    private void agregarClase(){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     public ArrayList<String> listarDistritosLimite(int paginaDistritoAdmin, String busqueda, int limite) {
 
         ArrayList<String> listaDistritosPagina = new ArrayList<>();
+
+        this.agregarClase();
 
         /*OBTENGO TODOS LOS DISTRITOS CON FARMACIAS QUE COINCIDAN CON LA BUSQUEDA*/
         String sqlObtenerDistritos = "select f.District_name from telefarma.pharmacy f \n"+
@@ -43,11 +53,7 @@ public class PharmacyAdminDao {
 
     public ArrayList<BFarmaciasAdmin> listarFarmaciasAdminPorDistrito(String distrito, String busqueda) {
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         ArrayList<BFarmaciasAdmin> listaFarmaciasAdminPorDistrito = new ArrayList<>();
 
@@ -80,11 +86,7 @@ public class PharmacyAdminDao {
 
     public ArrayList<String> listarDistritosEnSistema() {
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         ArrayList<String> listaDistritos = new ArrayList<>();
 
@@ -110,11 +112,7 @@ public class PharmacyAdminDao {
 
         boolean correoUnico = true;
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         String sql = "select idClient as 'id',mail,'client' as 'tipo' from telefarma.client\n" +
                 "where mail = ?\n" +
@@ -151,11 +149,7 @@ public class PharmacyAdminDao {
 
         boolean rucUnico = true;
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         String sql = "select idPharmacy,RUC from pharmacy\n" +
                 "where RUC = ?;";
@@ -182,11 +176,7 @@ public class PharmacyAdminDao {
 
     public void registrarFarmacia(String ruc, String nombre, String correo, String direccion, String distrito) {
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         String sql = "insert into telefarma.pharmacy (RUC,name,mail,address,District_name)\n" +
                 "values(?,?,?,?,?);";
@@ -208,37 +198,44 @@ public class PharmacyAdminDao {
 
     }
 
-    public boolean farmaciaPuedeBanearse(int idFarmacia) {
+    public boolean conPedidosPendientes(int idPharmacy){
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        boolean pendiente = false;
 
-        boolean farmaciaPuedeBanearse = true;
+        this.agregarClase();
 
-        String sql = "select o.idOrder,o.status from telefarma.orders o\n" +
-                "inner join telefarma.orderdetails od on (od.idOrder=o.idOrder)\n" +
-                "inner join telefarma.product p on (p.idProduct=od.idProduct)\n" +
-                "where o.status='Pendiente' and p.idPharmacy = ?\n" +
+        String sql = "select o.idOrder,o.status from orders o\n" +
+                "inner join orderdetails od on (od.idOrder=o.idOrder)\n" +
+                "inner join product p on (p.idProduct=od.idProduct)\n" +
+                "where o.status='Pendiente' and p.idPharmacy="+idPharmacy+"\n" +
                 "group by o.idOrder;";
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
-             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
 
-            pstmt.setInt(1,idFarmacia);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) { /*Se han encontrado resultados. No puede banearse*/
-                    farmaciaPuedeBanearse = false;
-                }
+            if(rs.next()){
+                pendiente = true;
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return farmaciaPuedeBanearse;
+        return pendiente;
     }
 
+    public void banearFarmacia(int id, String razon){
+        String sql = "update pharmacy set isBanned=1, banReason='"+razon+"'\n" +
+                "where idPharmacy="+id+";";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();){
+
+            stmt.executeUpdate(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
