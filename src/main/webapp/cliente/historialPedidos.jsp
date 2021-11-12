@@ -109,13 +109,7 @@
                                                 </td>
                                                 <td><%=orden.getFechaRecojo()%>
                                                 </td>
-                                                <% /*Para cálculo de precio*/
-                                                    Double precioTotal = 0.0;
-                                                    for (BOrderDetails details : orden.getListaDetails()) {
-                                                        precioTotal = precioTotal + details.getPrecioTotal();
-                                                    }
-                                                %>
-                                                <td>S/. <%=String.format("%.2f",precioTotal)%>
+                                                <td>S/. <%=String.format("%.2f",orden.getTotal())%>
                                                 </td>
                                                 <%
                                                     String estado = orden.getEstado();
@@ -167,7 +161,7 @@
                                             <tr id="dt-<%=count%>" class="collapse cell-1 row-child">
                                                 <td colspan="7">
                                                     <button type="button"
-                                                            class="btn btn-danger <%=orden.getTimeDiff()>1 ? "" : "disabled"%>">
+                                                            class="btn btn-danger <%=orden.getTimeDiff()>0 ? "" : "disabled"%>">
                                                         Cancelar pedido
                                                     </button>
                                                 </td>

@@ -100,15 +100,9 @@ public class ClientOrdersDao {
         }
 
 
-        String sql = "select pickUpDate,timestampdiff(SQL_TSI_HOUR,pickUpDate,now()) \n" +
+        String sql = "select pickUpDate,timestampdiff(SQL_TSI_HOUR,now(),pickUpDate) \n" +
                 "from telefarma.orders o \n" +
-                "where o.idOrder='"+orden.getIdOrder()+"' \n"+
-                "having now()<pickUpDate \n" +
-                "union \n" +
-                "select pickUpDate, (-1)*timestampdiff(SQL_TSI_HOUR,pickUpDate,now()) \n" +
-                "from telefarma.orders o \n" +
-                "where o.idOrder='"+orden.getIdOrder()+"' \n"+
-                "having now()>pickUpDate;";
+                "where o.idOrder='"+orden.getIdOrder()+"' ;";
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
              Statement stmt = conn.createStatement();

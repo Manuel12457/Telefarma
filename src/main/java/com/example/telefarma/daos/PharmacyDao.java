@@ -1,7 +1,6 @@
 package com.example.telefarma.daos;
 
-import com.example.telefarma.beans.BProducto;
-import com.example.telefarma.beans.BProductosBuscador;
+import com.example.telefarma.beans.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -73,6 +72,136 @@ public class PharmacyDao {
         }
 
         return listaProductos;
+    }
+
+    public ArrayList<BPharmacyOrders> listarOrdenes(int pagina, String busqueda, int limite, int id){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<BPharmacyOrders> listaOrdenes = new ArrayList<>();
+
+        String sql = "select o.idOrder,o.status,concat(c.name,' ',c.lastName) as 'Cliente'," +
+                "o.orderDate,o.pickUpDate,sum(p.price*od.quantity) as 'total'\n" +
+                "from telefarma.orders o \n" +
+                "inner join orderdetails od on (od.idOrder=o.idOrder) \n" +
+                "inner join product p on (p.idProduct=od.idProduct) \n" +
+                "inner join client c on (o.idClient=c.idClient) \n" +
+                "where p.idPharmacy="+id+" and o.idOrder like '%"+busqueda+"%' \n" +
+                "group by o.idOrder \n" +
+                "order by o.orderDate desc \n" +
+                "limit " + pagina*limite + "," + limite + ";";
+
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while(rs.next()) {
+                BPharmacyOrders pharmacyOrdersOrders = new BPharmacyOrders();
+                pharmacyOrdersOrders.setIdOrder(rs.getString(1));
+                pharmacyOrdersOrders.setEstado(rs.getString(2));
+                pharmacyOrdersOrders.setNombreCliente(rs.getString(3));
+                String dtOrden = rs.getString(4);
+                pharmacyOrdersOrders.setFechaOrden(dtOrden.substring(0,10)+" - "+dtOrden.substring(11,16));
+                String dtRecojo = rs.getString(5);
+                pharmacyOrdersOrders.setFechaRecojo(dtRecojo.substring(0,10)+" - "+dtRecojo.substring(11,16));
+                pharmacyOrdersOrders.setTotal(rs.getDouble(6));
+                listaOrdenes.add(pharmacyOrdersOrders);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listaOrdenes;
+    }
+
+    public void agregarOrderDetails(BPharmacyOrders orden){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<BOrderDetails> listaDetails = new ArrayList<>();
+
+        String sql = "select o.idOrder,od.quantity,p.name,p.price,p.price*od.quantity as 'totalProducto' \n" +
+                "from telefarma.orders o \n" +
+                "inner join orderdetails od on (od.idOrder=o.idOrder) \n" +
+                "inner join product p on (p.idProduct=od.idProduct) \n" +
+                "where o.idOrder='"+orden.getIdOrder()+"';";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while(rs.next()) {
+                BOrderDetails orderDetails = new BOrderDetails();
+                orderDetails.setUnidades(rs.getInt(2));
+                orderDetails.setProducto(rs.getString(3));
+                orderDetails.setPrecioUnit(rs.getDouble(4));
+                orderDetails.setPrecioTotal(rs.getDouble(5));
+                listaDetails.add(orderDetails);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        orden.setListaDetails(listaDetails);
+    }
+
+    public void agregarDayDiff(BPharmacyOrders orden){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        String sql = "select pickUpDate,timestampdiff(SQL_TSI_DAY,pickUpDate,now()) \n" +
+                "from telefarma.orders o \n" +
+                "where o.idOrder='"+orden.getIdOrder()+"' ;";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while(rs.next()) {
+                orden.setDayDiff(rs.getInt(2));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void cambiarEstadoPedido(String nuevoEstado, String idOrder) {
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        String sql = "update orders set status=? \n" +
+                "where idOrder=?;";
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setString(1, nuevoEstado);
+            pstmt.setString(2, idOrder);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void eliminarProducto(int idProducto, int idFarmacia) {

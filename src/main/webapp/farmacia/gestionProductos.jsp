@@ -41,7 +41,7 @@
                         Productos</b></a>
                 </li>
                 <li class="nav-item ">
-                    <a class="nav-link text-dark" href="farmaciaGestion.html">Gestión de Pedidos</a>
+                    <a class="nav-link text-dark" href="<%=request.getContextPath()%>/PharmacyServlet?action=buscarPedido">Gestión de Pedidos</a>
                 </li>
             </ul>
 
