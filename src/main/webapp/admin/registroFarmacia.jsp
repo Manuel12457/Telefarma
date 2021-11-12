@@ -1,5 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
+<jsp:useBean id="noValidMail" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="noValidRUC" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="camposNoLlenados" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="datosIngresados" scope="request" type="com.example.telefarma.beans.BFarmaciasAdmin" class="com.example.telefarma.beans.BFarmaciasAdmin"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,6 +19,20 @@
             <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
     </head>
     <body>
+
+        <%
+            String valorNombre = "";
+            String valorRUC = "";
+            String valorDistrito = "";
+            String valorDireccion = "";
+            String valorCorreo = "";
+            if (datosIngresados != null) {
+            valorNombre = "value='" + datosIngresados.getNombreFarmacia() + "'";
+            valorRUC = "value='" + datosIngresados.getRUCFarmacia() + "'";
+            valorDistrito = "value='" + datosIngresados.getDistritoFarmacia() + "'";
+            valorDireccion = "value='" + datosIngresados.getDireccionFarmacia() + "'";
+            valorCorreo = "value='" + datosIngresados.getEmailFarmacia() + "'";
+            }%>
 
         <section class="vh-100 ">
             <div class="container py-4 h-100">
@@ -32,7 +50,7 @@
                                         <div class="col-md-6">
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaName">Nombre</label>
-                                                <input type="text" name="nombre" id="farmaName" class="form-control"
+                                                <input type="text" name="nombre" id="farmaName" class="form-control" <%=valorNombre%>
                                                        placeholder="Ingrese nombre de la farmacia"/>
                                             </div>
                                         </div>
@@ -40,7 +58,7 @@
                                         <div class="col-md-6">
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaMail">Correo</label>
-                                                <input type="email" name="correo" id="farmaMail" class="form-control"
+                                                <input type="email" name="correo" id="farmaMail" class="form-control" <%=valorCorreo%>
                                                        placeholder="Ingrese el mail de la farmacia"/>
                                             </div>
                                         </div>
@@ -52,7 +70,7 @@
                                         <div class="col-md-6">
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaDireccion">Dirección</label>
-                                                <input type="text" name="direccion" id="farmaDireccion" class="form-control"
+                                                <input type="text" name="direccion" id="farmaDireccion" class="form-control" <%=valorDireccion%>
                                                        placeholder="Ingrese la dirección de la farmacia"/>
                                             </div>
                                         </div>
@@ -81,7 +99,7 @@
                                         <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaRUC">RUC</label>
-                                                <input type="text" name="ruc" id="farmaRUC" class="form-control"
+                                                <input type="text" name="ruc" id="farmaRUC" class="form-control" <%=valorRUC%>
                                                        placeholder="Ingrese el RUC de la farmacia"/>
                                             </div>
                                         </div>
@@ -89,8 +107,24 @@
                                     </div>
 
                                     <div class="row row-cols-3 justify-content-center">
-                                        <input class="btn btn-tele" type="submit" value="Registrar farmacia"/>
+                                        <input class="btn btn-tele" type="submit" id="" value="Registrar farmacia"/>
                                     </div>
+                                    <br>
+                                    <%if (noValidMail == 1) { %>
+                                    <div class="alert alert-danger" role="alert">
+                                        El correo que ha ingresado ya esta en uso
+                                    </div>
+                                    <%}
+                                    if (noValidRUC == 1) { %>
+                                    <div class="alert alert-danger" role="alert">
+                                        El RUC que ha ingresado ya esta en uso
+                                    </div>
+                                    <%}
+                                    if (camposNoLlenados == 1) { %>
+                                    <div class="alert alert-danger" role="alert">
+                                        Debe llenar todos los campos
+                                    </div>
+                                    <% } %>
 
                                 </form>
                             </div>
