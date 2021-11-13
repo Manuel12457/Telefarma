@@ -1,5 +1,6 @@
 package com.example.telefarma.daos;
 
+import com.example.telefarma.beans.BDetallesProducto;
 import com.example.telefarma.beans.BProductosBuscador;
 
 import java.sql.*;
@@ -84,6 +85,45 @@ public class ClientProductsDao {
         }
 
         return listaProductosBuscador;
+    }
+
+    public BDetallesProducto obtenerDetalles(int productid) {
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        BDetallesProducto producto = new BDetallesProducto();
+
+        String sql = "select p.idProduct, p.name, ph.name,  p.description, p.stock,p.price, p.requiresPrescription from product p\n" +
+                "inner join pharmacy ph on p.idPharmacy = ph.idPharmacy\n" +
+                "where idProduct=?;";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             PreparedStatement pstmt = conn.prepareStatement(sql);){
+
+            pstmt.setInt(1,productid);
+
+            try(ResultSet rs = pstmt.executeQuery()) {
+
+                while (rs.next()) {
+                    producto.setProductid(rs.getInt(1));
+                    producto.setNombreProducto(rs.getString(2));
+                    producto.setNombreFarmacia(rs.getString(3));
+                    producto.setDescripcion(rs.getString(4));
+                    producto.setStock(rs.getInt(5));
+                    producto.setPrice(rs.getDouble(6));
+                    producto.setRequierePrescripcion(rs.getBoolean(7));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return producto;
     }
 
 }
