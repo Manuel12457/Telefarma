@@ -2,6 +2,8 @@
 <jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
 <jsp:useBean id="noValidMail" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="noValidRUC" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="noNumRUC" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="noLongRuc" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="datosIngresados" scope="request" type="com.example.telefarma.beans.BFarmaciasAdmin"/>
 
 <!DOCTYPE html>
@@ -64,16 +66,16 @@
 
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaDistrict">Distrito</label>
-                                                <select class="form-select" name="distrito" id="farmaDistrict">
+                                                <select class="form-select" name="distrito" id="farmaDistrict" required>
                                                     <%boolean distritoIngresado = false;
                                                         if (datosIngresados.getDistritoFarmacia() != null && !datosIngresados.getDistritoFarmacia().equals("")) {
                                                             distritoIngresado = true;
                                                         }%>
                                                     <%if (distritoIngresado) { %>
                                                     <option selected><%=datosIngresados.getDistritoFarmacia()%></option>
-                                                    <option>Ingrese el distrito de la farmacia</option>
+                                                    <option value="">Ingrese el distrito de la farmacia</option>
                                                     <%} else { %>
-                                                    <option selected>Ingrese el distrito de la farmacia</option>
+                                                    <option value="" selected>Ingrese el distrito de la farmacia</option>
                                                     <%}%>
                                                     <%
                                                         for (String distrito : listaDistritosSistema){
@@ -98,7 +100,7 @@
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaRUC">RUC</label>
                                                 <input type="text" name="ruc" id="farmaRUC" class="form-control"
-                                                       placeholder="Ingrese el RUC de la farmacia" value="<%=datosIngresados.getRUCFarmacia()%>" required="required" maxlength="8"/>
+                                                       placeholder="Ingrese el RUC de la farmacia" value="<%=datosIngresados.getRUCFarmacia()%>" required="required" maxlength="11"/>
                                             </div>
                                         </div>
 
@@ -119,7 +121,22 @@
                                         El RUC que ha ingresado ya esta en uso
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
+                                    <%}
+                                        if (noNumRUC == 1) { %>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        El RUC debe contener únicamente números
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                    <%}
+                                        if (noLongRuc == 1) { %>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        El RUC debe contener 11 números
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
                                     <%}%>
+
+
+
 
                                 </form>
                             </div>

@@ -65,6 +65,8 @@ public class PharmacyAdminServlet extends HttpServlet {
 
                 request.setAttribute("noValidMail",0);
                 request.setAttribute("noValidRUC",0);
+                request.setAttribute("noNumRUC",0);
+                request.setAttribute("noLongRuc",0);
                 request.setAttribute("listaDistritosSistema", distritosSistema);
                 BFarmaciasAdmin f = new BFarmaciasAdmin();
                 request.setAttribute("datosIngresados", f);
@@ -93,8 +95,18 @@ public class PharmacyAdminServlet extends HttpServlet {
 
                 boolean correoValido = pharmacyAdminDao.validarCorreoFarmacia(f.getEmailFarmacia());
                 boolean rucValido = pharmacyAdminDao.validarRUCFarmacia(f.getRUCFarmacia());
+                boolean rucNumero = false;
+                boolean longitudRuc = f.getRUCFarmacia().length() == 11;
 
-                if (correoValido && rucValido) {
+                try {
+                    long rucNum = Long.parseLong(f.getRUCFarmacia());
+                    rucNumero = true;
+                    System.out.println("ES UN NUMERO");
+                } catch (NumberFormatException e) {
+                    System.out.println("NO ES UN NUMERO");
+                }
+
+                if (correoValido && rucValido && rucNumero && longitudRuc) {
                     String estadoRegistro = pharmacyAdminDao.registrarFarmacia(f.getRUCFarmacia(),f.getNombreFarmacia(),f.getEmailFarmacia(),f.getDireccionFarmacia(),f.getDistritoFarmacia());
                     response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet?registro=" + estadoRegistro);
                 } else {
@@ -108,6 +120,16 @@ public class PharmacyAdminServlet extends HttpServlet {
                         request.setAttribute("noValidRUC",1);
                     } else {
                         request.setAttribute("noValidRUC",0);
+                    }
+                    if (!rucNumero) {
+                        request.setAttribute("noNumRUC",1);
+                    } else {
+                        request.setAttribute("noNumRUC",0);
+                    }
+                    if (!longitudRuc) {
+                        request.setAttribute("noLongRuc",1);
+                    } else {
+                        request.setAttribute("noLongRuc",0);
                     }
 
                     ArrayList<String> distritosSistema = pharmacyAdminDao.listarDistritosEnSistema();
