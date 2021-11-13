@@ -34,6 +34,15 @@ public class PharmacyAdminServlet extends HttpServlet {
                 request.setAttribute("numDistritos", limitedistritos);
                 request.setAttribute("listaDistritosAMostrar", distritos);
 
+                String resultado = request.getParameter("result") == null ? "" : request.getParameter("result");
+                int result = 0;
+                if(resultado.equals("ban")){
+                    result = 1;
+                }else if(resultado.equals("noban")){
+                    result = 2;
+                }
+                request.setAttribute("resultado",result);
+
                 ArrayList<ArrayList<BFarmaciasAdmin>> listaListaFarmacias = new ArrayList<ArrayList<BFarmaciasAdmin>>();
 
                 for (String d : distritos) {
@@ -57,13 +66,6 @@ public class PharmacyAdminServlet extends HttpServlet {
                 view2.forward(request,response);
                 break;
 
-            case "noban":
-
-                break;
-
-            case "ban":
-
-                break;
             case "errorRegistro":
 
                 BFarmaciasAdmin f = new BFarmaciasAdmin();
@@ -136,6 +138,18 @@ public class PharmacyAdminServlet extends HttpServlet {
 
                 response.sendRedirect(request.getContextPath()+"/PharmacyAdminServlet?busqueda="+busqueda);
                 break;
+
+            case "banear":
+
+                int idFarma = request.getParameter("id") == null ? 1 : Integer.parseInt(request.getParameter("id"));
+
+                if(pharmacyAdminDao.conPedidosPendientes(idFarma)){
+                    response.sendRedirect(request.getContextPath()+"/PharmacyAdminServlet?result=noban");
+                }else{
+                    String razon = request.getParameter("razon") == null ? "" : request.getParameter("razon");
+                    pharmacyAdminDao.banearFarmacia(idFarma,razon);
+                    response.sendRedirect(request.getContextPath()+"/PharmacyAdminServlet?result=ban");
+                }
             default:
                 break;
         }

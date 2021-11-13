@@ -4,6 +4,7 @@
 <jsp:useBean id="listaListaFarmacias" scope="request" type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BFarmaciasAdmin>>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="resultado" scope="request" type="java.lang.Integer"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -17,6 +18,7 @@
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
       <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
+
   </head>
   <body>
     <%--Cabecera de admin--%>
@@ -28,6 +30,15 @@
       </jsp:include>
 
     <main>
+      <%if(resultado==1){%>
+        <div class="alert alert-success" role="alert">
+          La farmacia fue baneada con éxito
+        </div>
+      <%}else if(resultado==2){%>
+        <div class="alert alert-danger" role="alert">
+          La farmacia tiene al menos un pedido pendiente. Intentalo de nuevo más tarde
+        </div>
+      <%}%>
       <!--Alinear cabecera con contenido-->
       <div class="card-header my-5"></div>
       <!--Farmacias-->
@@ -81,7 +92,7 @@
                       <%
                         if(Byte.compare(farmacia.getIsBanned(), (byte)0)==0){
                       %>
-                      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#motivoBloqueo">Bloquear</button>
+                      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#motivoBloqueo" data-bs-whatever="<%=farmacia.getIdPharmacy()%>">Bloquear</button>
                       <button type="button" class="btn btn-light" disabled>Desbloquear</button>
                       <%}else {%>
                       <button type="button" class="btn btn-light" disabled >Bloquear</button>
@@ -120,25 +131,42 @@
             <h5 class="modal-title" id="conf_eliminar">Bloquear farmacia</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
-
-            <div class="form-outline">
-              <label class="form-label" for="bloqueoFarmacia">
-                Escriba el motivo del bloqueo de la farmacia:
-              </label>
-              <textarea type="tel" id="bloqueoFarmacia"
-                        class="form-control"></textarea>
+          <form method="post">
+            <div class="modal-body">
+              <div class="form-outline">
+                <label class="form-label" for="bloqueoFarmacia">
+                  Escriba el motivo del bloqueo de la farmacia:
+                </label>
+                <textarea type="tel" id="bloqueoFarmacia" name="razon" class="form-control"></textarea>
+              </div>
+              <br>
+              ¿Está seguro que desea bloquearla?
             </div>
-            <br>
-            ¿Está seguro que desea bloquearla?
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-danger">Bloquear Farmacia</button>
-          </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+              <button role="button" class="btn btn-danger border-start-1 input-group-text">
+                  Bloquear
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
+
+      <script>
+        var exampleModal = document.getElementById('motivoBloqueo')
+        exampleModal.addEventListener('show.bs.modal', function (event) {
+          // Activa la funcion cuando se pulsa el boton
+          var button = event.relatedTarget
+          // Se obtienee el id de la farmacia
+          var idFarmacia = button.getAttribute('data-bs-whatever')
+          // Se ubica la seccion form del modal
+          var modalForm = exampleModal.querySelector('form')
+          // Se le indica al form el id de la farmacia
+          modalForm.action = "<%=request.getContextPath()%>/PharmacyAdminServlet?action=banear&id="+idFarmacia
+          console.log(modalForm.action)
+        })
+      </script>
 
     <!--Paginación-->
     <%
