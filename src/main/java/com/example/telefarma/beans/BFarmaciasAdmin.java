@@ -1,11 +1,11 @@
 package com.example.telefarma.beans;
 
 public class BFarmaciasAdmin {
-    private String nombreFarmacia;
-    private String direccionFarmacia;
-    private String emailFarmacia;
-    private String RUCFarmacia;
-    private String distritoFarmacia;
+    private String nombreFarmacia = "";
+    private String direccionFarmacia = "";
+    private String emailFarmacia = "";
+    private String RUCFarmacia = "";
+    private String distritoFarmacia = "";
     private byte isBanned;
     private int idPharmacy;
 
