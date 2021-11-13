@@ -314,7 +314,7 @@ public class PharmacyDao {
 
         this.agregarClase();
 
-        String sql = "update telefarma.product set name=?,description=?,stock=?,price=?,requiresPrescription=?";
+        String sql = "update telefarma.product set name=?,description=?,stock=?,price=?,requiresPrescription=? where idProduct=?";
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
@@ -324,6 +324,7 @@ public class PharmacyDao {
             pstmt.setInt(3,producto.getStock());
             pstmt.setDouble(4,producto.getPrecio());
             pstmt.setByte(5,producto.getRequierePrescripcion()?(byte)1:(byte)0);
+            pstmt.setDouble(6,producto.getIdProducto());
             pstmt.executeUpdate();
 
         } catch (SQLException e) {

@@ -95,7 +95,7 @@
                 </div>
                 <!--Botones de editar y eliminar-->
                 <div class="col-sm-1 mt-5 d-none d-md-block text-center">
-                    <a href="farmaciaEditarProducto.html">
+                    <a href="<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&&productid=<%=producto.getIdProducto()%>">
                         <i class="far fa-edit btn-tele p-1 rounded"></i>
                     </a>
                     <hr class="my-1" style="background-color: white">

@@ -1,9 +1,6 @@
 package com.example.telefarma.servlets;
 
-import com.example.telefarma.beans.BClientOrders;
-import com.example.telefarma.beans.BFarmaciasAdmin;
-import com.example.telefarma.beans.BPharmacyOrders;
-import com.example.telefarma.beans.BProducto;
+import com.example.telefarma.beans.*;
 import com.example.telefarma.daos.ClientOrdersDao;
 import com.example.telefarma.daos.ClientProductsDao;
 import com.example.telefarma.daos.PharmacyAdminDao;
@@ -71,6 +68,13 @@ public class PharmacyServlet extends HttpServlet {
             case "registrarProducto":
                 RequestDispatcher view2 = request.getRequestDispatcher("/farmacia/registrarProducto.jsp");
                 view2.forward(request,response);
+            case "editarProducto":
+                ClientProductsDao clientProductsDao = new ClientProductsDao();
+                int producid  =  request.getParameter("productid")==null? 1 : Integer.parseInt(request.getParameter("productid"));
+                BDetallesProducto producto = clientProductsDao.obtenerDetalles(producid);
+                request.setAttribute("producto", producto);
+                RequestDispatcher view3 = request.getRequestDispatcher("/farmacia/editarProducto.jsp");
+                view3.forward(request,response);
                 break;
             case "errorRegistro":
                 String nombre = request.getParameter("nombre");
@@ -128,7 +132,7 @@ public class PharmacyServlet extends HttpServlet {
 
                     pharmacyDao.registrarProducto(p);
                     int idProduct = pharmacyDao.retornarUltimaIdProducto(idFarmacia);
-                    if(request.getPart("imagenProducto")!=null){
+                    if(request.getPart("imagenProducto").getSize()!=0){
                         Part imagenProductoPart = request.getPart("imagenProducto");
                         InputStream imagenProductoContent = imagenProductoPart.getInputStream();
                         pharmacyDao.anadirImagenProducto(idProduct,imagenProductoContent);
@@ -136,7 +140,42 @@ public class PharmacyServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath()+"/PharmacyServlet");
                 }
                 break;
+            case "editarProducto":
+                BProducto ep = new BProducto();
+                if(request.getParameter("nombre")==null ||
+                        request.getParameter("stock")==null ||
+                        request.getParameter("precio")==null){
+                    String redirectURL = request.getContextPath()+"/PharmacyServlet?action=errorRegistro";
+                    if(request.getParameter("nombre")!=null){
+                        redirectURL=redirectURL+"&nombre="+request.getParameter("nombre");
+                    }
+                    if(request.getParameter("stock")!=null){
+                        redirectURL=redirectURL+"&stock="+request.getParameter("stock");
+                    }
+                    if(request.getParameter("precio")!=null){
+                        redirectURL=redirectURL+"&precio="+request.getParameter("precio");
+                    }
+                    response.sendRedirect(redirectURL);
+                }else{
+                    ep.setIdProducto(Integer.parseInt(request.getParameter("productid")));
+                    ep.setNombre(request.getParameter("nombre"));
+                    ep.setDescripcion(request.getParameter("descripcion"));
+                    ep.setStock(Integer.parseInt(request.getParameter("stock")));
+                    ep.setPrecio(Double.parseDouble(request.getParameter("precio")));
+                    ep.setRequierePrescripcion(request.getParameter("requiereReceta").equals("true"));
+                    ep.setIdFarmacia(idFarmacia);
+
+                    pharmacyDao.editarProducto(ep);
+                    if(request.getPart("imagenProducto").getSize()!=0){
+                        Part imagenProductoPart = request.getPart("imagenProducto");
+                        InputStream imagenProductoContent = imagenProductoPart.getInputStream();
+                        pharmacyDao.anadirImagenProducto(Integer.parseInt(request.getParameter("productid")),imagenProductoContent);
+                    }
+                    response.sendRedirect(request.getContextPath()+"/PharmacyServlet");
+                }
+                break;
             default:
+
                 break;
         }
 
