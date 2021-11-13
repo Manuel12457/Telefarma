@@ -12,12 +12,17 @@ public class ClientOrdersDao {
     String pass = "root";
     String url = "jdbc:mysql://localhost:3306/telefarma";
 
-    public ArrayList<BClientOrders> listarOrdenes(int pagina, int limite, int id){
+    private void agregarClase(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<BClientOrders> listarOrdenes(int pagina, int limite, int id){
+
+        this.agregarClase();
 
         ArrayList<BClientOrders> listaOrdenes = new ArrayList<>();
 
@@ -58,11 +63,8 @@ public class ClientOrdersDao {
     }
 
     public void agregarOrderDetails(BClientOrders orden){
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+
+        this.agregarClase();
 
         ArrayList<BOrderDetails> listaDetails = new ArrayList<>();
 
@@ -93,12 +95,8 @@ public class ClientOrdersDao {
     }
 
     public void agregarTimeDiff(BClientOrders orden){
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
 
+        this.agregarClase();
 
         String sql = "select pickUpDate,timestampdiff(SQL_TSI_HOUR,now(),pickUpDate) \n" +
                 "from telefarma.orders o \n" +

@@ -216,6 +216,7 @@
           modalForm.action = "<%=request.getContextPath()%>/PharmacyAdminServlet?action=banear&id="+idFarmacia
           console.log(modalForm.action)
         })
+
         // Para el botón de besbloquear
         var exampleModal1 = document.getElementById('desbloquearFarmacia')
         exampleModal1.addEventListener('show.bs.modal', function (event) {

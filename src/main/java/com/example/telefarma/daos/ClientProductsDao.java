@@ -11,12 +11,17 @@ public class ClientProductsDao {
     String pass = "root";
     String url = "jdbc:mysql://localhost:3306/telefarma";
 
-    public int cantidadProductos(String busqueda){
+    private void agregarClase(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public int cantidadProductos(String busqueda){
+
+        this.agregarClase();
 
         int cantidad = 0;
 
@@ -38,11 +43,7 @@ public class ClientProductsDao {
 
     public ArrayList<BProductosBuscador> listarProductosBusqueda(int pagina, String busqueda, int limite, int id) {
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         ArrayList<BProductosBuscador> listaProductosBuscador = new ArrayList<>();
 

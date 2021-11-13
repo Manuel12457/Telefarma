@@ -11,6 +11,14 @@ public class InfoFarmaciayProductosDao {
     String pass = "root";
     String url = "jdbc:mysql://localhost:3306/telefarma";
 
+    private void agregarClase(){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     public ArrayList<String> datosFarmacia(int idFarmacia) {
 
         ArrayList<String> datos = new ArrayList<>();
@@ -18,11 +26,7 @@ public class InfoFarmaciayProductosDao {
         String sql = "select name,District_name,address from telefarma.pharmacy\n" +
                 "where idPharmacy=" + idFarmacia + ";";
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
              Statement stmt = conn.createStatement();
@@ -43,11 +47,8 @@ public class InfoFarmaciayProductosDao {
     }
 
     public int cantidadProductos(String busqueda, int idFarmacia){
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+
+        this.agregarClase();
 
         int cantidad = 0;
 
@@ -77,11 +78,7 @@ public class InfoFarmaciayProductosDao {
                 "order by name\n" +
                 "limit " + limite*pagina + ","+limite+";";
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
              Statement stmt = conn.createStatement();

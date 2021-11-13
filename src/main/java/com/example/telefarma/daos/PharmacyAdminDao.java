@@ -224,6 +224,9 @@ public class PharmacyAdminDao {
     }
 
     public void banearFarmacia(int id, String razon){
+
+        this.agregarClase();
+
         String sql = "update pharmacy set isBanned=1, banReason='"+razon+"'\n" +
                 "where idPharmacy="+id+";";
 
@@ -239,6 +242,9 @@ public class PharmacyAdminDao {
     }
 
     public void desBanearFarmacia(int id){
+
+        this.agregarClase();
+
         String sql = "update pharmacy set isBanned=0, banReason=null\n" +
                 "where idPharmacy="+id+";";
 

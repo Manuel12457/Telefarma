@@ -13,12 +13,17 @@ public class FarmacyClientDao {
     String pass = "root";
     String url = "jdbc:mysql://localhost:3306/telefarma";
 
-    public int cantidadDistritosconFarmacia(){
+    private void agregarClase(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public int cantidadDistritosconFarmacia(){
+
+        this.agregarClase();
 
         int cantidad = 0;
 
@@ -40,6 +45,8 @@ public class FarmacyClientDao {
     }
 
     public ArrayList<String> listarDistritosLimite(int paginaDistritoCliente,int limite) {
+
+        this.agregarClase();
 
         ArrayList<String> listaDistritosPagina = new ArrayList<>();
 
@@ -75,11 +82,7 @@ public class FarmacyClientDao {
 
     public ArrayList<BFarmaciasCliente> listarFarmaciasClientePorDistrito(String distrito) {
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         ArrayList<BFarmaciasCliente> listaFarmaciasClientePorDistrito = new ArrayList<>();
 
@@ -109,11 +112,7 @@ public class FarmacyClientDao {
 
     public ArrayList<BFarmaciasCliente> listarFarmaciasClientePorDistritoLimite(String distrito, int limite) {
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         ArrayList<BFarmaciasCliente> listaFarmaciasClientePorDistrito = new ArrayList<>();
 

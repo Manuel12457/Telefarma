@@ -76,11 +76,8 @@ public class PharmacyDao {
     }
 
     public ArrayList<BPharmacyOrders> listarOrdenes(int pagina, String busqueda, int limite, int id){
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+
+        this.agregarClase();
 
         ArrayList<BPharmacyOrders> listaOrdenes = new ArrayList<>();
 
@@ -121,11 +118,8 @@ public class PharmacyDao {
     }
 
     public void agregarOrderDetails(BPharmacyOrders orden){
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+
+        this.agregarClase();
 
         ArrayList<BOrderDetails> listaDetails = new ArrayList<>();
 
@@ -156,12 +150,8 @@ public class PharmacyDao {
     }
 
     public void agregarDayDiff(BPharmacyOrders orden){
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
 
+        this.agregarClase();
 
         String sql = "select pickUpDate,timestampdiff(SQL_TSI_DAY,pickUpDate,now()) \n" +
                 "from telefarma.orders o \n" +
@@ -183,11 +173,7 @@ public class PharmacyDao {
 
     public void cambiarEstadoPedido(String nuevoEstado, String idOrder) {
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.agregarClase();
 
         String sql = "update orders set status=? \n" +
                 "where idOrder=?;";
@@ -249,11 +235,8 @@ public class PharmacyDao {
     }
 
     public int retornarUltimaIdProducto(int idFarmacia){
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+
+        this.agregarClase();
 
         int idProducto=0; //Requiere inicializacion
 
