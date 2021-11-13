@@ -35,13 +35,16 @@ public class PharmacyAdminServlet extends HttpServlet {
                 request.setAttribute("listaDistritosAMostrar", distritos);
 
                 String resultado = request.getParameter("result") == null ? "" : request.getParameter("result");
-                int result = 0;
+                int resultban = 0;
                 if(resultado.equals("ban")){
-                    result = 1;
+                    resultban = 1;
                 }else if(resultado.equals("noban")){
-                    result = 2;
+                    resultban = 2;
+                }else if(resultado.equals("desban")){
+                    resultban = 3;
                 }
-                request.setAttribute("resultado",result);
+
+                request.setAttribute("resultban",resultban);
 
                 ArrayList<ArrayList<BFarmaciasAdmin>> listaListaFarmacias = new ArrayList<ArrayList<BFarmaciasAdmin>>();
 
@@ -150,7 +153,14 @@ public class PharmacyAdminServlet extends HttpServlet {
                     pharmacyAdminDao.banearFarmacia(idFarma,razon);
                     response.sendRedirect(request.getContextPath()+"/PharmacyAdminServlet?result=ban");
                 }
+                break;
+            case "desbanear":
+
+                int idFarma2 = request.getParameter("id") == null ? 1 : Integer.parseInt(request.getParameter("id"));
+                pharmacyAdminDao.desBanearFarmacia(idFarma2);
+                response.sendRedirect(request.getContextPath()+"/PharmacyAdminServlet?result=desban");
             default:
+                System.out.println("El servlet recibe un valor de action nulo");
                 break;
         }
 

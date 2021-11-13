@@ -238,4 +238,19 @@ public class PharmacyAdminDao {
         }
 
     }
+
+    public void desBanearFarmacia(int id){
+        String sql = "update pharmacy set isBanned=0, banReason=null\n" +
+                "where idPharmacy="+id+";";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();){
+
+            stmt.executeUpdate(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

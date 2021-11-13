@@ -4,7 +4,7 @@
 <jsp:useBean id="listaListaFarmacias" scope="request" type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BFarmaciasAdmin>>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="resultado" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="resultban" scope="request" type="java.lang.Integer"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -30,20 +30,24 @@
       </jsp:include>
 
     <main>
-      <%if(resultado==1){%>
-        <div class="alert alert-success" role="alert">
-          La farmacia fue baneada con éxito
-        </div>
-      <%}else if(resultado==2){%>
-        <div class="alert alert-danger" role="alert">
-          La farmacia tiene al menos un pedido pendiente. Intentalo de nuevo más tarde
-        </div>
-      <%}%>
       <!--Alinear cabecera con contenido-->
       <div class="card-header my-5"></div>
       <!--Farmacias-->
       <div class="container">
         <div class="row">
+          <%if(resultban==1){%>
+          <div class="alert alert-success" role="alert">
+            La farmacia fue baneada con éxito
+          </div>
+          <%}else if(resultban==2){%>
+          <div class="alert alert-danger" role="alert">
+            La farmacia tiene al menos un pedido pendiente. Intentalo de nuevo más tarde
+          </div>
+          <%}else if(resultban==3){%>
+          <div class="alert alert-success" role="alert">
+            La farmacia seleccionada fue baneada
+          </div>
+          <%}%>
           <h3 class="text-dark">Farmacias registradas</h3>
         </div>
         <%
@@ -96,7 +100,7 @@
                       <button type="button" class="btn btn-light" disabled>Desbloquear</button>
                       <%}else {%>
                       <button type="button" class="btn btn-light" disabled >Bloquear</button>
-                      <button type="button" class="btn btn-success" >Desbloquear</button>
+                      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#desbloquearFarmacia" data-bs-whatever="<%=farmacia.getIdPharmacy()%>">Desbloquear</button>
                       <%}%>
                     </div>
                   </div>
@@ -124,36 +128,65 @@
       <i class="fas fa-plus my-float"></i>
     </a>
 
-    <div class="modal fade" id="motivoBloqueo" tabindex="-1" aria-labelledby="conf_eliminar" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content border-0">
-          <div class="modal-header bg-danger text-white">
-            <h5 class="modal-title" id="conf_eliminar">Bloquear farmacia</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <form method="post">
-            <div class="modal-body">
-              <div class="form-outline">
-                <label class="form-label" for="bloqueoFarmacia">
-                  Escriba el motivo del bloqueo de la farmacia:
-                </label>
-                <textarea type="tel" id="bloqueoFarmacia" name="razon" class="form-control"></textarea>
+      <div class="modal fade" id="desbloquearFarmacia" tabindex="-1" aria-labelledby="desban" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content border-0">
+            <div class="modal-header bg-success text-white">
+              <h5 class="modal-title" id="desbanear">Bloquear farmacia</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post">
+              <div class="modal-body">
+                <div class="form-outline">
+                  <label class="form-label" for="bloqueoFarmacia">
+                    La siguiente farmacia se encuentra baneada. Si la desbanea, todos los clientes podrán verla y comprar sus productos.
+                  </label>
+                </div>
+                <br>
+                ¿Está seguro que desea continuar?
               </div>
-              <br>
-              ¿Está seguro que desea bloquearla?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-              <button role="button" class="btn btn-danger border-start-1 input-group-text">
-                  Bloquear
-              </button>
-            </div>
-          </form>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                <button role="button" class="btn btn-success border-start-1 input-group-text">
+                  Desbloquear
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+
+      <div class="modal fade" id="motivoBloqueo" tabindex="-1" aria-labelledby="conf_eliminar" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content border-0">
+            <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title" id="conf_eliminar">Bloquear farmacia</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post">
+              <div class="modal-body">
+                <div class="form-outline">
+                  <label class="form-label" for="bloqueoFarmacia">
+                    Escriba el motivo del bloqueo de la farmacia:
+                  </label>
+                  <textarea type="tel" id="bloqueoFarmacia" name="razon" class="form-control"></textarea>
+                </div>
+                <br>
+                ¿Está seguro que desea bloquearla?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                <button role="button" class="btn btn-danger border-start-1 input-group-text">
+                  Bloquear
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
 
       <script>
+        // Para el boton de Bloquear
         var exampleModal = document.getElementById('motivoBloqueo')
         exampleModal.addEventListener('show.bs.modal', function (event) {
           // Activa la funcion cuando se pulsa el boton
@@ -165,6 +198,19 @@
           // Se le indica al form el id de la farmacia
           modalForm.action = "<%=request.getContextPath()%>/PharmacyAdminServlet?action=banear&id="+idFarmacia
           console.log(modalForm.action)
+        })
+        // Para el botón de besbloquear
+        var exampleModal1 = document.getElementById('desbloquearFarmacia')
+        exampleModal1.addEventListener('show.bs.modal', function (event) {
+          // Activa la funcion cuando se pulsa el boton
+          var button1 = event.relatedTarget
+          // Se obtienee el id de la farmacia
+          var idFarmacia1 = button1.getAttribute('data-bs-whatever')
+          // Se ubica la seccion form del modal
+          var modalForm1 = exampleModal1.querySelector('form')
+          // Se le indica al form el id de la farmacia
+          modalForm1.action = "<%=request.getContextPath()%>/PharmacyAdminServlet?action=desbanear&id="+idFarmacia1
+          console.log(modalForm1.action)
         })
       </script>
 
