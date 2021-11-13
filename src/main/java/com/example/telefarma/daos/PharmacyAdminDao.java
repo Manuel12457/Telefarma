@@ -160,10 +160,8 @@ public class PharmacyAdminDao {
             pstmt.setString(1,ruc);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    if (rs.getString(2).equals(ruc)) {
-                        rucUnico = false;
-                    }
+                if (rs.next()) {
+                    rucUnico = false;
                 }
             }
 
@@ -174,7 +172,7 @@ public class PharmacyAdminDao {
         return rucUnico;
     }
 
-    public void registrarFarmacia(String ruc, String nombre, String correo, String direccion, String distrito) {
+    public String registrarFarmacia(String ruc, String nombre, String correo, String direccion, String distrito) {
 
         this.agregarClase();
 
@@ -194,8 +192,9 @@ public class PharmacyAdminDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return "ne";
         }
-
+        return "e";
     }
 
     public boolean conPedidosPendientes(int idPharmacy){

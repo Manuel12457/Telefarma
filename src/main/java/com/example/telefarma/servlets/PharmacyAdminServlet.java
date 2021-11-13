@@ -15,6 +15,7 @@ public class PharmacyAdminServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
+        String estadoRegistro = request.getParameter("registro") == null ? "" : request.getParameter("registro");
         int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
         String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
         PharmacyAdminDao pharmacyAdminDao = new PharmacyAdminDao();
@@ -54,6 +55,7 @@ public class PharmacyAdminServlet extends HttpServlet {
                 }
 
                 request.setAttribute("listaListaFarmacias", listaListaFarmacias);
+                request.setAttribute("estadoRegistro", estadoRegistro);
 
                 RequestDispatcher view = request.getRequestDispatcher("/admin/buscadorFarmacias.jsp");
                 view.forward(request,response);
@@ -63,51 +65,13 @@ public class PharmacyAdminServlet extends HttpServlet {
 
                 request.setAttribute("noValidMail",0);
                 request.setAttribute("noValidRUC",0);
-                request.setAttribute("camposNoLlenados",0);
                 request.setAttribute("listaDistritosSistema", distritosSistema);
+                BFarmaciasAdmin f = new BFarmaciasAdmin();
+                request.setAttribute("datosIngresados", f);
                 RequestDispatcher view2 = request.getRequestDispatcher("/admin/registroFarmacia.jsp");
                 view2.forward(request,response);
                 break;
-
-            case "errorRegistro":
-
-                BFarmaciasAdmin f = new BFarmaciasAdmin();
-                String ruc = request.getParameter("ruc") == null ? "" : request.getParameter("ruc");
-                f.setRUCFarmacia(ruc);
-                String nombre = request.getParameter("nombre") == null ? "" : request.getParameter("nombre");
-                f.setNombreFarmacia(nombre);
-                String correo = request.getParameter("correo") == null ? "" : request.getParameter("correo");
-                f.setEmailFarmacia(correo);
-                String direccion = request.getParameter("direccion") == null ? "" : request.getParameter("direccion");
-                f.setDireccionFarmacia(direccion);
-                String distrito = request.getParameter("distrito") == null ? "" : request.getParameter("distrito");
-                f.setDistritoFarmacia(distrito);
-
-                boolean camposLlenos = ruc != "" && nombre != "" && correo != "" && direccion != "" && distrito != "";
-
-                if (!pharmacyAdminDao.validarCorreoFarmacia(correo)) {
-                    request.setAttribute("noValidMail",1);
-                } else {
-                    request.setAttribute("noValidMail",0);
-                }
-                if (!pharmacyAdminDao.validarRUCFarmacia(ruc)) {
-                    request.setAttribute("noValidRUC",1);
-                } else {
-                    request.setAttribute("noValidRUC",0);
-                }
-                if (!camposLlenos) {
-                    request.setAttribute("camposNoLlenados",1);
-                } else {
-                    request.setAttribute("camposNoLlenados",0);
-                }
-
-                request.setAttribute("listaDistritosSistema", distritosSistema);
-                request.setAttribute("datosIngresados", f);
-                RequestDispatcher view3 = request.getRequestDispatcher("/admin/registroFarmacia.jsp");
-                view3.forward(request,response);
-                break;
         }
-
 
     }
 
@@ -127,13 +91,31 @@ public class PharmacyAdminServlet extends HttpServlet {
                 f.setDireccionFarmacia(request.getParameter("direccion"));
                 f.setDistritoFarmacia(request.getParameter("distrito"));
 
-                boolean camposLlenos = f.getRUCFarmacia() != null && f.getNombreFarmacia() != null && f.getEmailFarmacia() != null && f.getDireccionFarmacia() != null && f.getDistritoFarmacia() != null;
+                boolean correoValido = pharmacyAdminDao.validarCorreoFarmacia(f.getEmailFarmacia());
+                boolean rucValido = pharmacyAdminDao.validarRUCFarmacia(f.getRUCFarmacia());
 
-                if (pharmacyAdminDao.validarCorreoFarmacia(f.getEmailFarmacia()) && pharmacyAdminDao.validarRUCFarmacia(f.getRUCFarmacia()) && camposLlenos) {
-                    pharmacyAdminDao.registrarFarmacia(f.getRUCFarmacia(),f.getNombreFarmacia(),f.getEmailFarmacia(),f.getDireccionFarmacia(),f.getDistritoFarmacia());
-                    response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet");
+                if (correoValido && rucValido) {
+                    String estadoRegistro = pharmacyAdminDao.registrarFarmacia(f.getRUCFarmacia(),f.getNombreFarmacia(),f.getEmailFarmacia(),f.getDireccionFarmacia(),f.getDistritoFarmacia());
+                    response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet?registro=" + estadoRegistro);
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet?action=errorRegistro&ruc=" + f.getRUCFarmacia() + "&nombre=" + f.getNombreFarmacia() + "&correo=" + f.getEmailFarmacia() + "&direccion=" + f.getDireccionFarmacia() + "&distrito=" + f.getDistritoFarmacia());
+
+                    if (!correoValido) {
+                        request.setAttribute("noValidMail",1);
+                    } else {
+                        request.setAttribute("noValidMail",0);
+                    }
+                    if (!rucValido) {
+                        request.setAttribute("noValidRUC",1);
+                    } else {
+                        request.setAttribute("noValidRUC",0);
+                    }
+
+                    ArrayList<String> distritosSistema = pharmacyAdminDao.listarDistritosEnSistema();
+                    request.setAttribute("listaDistritosSistema", distritosSistema);
+                    request.setAttribute("datosIngresados", f);
+                    RequestDispatcher view2 = request.getRequestDispatcher("/admin/registroFarmacia.jsp");
+                    view2.forward(request,response);
+
                 }
                 break;
             case "buscar":

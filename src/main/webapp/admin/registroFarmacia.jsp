@@ -2,37 +2,22 @@
 <jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
 <jsp:useBean id="noValidMail" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="noValidRUC" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="camposNoLlenados" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="datosIngresados" scope="request" type="com.example.telefarma.beans.BFarmaciasAdmin" class="com.example.telefarma.beans.BFarmaciasAdmin"/>
+<jsp:useBean id="datosIngresados" scope="request" type="com.example.telefarma.beans.BFarmaciasAdmin"/>
 
 <!DOCTYPE html>
 <html lang="en">
     <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-            <title>Telefarma - Registrar Farmacia</title>
-            <link rel="stylesheet" href="<%=request.getContextPath()%>/res/bootstrap/css/bootstrap.min.css">
-            <link rel="preconnect" href="https://fonts.googleapis.com">
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-            <link rel="stylesheet" href="<%=request.getContextPath()%>/res/css/estilos.css">
-            <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>Telefarma - Registrar Farmacia</title>
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/res/bootstrap/css/bootstrap.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/res/css/estilos.css">
+        <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
     </head>
     <body>
-
-        <%
-            String valorNombre = "";
-            String valorRUC = "";
-            String valorDistrito = "";
-            String valorDireccion = "";
-            String valorCorreo = "";
-            if (datosIngresados != null) {
-            valorNombre = "value='" + datosIngresados.getNombreFarmacia() + "'";
-            valorRUC = "value='" + datosIngresados.getRUCFarmacia() + "'";
-            valorDistrito = "value='" + datosIngresados.getDistritoFarmacia() + "'";
-            valorDireccion = "value='" + datosIngresados.getDireccionFarmacia() + "'";
-            valorCorreo = "value='" + datosIngresados.getEmailFarmacia() + "'";
-            }%>
 
         <section class="vh-100 ">
             <div class="container py-4 h-100">
@@ -50,16 +35,16 @@
                                         <div class="col-md-6">
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaName">Nombre</label>
-                                                <input type="text" name="nombre" id="farmaName" class="form-control" <%=valorNombre%>
-                                                       placeholder="Ingrese nombre de la farmacia"/>
+                                                <input type="text" name="nombre" id="farmaName" class="form-control"
+                                                       placeholder="Ingrese nombre de la farmacia" value="<%=datosIngresados.getNombreFarmacia()%>" required="required" maxlength="50"/>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaMail">Correo</label>
-                                                <input type="email" name="correo" id="farmaMail" class="form-control" <%=valorCorreo%>
-                                                       placeholder="Ingrese el mail de la farmacia"/>
+                                                <input type="email" name="correo" id="farmaMail" class="form-control"
+                                                       placeholder="Ingrese el mail de la farmacia" value="<%=datosIngresados.getEmailFarmacia()%>" required="required" maxlength="70"/>
                                             </div>
                                         </div>
 
@@ -70,8 +55,8 @@
                                         <div class="col-md-6">
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaDireccion">Dirección</label>
-                                                <input type="text" name="direccion" id="farmaDireccion" class="form-control" <%=valorDireccion%>
-                                                       placeholder="Ingrese la dirección de la farmacia"/>
+                                                <input type="text" name="direccion" id="farmaDireccion" class="form-control"
+                                                       placeholder="Ingrese la dirección de la farmacia" value="<%=datosIngresados.getDireccionFarmacia()%>" required="required" maxlength="100"/>
                                             </div>
                                         </div>
 
@@ -80,13 +65,26 @@
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaDistrict">Distrito</label>
                                                 <select class="form-select" name="distrito" id="farmaDistrict">
-                                                    <option value="" disabled selected>Ingrese el distrito de la farmacia</option>
+                                                    <%boolean distritoIngresado = false;
+                                                        if (datosIngresados.getDistritoFarmacia() != null && !datosIngresados.getDistritoFarmacia().equals("")) {
+                                                            distritoIngresado = true;
+                                                        }%>
+                                                    <%if (distritoIngresado) { %>
+                                                    <option selected><%=datosIngresados.getDistritoFarmacia()%></option>
+                                                    <option>Ingrese el distrito de la farmacia</option>
+                                                    <%} else { %>
+                                                    <option selected>Ingrese el distrito de la farmacia</option>
+                                                    <%}%>
                                                     <%
-                                                    for (String distrito : listaDistritosSistema){
-                                                    %>
+                                                        for (String distrito : listaDistritosSistema){
+                                                            if (distritoIngresado) {
+                                                                if (!distrito.equals(datosIngresados.getDistritoFarmacia())) {%>
                                                     <option value="<%=distrito%>"><%=distrito%></option>
-                                                    <%
-                                                        }
+                                                    <%}
+                                                    }else {%>
+                                                    <option value="<%=distrito%>"><%=distrito%></option>
+                                                    <%}
+                                                    }
                                                     %>
                                                 </select>
                                             </div>
@@ -99,8 +97,8 @@
                                         <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaRUC">RUC</label>
-                                                <input type="text" name="ruc" id="farmaRUC" class="form-control" <%=valorRUC%>
-                                                       placeholder="Ingrese el RUC de la farmacia"/>
+                                                <input type="text" name="ruc" id="farmaRUC" class="form-control"
+                                                       placeholder="Ingrese el RUC de la farmacia" value="<%=datosIngresados.getRUCFarmacia()%>" required="required" maxlength="8"/>
                                             </div>
                                         </div>
 
@@ -110,21 +108,18 @@
                                         <input class="btn btn-tele" type="submit" id="" value="Registrar farmacia"/>
                                     </div>
                                     <br>
-                                    <%if (noValidMail == 1) { %>
-                                    <div class="alert alert-danger" role="alert">
+                                    <%if (noValidMail == 1) {%>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         El correo que ha ingresado ya esta en uso
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
                                     <%}
-                                    if (noValidRUC == 1) { %>
-                                    <div class="alert alert-danger" role="alert">
+                                        if (noValidRUC == 1) { %>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         El RUC que ha ingresado ya esta en uso
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
-                                    <%}
-                                    if (camposNoLlenados == 1) { %>
-                                    <div class="alert alert-danger" role="alert">
-                                        Debe llenar todos los campos
-                                    </div>
-                                    <% } %>
+                                    <%}%>
 
                                 </form>
                             </div>

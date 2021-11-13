@@ -5,6 +5,7 @@
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="resultban" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="estadoRegistro" scope="request" type="java.lang.String"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -35,17 +36,33 @@
       <!--Farmacias-->
       <div class="container">
         <div class="row">
+
+          <%if (estadoRegistro.equals("e")) { %>
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Farmacia registrada exitosamente
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          <%} else if (estadoRegistro.equals("ne")) {%>
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            Hubo un problema con el registro de la farmacia
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          <%}%>
+
           <%if(resultban==1){%>
-          <div class="alert alert-success" role="alert">
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
             La farmacia fue baneada con éxito
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
           <%}else if(resultban==2){%>
-          <div class="alert alert-danger" role="alert">
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
             La farmacia tiene al menos un pedido pendiente. Intentalo de nuevo más tarde
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
           <%}else if(resultban==3){%>
-          <div class="alert alert-success" role="alert">
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
             La farmacia seleccionada fue desbaneada
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
           <%}%>
           <h3 class="text-dark">Farmacias registradas</h3>
