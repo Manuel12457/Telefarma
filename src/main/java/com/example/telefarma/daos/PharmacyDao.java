@@ -2,6 +2,7 @@ package com.example.telefarma.daos;
 
 import com.example.telefarma.beans.*;
 
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -223,29 +224,78 @@ public class PharmacyDao {
 
     }
 
+
     public void registrarProducto(BProducto producto) {
 
         this.agregarClase();
 
-        String sql = "insert into telefarma.product (idProduct,idPharmacy,name,description,stock,price,requiresPrescription)\n" +
-                "values (?,?,?,?,?,?,?)";
+        String sql = "insert into telefarma.product (idPharmacy,name,description,stock,price,requiresPrescription)\n" +
+                "values (?,?,?,?,?,?)";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
-            pstmt.setInt(1,producto.getIdProducto());
-            pstmt.setInt(2,producto.getIdFarmacia());
-            pstmt.setString(3,producto.getNombre());
-            pstmt.setString(4,producto.getDescripcion());
-            pstmt.setInt(5,producto.getStock());
-            pstmt.setDouble(6,producto.getPrecio());
-            pstmt.setByte(7,producto.getRequierePrescripcion()?(byte)1:(byte)0);
+            pstmt.setInt(1, producto.getIdFarmacia());
+            pstmt.setString(2, producto.getNombre());
+            pstmt.setString(3, producto.getDescripcion());
+            pstmt.setInt(4, producto.getStock());
+            pstmt.setDouble(5, producto.getPrecio());
+            pstmt.setByte(6, producto.getRequierePrescripcion() ? (byte) 1 : (byte) 0);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
 
+    public int retornarUltimaIdProducto(int idFarmacia){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int idProducto=0; //Requiere inicializacion
+
+        ArrayList<BOrderDetails> listaDetails = new ArrayList<>();
+
+        String sql = "select idProduct from product where idPharmacy="+idFarmacia+" \n"+
+                "order by idProduct desc \n" +
+                "limit 1;";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while(rs.next()) {
+                idProducto = rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return idProducto;
+    }
+
+    public void anadirImagenProducto(int idProducto, InputStream imagenProducto) {
+
+        this.agregarClase();
+
+        String sql = "update product " +
+                "set photo = ? " +
+                "where idProduct=?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setBinaryStream(1, imagenProducto);
+            pstmt.setInt(2, idProducto);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean posibleEliminarProducto(int idProducto) {

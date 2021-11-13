@@ -3,6 +3,7 @@ package com.example.telefarma.servlets;
 import com.example.telefarma.beans.BClientOrders;
 import com.example.telefarma.beans.BFarmaciasAdmin;
 import com.example.telefarma.beans.BPharmacyOrders;
+import com.example.telefarma.beans.BProducto;
 import com.example.telefarma.daos.ClientOrdersDao;
 import com.example.telefarma.daos.ClientProductsDao;
 import com.example.telefarma.daos.PharmacyAdminDao;
@@ -12,14 +13,15 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 @WebServlet(name = "PharmacyServlet", value = "/PharmacyServlet")
+@MultipartConfig
 public class PharmacyServlet extends HttpServlet {
+    int idFarmacia=5; //hardcodeado
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        int idFarmacia=5; //hardcodeado
 
         String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
         int pagina;
@@ -67,7 +69,11 @@ public class PharmacyServlet extends HttpServlet {
 
                 break;
             case "registrarProducto":
+                RequestDispatcher view2 = request.getRequestDispatcher("/farmacia/registrarProducto.jsp");
+                view2.forward(request,response);
                 break;
+            case "errorRegistro":
+                String nombre = request.getParameter("nombre");
         }
     }
 
@@ -94,6 +100,40 @@ public class PharmacyServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/PharmacyServlet?action=buscarPedido");
                 }else {
                     response.sendRedirect(request.getContextPath() + "/PharmacyServlet?action=buscarPedido&busqueda=" + busqueda);
+                }
+                break;
+            case "registrarProducto":
+                BProducto p = new BProducto();
+                if(request.getParameter("nombre")==null ||
+                request.getParameter("stock")==null ||
+                request.getParameter("precio")==null){
+                    String redirectURL = request.getContextPath()+"/PharmacyServlet?action=errorRegistro";
+                    if(request.getParameter("nombre")!=null){
+                        redirectURL=redirectURL+"&nombre="+request.getParameter("nombre");
+                    }
+                    if(request.getParameter("stock")!=null){
+                        redirectURL=redirectURL+"&stock="+request.getParameter("stock");
+                    }
+                    if(request.getParameter("precio")!=null){
+                        redirectURL=redirectURL+"&precio="+request.getParameter("precio");
+                    }
+                    response.sendRedirect(redirectURL);
+                }else{
+                    p.setNombre(request.getParameter("nombre"));
+                    p.setDescripcion(request.getParameter("descripcion"));
+                    p.setStock(Integer.parseInt(request.getParameter("stock")));
+                    p.setPrecio(Double.parseDouble(request.getParameter("precio")));
+                    p.setRequierePrescripcion(request.getParameter("requiereReceta").equals("true"));
+                    p.setIdFarmacia(idFarmacia);
+
+                    pharmacyDao.registrarProducto(p);
+                    int idProduct = pharmacyDao.retornarUltimaIdProducto(idFarmacia);
+                    if(request.getPart("imagenProducto")!=null){
+                        Part imagenProductoPart = request.getPart("imagenProducto");
+                        InputStream imagenProductoContent = imagenProductoPart.getInputStream();
+                        pharmacyDao.anadirImagenProducto(idProduct,imagenProductoContent);
+                    }
+                    response.sendRedirect(request.getContextPath()+"/PharmacyServlet");
                 }
                 break;
             default:

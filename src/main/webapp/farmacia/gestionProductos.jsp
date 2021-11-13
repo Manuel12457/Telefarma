@@ -61,9 +61,9 @@
                 <!--Precio y Stock-->
                 <div class="col-md-1 text-center mt-5 d-none d-md-block">
                     <h6>Precio</h6>
-                    <p style="font-size: larger">s/ 36.00</p>
+                    <p style="font-size: larger">s/ <%=producto.getPrecio()%></p>
                     <h6>Stock</h6>
-                    <p style="font-size: larger">24</p>
+                    <p style="font-size: larger"><%=producto.getStock()%></p>
                 </div>
                 <div class="d-flex justify-content-around align-items-center d-md-none">
                     <h6 style="display: inline">
@@ -172,7 +172,7 @@
         </main>
 
         <!--Botón flotante "+" para agregar farmacia-->
-        <a href="<%=request.getContextPath()%>/" class="btn-float">
+        <a href="<%=request.getContextPath()%>/PharmacyServlet?action=registrarProducto" class="btn-float">
             <i class="fas fa-plus my-float"></i>
         </a>
 
