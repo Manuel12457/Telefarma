@@ -45,7 +45,7 @@
           </div>
           <%}else if(resultban==3){%>
           <div class="alert alert-success" role="alert">
-            La farmacia seleccionada fue baneada
+            La farmacia seleccionada fue desbaneada
           </div>
           <%}%>
           <h3 class="text-dark">Farmacias registradas</h3>
@@ -132,7 +132,7 @@
         <div class="modal-dialog">
           <div class="modal-content border-0">
             <div class="modal-header bg-success text-white">
-              <h5 class="modal-title" id="desbanear">Bloquear farmacia</h5>
+              <h5 class="modal-title" id="desbanear">Desbloquear farmacia</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="post">
