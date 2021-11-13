@@ -75,7 +75,7 @@
                         <%--Loop de productos--%>
                         <% for (BProductosBuscador producto : productosDeLaFarmacia) { %>
                         <div class="col">
-                            <div onclick="location.href='usuarioDetallesProducto.html'" class="card card-producto">
+                            <div onclick="location.href='<%=request.getContextPath()%>/details?productid=<%=producto.getIdProducto()%>'" class="card card-producto">
                                 <div class="card-header">
                                     <h6><%= producto.getNombreProducto() %>
                                     </h6>
