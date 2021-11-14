@@ -1,10 +1,11 @@
-<%@ page import="com.example.telefarma.beans.BProducto" %>
+<%@ page import="com.example.telefarma.beans.BProductoGestion" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaProductosBusqueda" scope="request"
-             type="java.util.ArrayList<com.example.telefarma.beans.BProducto>"/>
+             type="java.util.ArrayList<com.example.telefarma.beans.BProductoGestion>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
-<%String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");%>
+<%String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
+  String result = request.getParameter("result");%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,6 +35,45 @@
             <!--Alinear cabecera con contenido-->
             <div class="card-header mt-5 mb-4"></div>
 
+            <%
+
+              if (result!=null){
+                  String tipoAlerta="warning";
+                  String mensaje ="";
+                  if (result.startsWith("error")){
+                      tipoAlerta="danger";
+                  }
+                  if(result.startsWith("exito")){
+                      tipoAlerta="success";
+                  }
+                  switch (result){
+                      case("error1"):
+                          mensaje="Ha ocurrido un error en el registro";
+                          break;
+                      case("error2"):
+                          mensaje="Ha ocurrido un error al subir la imagen";
+                          break;
+                      case("exito1"):
+                          mensaje="Se ha registrado el producto";
+                          break;
+                      case("exito2"):
+                          mensaje="Se ha editado el producto";
+                          break;
+                      case("exito3"):
+                          mensaje="Se ha eliminado el producto";
+                          break;
+                }
+            %>
+
+            <div class="alert alert-<%=tipoAlerta%> alert-dismissible fade show" role="alert"
+            style="margin: 30px auto 20px; width: 95%">
+                <%=mensaje%>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <%
+            }
+            %>
+
             <!--Pestañas visualización y gestión-->
             <ul class="nav nav-tabs  nav-fill mb-4 justify-content-around px-5">
                 <li class="nav-item ">
@@ -46,7 +86,7 @@
             </ul>
 
             <%
-                for (BProducto producto : listaProductosBusqueda) {
+                for (BProductoGestion producto : listaProductosBusqueda) {
             %>
             <!--Producto 1-->
             <hr class="mx-md-5 mx-sm-3">
@@ -61,7 +101,7 @@
                 <!--Precio y Stock-->
                 <div class="col-md-1 text-center mt-5 d-none d-md-block">
                     <h6>Precio</h6>
-                    <p style="font-size: larger">s/ <%=producto.getPrecio()%></p>
+                    <p style="font-size: larger">s/ <%=String.format("%.2f",producto.getPrecio())%></p>
                     <h6>Stock</h6>
                     <p style="font-size: larger"><%=producto.getStock()%></p>
                 </div>
@@ -69,7 +109,7 @@
                     <h6 style="display: inline">
                         Precio:
                         <p style="display: inline;font-size: large; font-weight: normal;">
-                            &nbsp;s/ <%=producto.getPrecio()%>
+                            &nbsp;s/ <%=String.format("%.2f",producto.getPrecio())%>
                         </p>
                     </h6>
                     <h6 style="display: inline">
@@ -93,24 +133,35 @@
                     <h6 class="mt-1">¿Requiere Receta? <b><%=producto.getRequierePrescripcion() ? "Sí" : "No"%>
                     </b></h6>
                 </div>
+
+                <%
+                    String modalTarget;
+                    if(producto.getPosibleEliminar()){
+                        modalTarget="confirmacionEliminar";
+                    }else{
+                        modalTarget="productoEnOrden";
+                    }
+                %>
                 <!--Botones de editar y eliminar-->
                 <div class="col-sm-1 mt-5 d-none d-md-block text-center">
-                    <a href="<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&&productid=<%=producto.getIdProducto()%>">
+                    <a href="<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProducto()%>">
                         <i class="far fa-edit btn-tele p-1 rounded"></i>
                     </a>
                     <hr class="my-1" style="background-color: white">
                     <button class="btn btn-danger py-0 px-1" type="button"
-                            data-bs-toggle="modal" data-bs-target="#error">
+                            data-bs-toggle="modal" data-bs-target="#<%=modalTarget%>"
+                            data-bs-whatever="<%=producto.getIdProducto()%>">
                         <i class="fas fa-times-circle"></i>
                     </button>
                 </div>
                 <div class="d-flex justify-content-center my-2 d-md-none">
-                    <a href="farmaciaEditarProducto.html">
+                    <a href="<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProducto()%>">
                         <i class="far fa-edit btn-tele p-1 rounded"></i>
                     </a>
                     <div class="mx-3"></div>
                     <button class="btn btn-danger py-0 px-1" type="button"
-                            data-bs-toggle="modal" data-bs-target="#error">
+                            data-bs-toggle="modal" data-bs-target="#<%=modalTarget%>"
+                            data-bs-whatever="<%=producto.getIdProducto()%>">
                         <i class="fas fa-times-circle"></i>
                     </button>
                 </div>
@@ -131,7 +182,7 @@
             </jsp:include>
 
             <!--Modal eliminar producto: Producto pendiente para pedido-->
-            <div class="modal fade" id="error" tabindex="-1" aria-labelledby="err_eliminar" aria-hidden="true">
+            <div class="modal fade" id="productoEnOrden" tabindex="-1" aria-labelledby="err_eliminar" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content border-0">
                         <div class="modal-header bg-danger text-white">
@@ -140,7 +191,7 @@
                                     aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            El producto no puede ser eliminado, ya que esta siendo pedido por un cliente.
+                            El producto no puede ser eliminado, ya que está relacionado a una o más ordenes.
                         </div>
                         <div class="modal-footer my-0 py-1">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Ok</button>
@@ -150,22 +201,24 @@
             </div>
 
             <!--Modal eliminar producto: Producto no pendiente para pedido-->
-            <div class="modal fade" id="confirmacion" tabindex="-1" aria-labelledby="conf_eliminar" aria-hidden="true">
+            <div class="modal fade" id="confirmacionEliminar" tabindex="-1" aria-labelledby="conf_eliminar" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content border-0">
-                        <div class="modal-header bg-danger text-white">
-                            <h5 class="modal-title" id="conf_eliminar">Eliminar Producto</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            El producto será eliminado permanentemente y no se podrá recuperar.<br>
-                            ¿Está seguro que desea eliminarlo del catálogo?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn btn-danger">Eliminar Producto</button>
-                        </div>
+                        <form method="post">
+                            <div class="modal-header bg-danger text-white">
+                                <h5 class="modal-title" id="conf_eliminar">Eliminar Producto</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                El producto será eliminado permanentemente y no se podrá recuperar.<br>
+                                ¿Está seguro que desea eliminarlo del catálogo?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                                <button role="button" class="btn btn-danger">Eliminar Producto</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -177,6 +230,21 @@
         </a>
 
         <%--JS--%>
+        <script>
+            // Para el boton de Bloquear
+            var exampleModal = document.getElementById('confirmacionEliminar')
+            exampleModal.addEventListener('show.bs.modal', function (event) {
+                // Activa la funcion cuando se pulsa el boton
+                var button = event.relatedTarget
+                // Se obtienee el id de la farmacia
+                var idProducto = button.getAttribute('data-bs-whatever')
+                // Se ubica la seccion form del modal
+                var modalForm = exampleModal.querySelector('form')
+                // Se le indica al form el id de la farmacia
+                modalForm.action = "<%=request.getContextPath()%>/PharmacyServlet?action=eliminarProducto&idProducto="+idProducto
+                console.log(modalForm.action)
+            })
+        </script>
         <script src="${pageContext.request.contextPath}/res/bootstrap/js/bootstrap.min.js"></script>
     </body>
 

@@ -42,9 +42,9 @@ public class PharmacyDao {
         return cantidad;
     }
 
-    public ArrayList<BProducto> listaProductosFarmacia(int pagina, String busqueda, int idFarmacia, int limite) {
+    public ArrayList<BProductoGestion> listaProductosFarmacia(int pagina, String busqueda, int idFarmacia, int limite) {
 
-        ArrayList<BProducto> listaProductos = new ArrayList<>();
+        ArrayList<BProductoGestion> listaProductos = new ArrayList<>();
 
         String sql = "select p.idProduct, p.name, p.description, p.stock, p.price, p.requiresPrescription from telefarma.product p\n" +
                 "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
@@ -58,7 +58,7 @@ public class PharmacyDao {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                BProducto producto = new BProducto();
+                BProductoGestion producto = new BProductoGestion();
                 producto.setIdProducto(rs.getInt(1));
                 producto.setNombre(rs.getString(2));
                 producto.setDescripcion(rs.getString(3));
@@ -73,6 +73,29 @@ public class PharmacyDao {
         }
 
         return listaProductos;
+    }
+
+    public void agregarposibleEliminar(BProductoGestion producto) {
+
+        this.agregarClase();
+
+        String sql = "select p.idProduct, o.idOrder from telefarma.product p\n" +
+                "inner join telefarma.orderdetails od on (p.idProduct = od.idProduct)\n" +
+                "inner join telefarma.orders o on (od.idOrder = o.idOrder)\n" +
+                "where p.idProduct=?;";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setInt(1,producto.getIdProducto());
+            try (ResultSet rs = pstmt.executeQuery()) {
+                producto.setPosibleEliminar(!rs.next());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public ArrayList<BPharmacyOrders> listarOrdenes(int pagina, String busqueda, int limite, int id){
@@ -191,27 +214,7 @@ public class PharmacyDao {
 
     }
 
-    public void eliminarProducto(int idProducto, int idFarmacia) {
-
-        this.agregarClase();
-
-        String sql = "delete from telefarma.product where (idProduct=?) and (idPharmacy=?);";
-
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
-             PreparedStatement pstmt = conn.prepareStatement(sql);) {
-
-            pstmt.setInt(1,idProducto);
-            pstmt.setInt(2,idFarmacia);
-            pstmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-    public void registrarProducto(BProducto producto) {
+    public boolean registrarProducto(BProducto producto) { //retorna falso si surge una excepcion
 
         this.agregarClase();
 
@@ -231,7 +234,10 @@ public class PharmacyDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
+
+        return true;
     }
 
     public int retornarUltimaIdProducto(int idFarmacia){
@@ -261,7 +267,7 @@ public class PharmacyDao {
         return idProducto;
     }
 
-    public void anadirImagenProducto(int idProducto, InputStream imagenProducto) {
+    public boolean anadirImagenProducto(int idProducto, InputStream imagenProducto) {
 
         this.agregarClase();
 
@@ -278,43 +284,64 @@ public class PharmacyDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
-    public boolean posibleEliminarProducto(int idProducto) {
-
+    public boolean productoPerteneceFarmacia(int idProducto, int idFarmacia){
         this.agregarClase();
 
-        boolean esPosibleEliminarProducto = true;
-
-        String sql = "select p.idProduct, o.idOrder from telefarma.product p\n" +
-                "inner join telefarma.orderdetails od on (p.idProduct = od.idProduct)\n" +
-                "inner join telefarma.orders o on (od.idOrder = o.idOrder)\n" +
-                "where p.idProduct=?;";
+        int count = 0;
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
-             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("select count(*) from product " +
+                     "where idProduct="+idProducto+" and idPharmacy="+idFarmacia+";")) {
 
-            pstmt.setInt(1,idProducto);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    esPosibleEliminarProducto = false;
-                }
+            if(rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return count==1;
+    }
+
+    public BProducto obtenerProducto(int idProducto){
+
+        this.agregarClase();
+        BProducto producto = new BProducto();
+        producto.setIdProducto(idProducto);
+        String sql = "select name, description, stock, price, requiresPrescription from telefarma.product " +
+                "where idProduct=" + idProducto + ";";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                producto.setNombre(rs.getString(1));
+                producto.setDescripcion(rs.getString(2));
+                producto.setStock(rs.getInt(3));
+                producto.setPrecio(rs.getDouble(4));
+                producto.setRequierePrescripcion(Byte.compare(rs.getByte(5), (byte) 0) != 0);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return esPosibleEliminarProducto;
-
+        return producto;
     }
 
-    public void editarProducto(BProducto producto) {
+    public boolean editarProducto(BProducto producto) {
 
         this.agregarClase();
 
-        String sql = "update telefarma.product set name=?,description=?,stock=?,price=?,requiresPrescription=? where idProduct=?";
+        String sql = "update telefarma.product set name=?,description=?,stock=?,price=?,requiresPrescription=? " +
+                "where idProduct=?";
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
@@ -325,6 +352,25 @@ public class PharmacyDao {
             pstmt.setDouble(4,producto.getPrecio());
             pstmt.setByte(5,producto.getRequierePrescripcion()?(byte)1:(byte)0);
             pstmt.setDouble(6,producto.getIdProducto());
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+            return true;
+    }
+
+    public void eliminarProducto(int idProducto) {
+
+        this.agregarClase();
+
+        String sql = "delete from telefarma.product where (idProduct=?);";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setInt(1,idProducto);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {

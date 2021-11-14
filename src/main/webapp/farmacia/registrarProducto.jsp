@@ -8,7 +8,7 @@
 <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - Editar Producto</title>
+        <title>Telefarma - Registrar Producto</title>
         <link rel="stylesheet" href="<%=request.getContextPath()%>/res/bootstrap/css/bootstrap.min.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,17 +36,17 @@
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="productName">Nombre</label>
                                         <input type="text" name="nombre" id="productName" class="form-control"
-                                               required="required" placeholder="Ingrese nombre del producto"/>
+                                               maxlength="80" required="required" placeholder="Ingrese nombre del producto"/>
                                     </div>
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="productStock">Stock</label>
                                         <input type="number" step="1" name="stock" id="productStock" class="form-control"
-                                               required="required" placeholder="0"/>
+                                               min="1" max="100000" required="required" placeholder="0"/>
                                     </div>
                                     <div class="form-outline">
                                         <label class="form-label" for="productPrice">Precio</label>
                                         <input type="number" step="0.01" name="precio" id="productPrice" class="form-control"
-                                               required="required" placeholder="Ingrese el precio del producto"/>
+                                               min="0.01" max="999.99" required="required" placeholder="Ingrese el precio del producto"/>
                                     </div>
                                     <div class="d-flex justify-content-start my-3">
                                         <div class="pb-1">¿Requiere receta?&nbsp;&nbsp;&nbsp;</div>
@@ -77,11 +77,6 @@
                                            accept="image/png, image/gif, image/jpeg"
                                            name="imagenProducto"
                                            onchange="readURL(this);">
-
-                                    <div class="d-flex justify-content-center my-3">
-                                        <input class="btn btn-tele" type="submit" value="Subir imagen"/>
-                                    </div>
-
                                 </div>
                             </div>
 

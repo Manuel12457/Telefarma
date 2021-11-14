@@ -35,10 +35,14 @@ public class PharmacyServlet extends HttpServlet {
 
                 pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-                request.setAttribute("listaProductosBusqueda", pharmacyDao.listaProductosFarmacia(pagina,busqueda,idFarmacia,limiteProductos));
-                request.setAttribute("pagActual",pagina);
+                ArrayList<BProductoGestion> listaProductosBusqueda = pharmacyDao.listaProductosFarmacia(pagina,busqueda,idFarmacia,limiteProductos);
+                for(BProductoGestion producto : listaProductosBusqueda) {
+                    pharmacyDao.agregarposibleEliminar(producto);
+                }
 
                 pagTotales = (int)Math.ceil((double)pharmacyDao.cantidadProductos(busqueda,idFarmacia)/limiteProductos);
+                request.setAttribute("listaProductosBusqueda", listaProductosBusqueda);
+                request.setAttribute("pagActual",pagina);
                 request.setAttribute("pagTotales",pagTotales);
 
                 view = request.getRequestDispatcher("/farmacia/gestionProductos.jsp");
@@ -66,18 +70,23 @@ public class PharmacyServlet extends HttpServlet {
 
                 break;
             case "registrarProducto":
-                RequestDispatcher view2 = request.getRequestDispatcher("/farmacia/registrarProducto.jsp");
-                view2.forward(request,response);
+                view = request.getRequestDispatcher("/farmacia/registrarProducto.jsp");
+                view.forward(request,response);
             case "editarProducto":
-                ClientProductsDao clientProductsDao = new ClientProductsDao();
-                int producid  =  request.getParameter("productid")==null? 1 : Integer.parseInt(request.getParameter("productid"));
-                BDetallesProducto producto = clientProductsDao.obtenerDetalles(producid);
-                request.setAttribute("producto", producto);
-                RequestDispatcher view3 = request.getRequestDispatcher("/farmacia/editarProducto.jsp");
-                view3.forward(request,response);
+                try{
+                    int idProducto = Integer.parseInt(request.getParameter("idProducto"));
+                    if(pharmacyDao.productoPerteneceFarmacia(idProducto,idFarmacia)){
+                        BProducto producto = pharmacyDao.obtenerProducto(idProducto);
+                        request.setAttribute("producto",producto);
+                    }else{
+                        response.sendRedirect(request.getContextPath()+"/PharmacyServlet");
+                    }
+                }catch (Exception e) {
+                    response.sendRedirect(request.getContextPath()+"/PharmacyServlet");
+                }
+                view = request.getRequestDispatcher("/farmacia/editarProducto.jsp");
+                view.forward(request,response);
                 break;
-            case "errorRegistro":
-                String nombre = request.getParameter("nombre");
         }
     }
 
@@ -88,9 +97,10 @@ public class PharmacyServlet extends HttpServlet {
         switch(request.getParameter("action")) {
             case "buscarProducto":
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-
                 response.sendRedirect(request.getContextPath()+"/PharmacyServlet?action=buscarProducto&busqueda="+busqueda);
                 break;
+
+
             case "buscarPedido":
                 String cambiarEntregado = request.getParameter("cambiarEntregado");
                 String cambiarCancelado = request.getParameter("cambiarCancelado");
@@ -106,76 +116,86 @@ public class PharmacyServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/PharmacyServlet?action=buscarPedido&busqueda=" + busqueda);
                 }
                 break;
+
+
             case "registrarProducto":
                 BProducto p = new BProducto();
-                if(request.getParameter("nombre")==null ||
-                request.getParameter("stock")==null ||
-                request.getParameter("precio")==null){
-                    String redirectURL = request.getContextPath()+"/PharmacyServlet?action=errorRegistro";
-                    if(request.getParameter("nombre")!=null){
-                        redirectURL=redirectURL+"&nombre="+request.getParameter("nombre");
-                    }
-                    if(request.getParameter("stock")!=null){
-                        redirectURL=redirectURL+"&stock="+request.getParameter("stock");
-                    }
-                    if(request.getParameter("precio")!=null){
-                        redirectURL=redirectURL+"&precio="+request.getParameter("precio");
-                    }
-                    response.sendRedirect(redirectURL);
-                }else{
-                    p.setNombre(request.getParameter("nombre"));
-                    p.setDescripcion(request.getParameter("descripcion"));
+                p.setNombre(request.getParameter("nombre"));
+                p.setDescripcion(request.getParameter("descripcion"));
+                p.setRequierePrescripcion(request.getParameter("requiereReceta").equals("true"));
+                p.setIdFarmacia(idFarmacia);
+                try { //Verifica que se pueda parsear
                     p.setStock(Integer.parseInt(request.getParameter("stock")));
                     p.setPrecio(Double.parseDouble(request.getParameter("precio")));
-                    p.setRequierePrescripcion(request.getParameter("requiereReceta").equals("true"));
-                    p.setIdFarmacia(idFarmacia);
-
-                    pharmacyDao.registrarProducto(p);
-                    int idProduct = pharmacyDao.retornarUltimaIdProducto(idFarmacia);
-                    if(request.getPart("imagenProducto").getSize()!=0){
-                        Part imagenProductoPart = request.getPart("imagenProducto");
-                        InputStream imagenProductoContent = imagenProductoPart.getInputStream();
-                        pharmacyDao.anadirImagenProducto(idProduct,imagenProductoContent);
-                    }
-                    response.sendRedirect(request.getContextPath()+"/PharmacyServlet");
+                }catch (Exception e) {
+                    response.sendRedirect(request.getContextPath()+"/PharmacyServlet?result=error1");
                 }
+                if (pharmacyDao.registrarProducto(p)) { //si se ha podido ingresar la informacion
+                    int idProduct = pharmacyDao.retornarUltimaIdProducto(idFarmacia);
+                    Part imagenProductoPart = request.getPart("imagenProducto");
+                    InputStream imagenProductoContent = imagenProductoPart.getInputStream();
+                    if(imagenProductoContent.available()>0){ // verifica si se subido una imagen
+                        if(pharmacyDao.anadirImagenProducto(idProduct,imagenProductoContent)) { //si se ha podido actualizar la imagen
+                            response.sendRedirect(request.getContextPath()+"/PharmacyServlet?result=exito1");
+                        }else { //no se ha podido actualizar la imagen
+                            response.sendRedirect(request.getContextPath()+"/PharmacyServlet?result=error2");
+                        }
+                    }else { //si no se ha subido imagen se imprime mensaje de exito
+                        response.sendRedirect(request.getContextPath()+"/PharmacyServlet?result=exito1");
+                    }
+                }else { //si no se ha podido ingresar la informacion (form ha sido alterado)
+                    response.sendRedirect(request.getContextPath()+"/PharmacyServlet?result=error1");
+                }
+
                 break;
+
+
             case "editarProducto":
                 BProducto ep = new BProducto();
-                if(request.getParameter("nombre")==null ||
-                        request.getParameter("stock")==null ||
-                        request.getParameter("precio")==null){
-                    String redirectURL = request.getContextPath()+"/PharmacyServlet?action=errorRegistro";
-                    if(request.getParameter("nombre")!=null){
-                        redirectURL=redirectURL+"&nombre="+request.getParameter("nombre");
-                    }
-                    if(request.getParameter("stock")!=null){
-                        redirectURL=redirectURL+"&stock="+request.getParameter("stock");
-                    }
-                    if(request.getParameter("precio")!=null){
-                        redirectURL=redirectURL+"&precio="+request.getParameter("precio");
-                    }
-                    response.sendRedirect(redirectURL);
-                }else{
-                    ep.setIdProducto(Integer.parseInt(request.getParameter("productid")));
-                    ep.setNombre(request.getParameter("nombre"));
-                    ep.setDescripcion(request.getParameter("descripcion"));
+                ep.setNombre(request.getParameter("nombre"));
+                ep.setDescripcion(request.getParameter("descripcion"));
+                ep.setRequierePrescripcion(request.getParameter("requiereReceta").equals("true"));
+                ep.setIdFarmacia(idFarmacia);
+                try {
                     ep.setStock(Integer.parseInt(request.getParameter("stock")));
                     ep.setPrecio(Double.parseDouble(request.getParameter("precio")));
-                    ep.setRequierePrescripcion(request.getParameter("requiereReceta").equals("true"));
-                    ep.setIdFarmacia(idFarmacia);
+                    ep.setIdProducto(Integer.parseInt(request.getParameter("idProducto")));
+                }catch (Exception e) { //form alterado no se ha podido parsear
+                    response.sendRedirect(request.getContextPath()+"/PharmacyServlet?result=error3");
+                }
 
-                    pharmacyDao.editarProducto(ep);
-                    if(request.getPart("imagenProducto").getSize()!=0){
-                        Part imagenProductoPart = request.getPart("imagenProducto");
-                        InputStream imagenProductoContent = imagenProductoPart.getInputStream();
-                        pharmacyDao.anadirImagenProducto(Integer.parseInt(request.getParameter("productid")),imagenProductoContent);
+                System.out.println(ep.getIdProducto());
+                System.out.println(ep.getNombre());
+                System.out.println(ep.getStock());
+
+                if (pharmacyDao.editarProducto(ep)) { //si se ha podido ingresar la informacion
+                    Part imagenProductoPart = request.getPart("imagenProducto");
+                    InputStream imagenProductoContent = imagenProductoPart.getInputStream();
+                    if(imagenProductoContent.available()>0){ // verifica si se subido una imagen
+                        if(pharmacyDao.anadirImagenProducto(ep.getIdProducto(),imagenProductoContent)) { //si se ha podido actualizar la imagen
+                            response.sendRedirect(request.getContextPath()+"/PharmacyServlet?result=exito2");
+                        }else { //no se ha podido actualizar la imagen
+                            response.sendRedirect(request.getContextPath()+"/PharmacyServlet?result=error2");
+                        }
+                    }else { //si no se ha subido imagen se imprime mensaje de exito
+                        response.sendRedirect(request.getContextPath()+"/PharmacyServlet?result=exito2");
                     }
-                    response.sendRedirect(request.getContextPath()+"/PharmacyServlet");
+                }else { //si no se ha podido ingresar la informacion (form ha sido alterado)
+                    response.sendRedirect(request.getContextPath()+"/PharmacyServlet?result=error3");
                 }
                 break;
-            default:
-
+            case "eliminarProducto":
+                try{
+                    int idProducto = Integer.parseInt(request.getParameter("idProducto"));
+                    if(pharmacyDao.productoPerteneceFarmacia(idProducto,idFarmacia)){
+                        pharmacyDao.eliminarProducto(idProducto);
+                        response.sendRedirect(request.getContextPath()+"/PharmacyServlet?result=exito3");
+                    }else{
+                        response.sendRedirect(request.getContextPath()+"/PharmacyServlet"); // o 404
+                    }
+                }catch (Exception e){
+                    response.sendRedirect(request.getContextPath()+"/PharmacyServlet"); // o 404
+                }
                 break;
         }
 
@@ -184,3 +204,12 @@ public class PharmacyServlet extends HttpServlet {
     }
 }
 
+/*  Results:
+*   error1: ha ocurrido un error en el registro
+*   error2: ha ocurrido un error al subir la imagen
+*   error3: ha ocurrido un error al editar el producto
+*
+*   exito1: el producto ha sido registrado
+*   exito2: el producto ha sido editado
+*   exito3: el producto ha sido eliminado
+* */
