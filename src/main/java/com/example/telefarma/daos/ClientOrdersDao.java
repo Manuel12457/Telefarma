@@ -68,7 +68,7 @@ public class ClientOrdersDao {
 
         ArrayList<BOrderDetails> listaDetails = new ArrayList<>();
 
-        String sql = "select o.idOrder,od.quantity,p.name,p.price,p.price*od.quantity as 'totalProducto' \n" +
+        String sql = "select o.idOrder,od.quantity,p.name,p.price,p.price*od.quantity as 'totalProducto',p.idProduct\n" +
                 "from telefarma.orders o \n" +
                 "inner join orderdetails od on (od.idOrder=o.idOrder) \n" +
                 "inner join product p on (p.idProduct=od.idProduct) \n" +

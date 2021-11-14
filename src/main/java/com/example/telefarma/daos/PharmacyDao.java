@@ -121,16 +121,16 @@ public class PharmacyDao {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while(rs.next()) {
-                BPharmacyOrders pharmacyOrdersOrders = new BPharmacyOrders();
-                pharmacyOrdersOrders.setIdOrder(rs.getString(1));
-                pharmacyOrdersOrders.setEstado(rs.getString(2));
-                pharmacyOrdersOrders.setNombreCliente(rs.getString(3));
+                BPharmacyOrders pharmacyOrders = new BPharmacyOrders();
+                pharmacyOrders.setIdOrder(rs.getString(1));
+                pharmacyOrders.setEstado(rs.getString(2));
+                pharmacyOrders.setNombreCliente(rs.getString(3));
                 String dtOrden = rs.getString(4);
-                pharmacyOrdersOrders.setFechaOrden(dtOrden.substring(0,10)+" - "+dtOrden.substring(11,16));
+                pharmacyOrders.setFechaOrden(dtOrden.substring(0,10)+" - "+dtOrden.substring(11,16));
                 String dtRecojo = rs.getString(5);
-                pharmacyOrdersOrders.setFechaRecojo(dtRecojo.substring(0,10)+" - "+dtRecojo.substring(11,16));
-                pharmacyOrdersOrders.setTotal(rs.getDouble(6));
-                listaOrdenes.add(pharmacyOrdersOrders);
+                pharmacyOrders.setFechaRecojo(dtRecojo.substring(0,10)+" - "+dtRecojo.substring(11,16));
+                pharmacyOrders.setTotal(rs.getDouble(6));
+                listaOrdenes.add(pharmacyOrders);
             }
 
         } catch (SQLException e) {
@@ -146,7 +146,7 @@ public class PharmacyDao {
 
         ArrayList<BOrderDetails> listaDetails = new ArrayList<>();
 
-        String sql = "select o.idOrder,od.quantity,p.name,p.price,p.price*od.quantity as 'totalProducto' \n" +
+        String sql = "select o.idOrder,od.quantity,p.name,p.price,p.price*od.quantity as 'totalProducto',p.idProduct,p.requiresPrescription \n" +
                 "from telefarma.orders o \n" +
                 "inner join orderdetails od on (od.idOrder=o.idOrder) \n" +
                 "inner join product p on (p.idProduct=od.idProduct) \n" +
@@ -158,10 +158,13 @@ public class PharmacyDao {
 
             while(rs.next()) {
                 BOrderDetails orderDetails = new BOrderDetails();
+                orderDetails.setOrder(rs.getString(1));
                 orderDetails.setUnidades(rs.getInt(2));
                 orderDetails.setProducto(rs.getString(3));
                 orderDetails.setPrecioUnit(rs.getDouble(4));
                 orderDetails.setPrecioTotal(rs.getDouble(5));
+                orderDetails.setIdProduct(rs.getInt(6));
+                orderDetails.setRequierePrescripcion(rs.getBoolean(7));
                 listaDetails.add(orderDetails);
             }
 

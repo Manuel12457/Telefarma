@@ -6,7 +6,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.sql.*;
 
 @WebServlet(name = "ImageServlet", value = "/Image")
 public class ImageServlet extends HttpServlet {
@@ -14,17 +13,23 @@ public class ImageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String id = request.getParameter("id");
+        ImageDao imageDao = new ImageDao();
 
-        ImageDao imgd = new ImageDao();
+        String idProduct = request.getParameter("idProduct");
+        String idOrder = request.getParameter("idOrder");
 
-        byte[] content = imgd.obtenerImagen(id);
+        byte[] content = null;
+        if (idOrder == null) {
+            content = imageDao.obtenerImagenProducto(idProduct);
+        } else {
+            content = imageDao.obtenerImagenReceta(idProduct, idOrder);
+        }
 
-        if(content.length==1 && content[0]==0){
+        if (content.length == 1 && content[0] == 0) {
             System.out.println("Algo falló al nivel de SQL/DB");
-        }else if(content.length==1 && content[0]==1){
+        } else if (content.length == 1 && content[0] == 1) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
-        }else{
+        } else {
             response.setContentType("image/gif");
             response.setContentLength(content.length);
             response.getOutputStream().write(content);

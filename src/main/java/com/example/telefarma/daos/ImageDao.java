@@ -7,13 +7,13 @@ import java.util.ArrayList;
 
 public class ImageDao {
 
-    public byte[] obtenerImagen(String id){
+    String user = "root";
+    String pass = "root";
+    String url = "jdbc:mysql://localhost:3306/telefarma";
+
+    public byte[] obtenerImagenProducto(String id){
 
         byte[] content = null;
-
-        String user = "root";
-        String psw = "root";
-        String url = "jdbc:mysql://localhost:3306/telefarma";
 
         String sql = "SELECT photo FROM product\n"+
                 "WHERE idProduct="+id;
@@ -24,12 +24,44 @@ public class ImageDao {
             e.printStackTrace();
         }
 
-        try (Connection conn = DriverManager.getConnection(url,user,psw);
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             if (rs.next()) {
                 content = rs.getBytes("photo");
+            } else{
+                content = new byte[]{(byte) 1};
+            }
+            return content;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        content = new byte[]{(byte) 0};
+        return content;
+    }
+
+    public byte[] obtenerImagenReceta(String idProduct, String idOrder){
+
+        byte[] content = null;
+
+        String sql = "select prescription from orderdetails\n" +
+                "where idProduct = " + idProduct + " and\n" +
+                "idOrder = '" + idOrder + "'";
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                content = rs.getBytes("prescription");
             } else{
                 content = new byte[]{(byte) 1};
             }

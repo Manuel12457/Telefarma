@@ -22,7 +22,7 @@
 
     <body>
         <!--Barra de Navegación Superior-->
-        <jsp:include page="../BarraSuperior.jsp">
+        <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="Paco Perez"/>
             <jsp:param name="servletBusqueda" value="ClientProductsServlet?"/>

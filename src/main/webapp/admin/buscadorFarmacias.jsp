@@ -23,7 +23,7 @@
   </head>
   <body>
     <%--Cabecera de admin--%>
-      <jsp:include page="../BarraSuperior.jsp">
+      <jsp:include page="../barraSuperior.jsp">
         <jsp:param name="tipoUsuario" value="admin"/>
         <jsp:param name="nombre" value="Admin"/>
         <jsp:param name="servletBusqueda" value="PharmacyAdminServlet?"/>

@@ -28,7 +28,7 @@
             String busquedaPlaceholder = "Busca un producto en " + infoFarmacia.get(0);
         %>
         <!--Barra de Navegación Superior-->
-        <jsp:include page="../BarraSuperior.jsp">
+        <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="Paco Perez"/>
             <jsp:param name="servletBusqueda" value="<%=servletBusqueda%>"/>
@@ -81,7 +81,7 @@
                                     </h6>
                                 </div>
                                 <div class="card-body d-flex flex-column">
-                                    <img src="${pageContext.request.contextPath}/Image?id=<%= producto.getIdProducto() %>"
+                                    <img src="${pageContext.request.contextPath}/Image?idProduct=<%= producto.getIdProducto() %>"
                                          class="card-img-top mb-1"
                                          aria-label="Producto">
                                     <div class="mt-auto">

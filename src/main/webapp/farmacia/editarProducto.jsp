@@ -72,7 +72,7 @@
                                     <label for="formFile" class="form-label">Imagen
                                         Referencial</label>
                                     <div class="text-center mt-2 mb-3">
-                                        <img src="${pageContext.request.contextPath}/Image?id=<%= producto.getIdProducto() %>"
+                                        <img src="${pageContext.request.contextPath}/Image?idProduct=<%= producto.getIdProducto() %>"
                                              class="img-thumbnail"
                                              id="imagenPreview" width="100px" height="100px"
                                              alt="imagen de producto">
