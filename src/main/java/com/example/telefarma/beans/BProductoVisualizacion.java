@@ -1,6 +1,6 @@
 package com.example.telefarma.beans;
 
-public class BProductoGestion extends BProducto{
+public class BProductoVisualizacion extends BProducto{
     private boolean posibleEliminar;
 
     public boolean getPosibleEliminar() {

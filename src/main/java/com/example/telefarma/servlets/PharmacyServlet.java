@@ -1,9 +1,6 @@
 package com.example.telefarma.servlets;
 
 import com.example.telefarma.beans.*;
-import com.example.telefarma.daos.ClientOrdersDao;
-import com.example.telefarma.daos.ClientProductsDao;
-import com.example.telefarma.daos.PharmacyAdminDao;
 import com.example.telefarma.daos.PharmacyDao;
 
 import javax.servlet.*;
@@ -21,23 +18,22 @@ public class PharmacyServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
-        int pagina;
         String busqueda;
-        PharmacyDao pharmacyDao = new PharmacyDao();
+        int pagina;
         int pagTotales;
         RequestDispatcher view;
 
+        PharmacyDao pharmacyDao = new PharmacyDao();
+        String accion = request.getParameter("action") == null ? "buscarProducto" : request.getParameter("action");
+
         switch (accion) {
 
-            case "":
             case "buscarProducto":
                 int limiteProductos = 6;
-
                 pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-                ArrayList<BProductoGestion> listaProductosBusqueda = pharmacyDao.listaProductosFarmacia(pagina, busqueda, idFarmacia, limiteProductos);
-                for (BProductoGestion producto : listaProductosBusqueda) {
+                ArrayList<BProductoVisualizacion> listaProductosBusqueda = pharmacyDao.listaProductosFarmacia(pagina, busqueda, idFarmacia, limiteProductos);
+                for (BProductoVisualizacion producto : listaProductosBusqueda) {
                     pharmacyDao.agregarposibleEliminar(producto);
                 }
 

@@ -5,15 +5,16 @@
              type="java.util.ArrayList<com.example.telefarma.beans.BProductosBuscador>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="idFarma" scope="request" type="java.lang.Integer"/>
-<%String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");%>
+<jsp:useBean id="idPharmacy" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="busqueda" scope="request" type="java.lang.String" class="java.lang.String"/>
 
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - <%=infoFarmacia.get(0)%>></title>
+        <title>Telefarma - <%=infoFarmacia.get(0)%>
+        </title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css"
               type="text/css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css" type="text/css">
@@ -24,7 +25,7 @@
     </head>
     <body>
         <%
-            String servletBusqueda = "PharmacyAndProductsServlet?idPharmacy=" + idFarma + "&";
+            String servletBusqueda = "ClientPharmacyProductsServlet?idPharmacy=" + idPharmacy + "&";
             String busquedaPlaceholder = "Busca un producto en " + infoFarmacia.get(0);
         %>
         <!--Barra de Navegación Superior-->
@@ -60,13 +61,13 @@
                     </div>
                     <!--Titulo-->
                     <div class="row mb-3">
-                        <%if (busqueda.equals("")) {%>
+                        <% if (busqueda.equals("")) { %>
                         <h4 class="pb-2 border-bottom d-flex justify-content-start" style="color: #f57f00">Productos
                             disponibles</h4>
-                        <%} else {%>
+                        <% } else { %>
                         <h4 class="pb-2 border-bottom d-flex justify-content-start" style="color: #f57f00">Resultados de
-                            "<%=busqueda%>"</h4>
-                        <%}%>
+                            "<%= busqueda %>"</h4>
+                        <% } %>
                     </div>
                 </div>
                 <!--Productos-->
@@ -75,7 +76,8 @@
                         <%--Loop de productos--%>
                         <% for (BProductosBuscador producto : productosDeLaFarmacia) { %>
                         <div class="col">
-                            <div onclick="location.href='<%=request.getContextPath()%>/details?productid=<%=producto.getIdProducto()%>'" class="card card-producto">
+                            <div onclick="location.href='<%=request.getContextPath()%>/details?productid=<%=producto.getIdProducto()%>'"
+                                 class="card card-producto">
                                 <div class="card-header">
                                     <h6><%= producto.getNombreProducto() %>
                                     </h6>
@@ -100,7 +102,7 @@
                 </div>
             </div>
             <!--Paginación-->
-            <%String servlet = "/PharmacyAndProductsServlet?busqueda=" + busqueda + "&idPharmacy=" + idFarma + "&";%>
+            <%String servlet = "/ClientPharmacyProductsServlet?busqueda=" + busqueda + "&idPharmacy=" + idPharmacy + "&";%>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>

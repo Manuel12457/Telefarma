@@ -4,6 +4,10 @@
 <jsp:useBean id="listaOrdenes" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BClientOrders>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="busqueda" scope="request" type="java.lang.String"/>
+<%
+    int idClient = 1; //hardcodeado
+%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -77,6 +81,21 @@
                         <!--Contenido-->
                         <div class="card-body">
                             <div class="rounded py-2">
+                                <%--Buscador de pedidos--%>
+                                <form class="mb-4" method="post"
+                                      action="<%=request.getContextPath()%>/ClientOrdersServlet?action=buscar&idClient=<%=idClient%>">
+                                    <div class="input-group justify-content-center">
+                                        <div class="form-outline" style="width: 36%">
+                                            <input type="search" id="buscarPedido" class="form-control"
+                                                   placeholder="Buscar pedidos" name="busqueda"
+                                                   value="<%=busqueda%>"/>
+                                        </div>
+                                        <button role="button" class="btn btn-tele border-start-1">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                                <%--Tabla de pedidos--%>
                                 <div class="table-responsive">
                                     <table class="table">
                                         <!--Cabecera tabla de pedidos-->
@@ -109,7 +128,7 @@
                                                 </td>
                                                 <td><%=orden.getFechaRecojo()%>
                                                 </td>
-                                                <td>S/. <%=String.format("%.2f",orden.getTotal())%>
+                                                <td>S/. <%=String.format("%.2f", orden.getTotal())%>
                                                 </td>
                                                 <%
                                                     String estado = orden.getEstado();
@@ -149,9 +168,9 @@
                                                 </td>
                                                 <td colspan="2"><%=details.getProducto()%>
                                                 </td>
-                                                <td colspan="2">s/ <%=String.format("%.2f",details.getPrecioUnit())%>
+                                                <td colspan="2">s/ <%=String.format("%.2f", details.getPrecioUnit())%>
                                                 </td>
-                                                <td colspan="2">s/ <%=String.format("%.2f",details.getPrecioTotal())%>
+                                                <td colspan="2">s/ <%=String.format("%.2f", details.getPrecioTotal())%>
                                                 </td>
                                             </tr>
                                             <%

@@ -85,7 +85,7 @@
                                     <div class="form-outline">
                                         <label class="form-label" for="productoDescription">Descripción</label>
                                         <textarea type="tel" id="productoDescription" name="descripcion"
-                                                  class="form-control"></textarea>
+                                                  class="form-control" rows="5"></textarea>
 
                                     </div>
 
