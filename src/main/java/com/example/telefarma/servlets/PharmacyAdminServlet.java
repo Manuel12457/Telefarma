@@ -14,6 +14,10 @@ public class PharmacyAdminServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        response.setCharacterEncoding("UTF-8");
+
+        response.setCharacterEncoding("UTF-8");
+
         String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
         String estadoRegistro = request.getParameter("registro") == null ? "" : request.getParameter("registro");
         int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
@@ -79,6 +83,7 @@ public class PharmacyAdminServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
 
         request.setCharacterEncoding("UTF-8");
         String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
