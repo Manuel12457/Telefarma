@@ -34,6 +34,7 @@ public class PharmacyAndProductsServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         switch(request.getParameter("action")) {
             case "buscar":
                 String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
