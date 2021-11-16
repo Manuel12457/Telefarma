@@ -12,7 +12,7 @@ public class PharmacyDao {
     String pass = "root";
     String url = "jdbc:mysql://localhost:3306/telefarma";
 
-    private void agregarClase(){
+    private void agregarClase() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -20,19 +20,18 @@ public class PharmacyDao {
         }
     }
 
-    public int cantidadProductos(String busqueda, int idFarmacia){
-
+    public int cantidadProductos(String busqueda, int idFarmacia) {
         this.agregarClase();
 
         int cantidad = 0;
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("select count(*), p.name from product p " +
                      "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy) " +
-                     "where lower(p.name) like '%"+busqueda +"%'and f.idPharmacy=" + idFarmacia + " ;")) {
+                     "where lower(p.name) like '%" + busqueda + "%'and f.idPharmacy=" + idFarmacia + " ;")) {
 
-            if(rs.next()) {
+            if (rs.next()) {
                 cantidad = rs.getInt(1);
             }
         } catch (SQLException e) {
@@ -42,23 +41,22 @@ public class PharmacyDao {
         return cantidad;
     }
 
-    public ArrayList<BProductoGestion> listaProductosFarmacia(int pagina, String busqueda, int idFarmacia, int limite) {
+    public ArrayList<BProductoVisualizacion> listaProductosFarmacia(int pagina, String busqueda, int idFarmacia, int limite) {
+        this.agregarClase();
 
-        ArrayList<BProductoGestion> listaProductos = new ArrayList<>();
+        ArrayList<BProductoVisualizacion> listaProductos = new ArrayList<>();
 
         String sql = "select p.idProduct, p.name, p.description, p.stock, p.price, p.requiresPrescription from telefarma.product p\n" +
                 "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
                 "where lower(p.name) like '%" + busqueda + "%' and f.idPharmacy=" + idFarmacia + "\n" +
-                "limit " + limite*pagina + ","+limite+";";
+                "limit " + limite * pagina + "," + limite + ";";
 
-        this.agregarClase();
-
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                BProductoGestion producto = new BProductoGestion();
+                BProductoVisualizacion producto = new BProductoVisualizacion();
                 producto.setIdProducto(rs.getInt(1));
                 producto.setNombre(rs.getString(2));
                 producto.setDescripcion(rs.getString(3));
@@ -75,19 +73,17 @@ public class PharmacyDao {
         return listaProductos;
     }
 
-    public void agregarposibleEliminar(BProductoGestion producto) {
-
+    public void agregarposibleEliminar(BProductoVisualizacion producto) {
         this.agregarClase();
 
-        String sql = "select p.idProduct, o.idOrder from telefarma.product p\n" +
-                "inner join telefarma.orderdetails od on (p.idProduct = od.idProduct)\n" +
-                "inner join telefarma.orders o on (od.idOrder = o.idOrder)\n" +
-                "where p.idProduct=?;";
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             PreparedStatement pstmt = conn.prepareStatement("select p.idProduct, o.idOrder from product p\n" +
+                     "inner join orderdetails od on (p.idProduct = od.idProduct)\n" +
+                     "inner join orders o on (od.idOrder = o.idOrder)\n" +
+                     "where p.idProduct = ?;");) {
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
-             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+            pstmt.setInt(1, producto.getIdProducto());
 
-            pstmt.setInt(1,producto.getIdProducto());
             try (ResultSet rs = pstmt.executeQuery()) {
                 producto.setPosibleEliminar(!rs.next());
             }
@@ -95,40 +91,35 @@ public class PharmacyDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
-    public ArrayList<BPharmacyOrders> listarOrdenes(int pagina, String busqueda, int limite, int id){
-
+    public ArrayList<BPharmacyOrders> listarOrdenes(int pagina, String busqueda, int limite, int id) {
         this.agregarClase();
 
         ArrayList<BPharmacyOrders> listaOrdenes = new ArrayList<>();
 
-        String sql = "select o.idOrder,o.status,concat(c.name,' ',c.lastName) as 'Cliente'," +
-                "o.orderDate,o.pickUpDate,sum(p.price*od.quantity) as 'total'\n" +
-                "from telefarma.orders o \n" +
-                "inner join orderdetails od on (od.idOrder=o.idOrder) \n" +
-                "inner join product p on (p.idProduct=od.idProduct) \n" +
-                "inner join client c on (o.idClient=c.idClient) \n" +
-                "where p.idPharmacy="+id+" and o.idOrder like '%"+busqueda+"%' \n" +
-                "group by o.idOrder \n" +
-                "order by o.orderDate desc \n" +
-                "limit " + pagina*limite + "," + limite + ";";
-
-
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             ResultSet rs = stmt.executeQuery("select o.idOrder,o.status,concat(c.name,' ',c.lastName)," +
+                     "o.orderDate,o.pickUpDate,sum(p.price*od.quantity) as 'total'\n" +
+                     "from orders o \n" +
+                     "inner join orderdetails od on (od.idOrder=o.idOrder) \n" +
+                     "inner join product p on (p.idProduct=od.idProduct) \n" +
+                     "inner join client c on (o.idClient=c.idClient) \n" +
+                     "where p.idPharmacy=" + id + " and o.idOrder like '%" + busqueda + "%' \n" +
+                     "group by o.idOrder \n" +
+                     "order by o.orderDate desc \n" +
+                     "limit " + pagina * limite + "," + limite + ";")) {
 
-            while(rs.next()) {
+            while (rs.next()) {
                 BPharmacyOrders pharmacyOrders = new BPharmacyOrders();
                 pharmacyOrders.setIdOrder(rs.getString(1));
                 pharmacyOrders.setEstado(rs.getString(2));
                 pharmacyOrders.setNombreCliente(rs.getString(3));
                 String dtOrden = rs.getString(4);
-                pharmacyOrders.setFechaOrden(dtOrden.substring(0,10)+" - "+dtOrden.substring(11,16));
+                pharmacyOrders.setFechaOrden(dtOrden.substring(0, 10) + " - " + dtOrden.substring(11, 16));
                 String dtRecojo = rs.getString(5);
-                pharmacyOrders.setFechaRecojo(dtRecojo.substring(0,10)+" - "+dtRecojo.substring(11,16));
+                pharmacyOrders.setFechaRecojo(dtRecojo.substring(0, 10) + " - " + dtRecojo.substring(11, 16));
                 pharmacyOrders.setTotal(rs.getDouble(6));
                 listaOrdenes.add(pharmacyOrders);
             }
@@ -140,8 +131,7 @@ public class PharmacyDao {
         return listaOrdenes;
     }
 
-    public void agregarOrderDetails(BPharmacyOrders orden){
-
+    public void agregarOrderDetails(BPharmacyOrders orden) {
         this.agregarClase();
 
         ArrayList<BOrderDetails> listaDetails = new ArrayList<>();
@@ -150,13 +140,13 @@ public class PharmacyDao {
                 "from telefarma.orders o \n" +
                 "inner join orderdetails od on (od.idOrder=o.idOrder) \n" +
                 "inner join product p on (p.idProduct=od.idProduct) \n" +
-                "where o.idOrder='"+orden.getIdOrder()+"';";
+                "where o.idOrder='" + orden.getIdOrder() + "';";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            while(rs.next()) {
+            while (rs.next()) {
                 BOrderDetails orderDetails = new BOrderDetails();
                 orderDetails.setOrder(rs.getString(1));
                 orderDetails.setUnidades(rs.getInt(2));
@@ -175,19 +165,18 @@ public class PharmacyDao {
         orden.setListaDetails(listaDetails);
     }
 
-    public void agregarDayDiff(BPharmacyOrders orden){
-
+    public void agregarDayDiff(BPharmacyOrders orden) {
         this.agregarClase();
 
         String sql = "select pickUpDate,timestampdiff(SQL_TSI_DAY,pickUpDate,now()) \n" +
                 "from telefarma.orders o \n" +
-                "where o.idOrder='"+orden.getIdOrder()+"' ;";
+                "where o.idOrder='" + orden.getIdOrder() + "' ;";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            while(rs.next()) {
+            while (rs.next()) {
                 orden.setDayDiff(rs.getInt(2));
             }
 
@@ -198,7 +187,6 @@ public class PharmacyDao {
     }
 
     public void cambiarEstadoPedido(String nuevoEstado, String idOrder) {
-
         this.agregarClase();
 
         String sql = "update orders set status=? \n" +
@@ -218,7 +206,6 @@ public class PharmacyDao {
     }
 
     public boolean registrarProducto(BProducto producto) { //retorna falso si surge una excepcion
-
         this.agregarClase();
 
         String sql = "insert into telefarma.product (idPharmacy,name,description,stock,price,requiresPrescription)\n" +
@@ -243,23 +230,23 @@ public class PharmacyDao {
         return true;
     }
 
-    public int retornarUltimaIdProducto(int idFarmacia){
+    public int retornarUltimaIdProducto(int idFarmacia) {
 
         this.agregarClase();
 
-        int idProducto=0; //Requiere inicializacion
+        int idProducto = 0; //Requiere inicializacion
 
         ArrayList<BOrderDetails> listaDetails = new ArrayList<>();
 
-        String sql = "select idProduct from product where idPharmacy="+idFarmacia+" \n"+
+        String sql = "select idProduct from product where idPharmacy=" + idFarmacia + " \n" +
                 "order by idProduct desc \n" +
                 "limit 1;";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            while(rs.next()) {
+            while (rs.next()) {
                 idProducto = rs.getInt(1);
             }
 
@@ -292,27 +279,27 @@ public class PharmacyDao {
         return true;
     }
 
-    public boolean productoPerteneceFarmacia(int idProducto, int idFarmacia){
+    public boolean productoPerteneceFarmacia(int idProducto, int idFarmacia) {
         this.agregarClase();
 
         int count = 0;
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("select count(*) from product " +
-                     "where idProduct="+idProducto+" and idPharmacy="+idFarmacia+";")) {
+                     "where idProduct=" + idProducto + " and idPharmacy=" + idFarmacia + ";")) {
 
-            if(rs.next()) {
+            if (rs.next()) {
                 count = rs.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return count==1;
+        return count == 1;
     }
 
-    public BProducto obtenerProducto(int idProducto){
+    public BProducto obtenerProducto(int idProducto) {
 
         this.agregarClase();
         BProducto producto = new BProducto();
@@ -320,7 +307,7 @@ public class PharmacyDao {
         String sql = "select name, description, stock, price, requiresPrescription from telefarma.product " +
                 "where idProduct=" + idProducto + ";";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -346,22 +333,22 @@ public class PharmacyDao {
         String sql = "update telefarma.product set name=?,description=?,stock=?,price=?,requiresPrescription=? " +
                 "where idProduct=?";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
-            pstmt.setString(1,producto.getNombre());
-            pstmt.setString(2,producto.getDescripcion());
-            pstmt.setInt(3,producto.getStock());
-            pstmt.setDouble(4,producto.getPrecio());
-            pstmt.setByte(5,producto.getRequierePrescripcion()?(byte)1:(byte)0);
-            pstmt.setDouble(6,producto.getIdProducto());
+            pstmt.setString(1, producto.getNombre());
+            pstmt.setString(2, producto.getDescripcion());
+            pstmt.setInt(3, producto.getStock());
+            pstmt.setDouble(4, producto.getPrecio());
+            pstmt.setByte(5, producto.getRequierePrescripcion() ? (byte) 1 : (byte) 0);
+            pstmt.setDouble(6, producto.getIdProducto());
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
-            return true;
+        return true;
     }
 
     public void eliminarProducto(int idProducto) {
@@ -370,10 +357,10 @@ public class PharmacyDao {
 
         String sql = "delete from telefarma.product where (idProduct=?);";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
-            pstmt.setInt(1,idProducto);
+            pstmt.setInt(1, idProducto);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {

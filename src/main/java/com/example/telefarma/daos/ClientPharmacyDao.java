@@ -7,7 +7,7 @@ import com.example.telefarma.beans.BProductosBuscador;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class FarmacyClientDao {
+public class ClientPharmacyDao {
 
     String user = "root";
     String pass = "root";
@@ -21,22 +21,21 @@ public class FarmacyClientDao {
         }
     }
 
-    public int cantidadDistritosconFarmacia(){
-
+    public int cantidadDistritosConFarmacia(){
         this.agregarClase();
 
         int cantidad = 0;
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("select count(*) from (select d.name from district d\n" +
-                     "inner join telefarma.pharmacy f on (d.name=f.District_name)\n" +
-                     "where f.isBanned=0\n" +
-                     "group by d.name) DistritoConFarmacia;")) {
+             ResultSet rs = stmt.executeQuery("select count(*) from (select District_name from pharmacy\n" +
+                     "where isBanned = 0\n" +
+                     "group by District_name) distFarm;")) {
 
             if(rs.next()) {
                 cantidad = rs.getInt(1);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -50,7 +49,7 @@ public class FarmacyClientDao {
 
         ArrayList<String> listaDistritosPagina = new ArrayList<>();
 
-        /*OBTENGO TODOS LOS ORDENADOS POR CANTIDAD DE FARMACIAS DISTRITOS (PRIMERO EL DEL CLIENTE ACTUAL)*/
+        //Distritos ordenados por su cant. de farmacias (1ero distrito del cliente) + limit
         String sqlObtenerDistritos = "select d.name from district d\n" +
                 "inner join (select District_name, \n" +
                 "count(idPharmacy) as `cantFarmacias`\n" +
@@ -80,43 +79,72 @@ public class FarmacyClientDao {
         return listaDistritosPagina;
     }
 
-    public ArrayList<BFarmaciasCliente> listarFarmaciasClientePorDistrito(String distrito) {
-
+    public int cantidadFarmaciasPorDistrito(String distrito, String busqueda) {
         this.agregarClase();
 
-        ArrayList<BFarmaciasCliente> listaFarmaciasClientePorDistrito = new ArrayList<>();
-
-        /*OBTENGO LAS FARMACIAS DE LOS DISTRITOS QUE SE MOSTRARAN POR PAGINA*/
-        String sqlObtenerFarmacias = "select name, address, District_name, idPharmacy from telefarma.pharmacy\n" +
-                "where isBanned = 0 and District_name = '" + distrito + "';";
+        int cantidad = 0;
 
         try (Connection conn = DriverManager.getConnection(url,user,pass);
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sqlObtenerFarmacias)) {
+             PreparedStatement pstmt = conn.prepareStatement("select count(*) from (select * from pharmacy\n" +
+                     "where isBanned = 0 and District_name = '" + distrito + "'\n and " +
+                     "name like ?) cantFarma;");) {
 
-            while (rs.next()) {
-                BFarmaciasCliente bFarmaciasCliente = new BFarmaciasCliente();
-                bFarmaciasCliente.setNombreFarmacia(rs.getString(1));
-                bFarmaciasCliente.setDireccionFarmacia(rs.getString(2));
-                bFarmaciasCliente.setDistritoFarmacia(rs.getString(3));
-                bFarmaciasCliente.setIdPharmacy(rs.getInt(4));
-                listaFarmaciasClientePorDistrito.add(bFarmaciasCliente);
+            pstmt.setString(1, "%"+busqueda+"%");
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                if (rs.next()) {
+                    cantidad = rs.getInt(1);
+                }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return listaFarmaciasClientePorDistrito;
+        return cantidad;
     }
 
-    public ArrayList<BFarmaciasCliente> listarFarmaciasClientePorDistritoLimite(String distrito, int limite) {
+    public ArrayList<BFarmaciasCliente> listarFarmaciasPorDistrito(int pagina, String distrito, String busqueda, int limite) {
+
+        this.agregarClase();
+
+        ArrayList<BFarmaciasCliente> listaFarmaciasPorDistrito = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             PreparedStatement pstmt = conn.prepareStatement("select name, address, District_name, idPharmacy from pharmacy\n" +
+                     "where isBanned = 0 and District_name = '" + distrito + "'\n and " +
+                     "name like ?\n" +
+                     "limit " + limite * pagina + "," + limite + ";");) {
+
+            pstmt.setString(1, "%"+busqueda+"%");
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                while (rs.next()) {
+                    BFarmaciasCliente bFarmaciasCliente = new BFarmaciasCliente();
+                    bFarmaciasCliente.setNombreFarmacia(rs.getString(1));
+                    bFarmaciasCliente.setDireccionFarmacia(rs.getString(2));
+                    bFarmaciasCliente.setDistritoFarmacia(rs.getString(3));
+                    bFarmaciasCliente.setIdPharmacy(rs.getInt(4));
+                    listaFarmaciasPorDistrito.add(bFarmaciasCliente);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listaFarmaciasPorDistrito;
+    }
+
+    public ArrayList<BFarmaciasCliente> listarFarmaciasPorDistritoLimite(String distrito, int limite) {
 
         this.agregarClase();
 
         ArrayList<BFarmaciasCliente> listaFarmaciasClientePorDistrito = new ArrayList<>();
 
-        /*OBTENGO LAS FARMACIAS DE LOS DISTRITOS QUE SE MOSTRARAN POR PAGINA*/
+        //Farmacias por distrito + limit
         String sqlObtenerFarmacias = "select name, address, District_name, idPharmacy from telefarma.pharmacy\n" +
                 "where isBanned = 0 and District_name = '" + distrito + "'\n" +
                 "limit "+limite+";";

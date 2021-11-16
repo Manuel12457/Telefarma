@@ -1,7 +1,7 @@
-<%@ page import="com.example.telefarma.beans.BProductoGestion" %>
+<%@ page import="com.example.telefarma.beans.BProductoVisualizacion" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaProductosBusqueda" scope="request"
-             type="java.util.ArrayList<com.example.telefarma.beans.BProductoGestion>"/>
+             type="java.util.ArrayList<com.example.telefarma.beans.BProductoVisualizacion>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <%
@@ -90,7 +90,7 @@
             <div class="container">
                 <!--Loop de productos-->
                 <%
-                    for (BProductoGestion producto : listaProductosBusqueda) {
+                    for (BProductoVisualizacion producto : listaProductosBusqueda) {
                 %>
                 <div class="row col-12 justify-content-center align-items-start">
                     <!--Nombre del producto e imagen referencial-->
@@ -149,10 +149,10 @@
                     <!--Botones de editar y eliminar-->
                     <div class="col-sm-1 mt-5 d-none d-md-block text-center">
                         <a href="<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProducto()%>">
-                            <i class="far fa-edit btn-tele p-1 rounded"></i>
+                            <i class="far fa-edit fa-lg btn-tele p-2 rounded"></i>
                         </a>
                         <hr class="my-1" style="background-color: white">
-                        <button class="btn btn-danger py-0 px-1" type="button"
+                        <button class="btn btn-danger fa-lg px-2" type="button"
                                 data-bs-toggle="modal" data-bs-target="#<%=modalTarget%>"
                                 data-bs-whatever="<%=producto.getIdProducto()%>">
                             <i class="fas fa-times-circle"></i>
@@ -160,10 +160,10 @@
                     </div>
                     <div class="d-flex justify-content-center my-2 d-md-none">
                         <a href="<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProducto()%>">
-                            <i class="far fa-edit btn-tele p-1 rounded"></i>
+                            <i class="far fa-edit fa-lg btn-tele p-2 rounded"></i>
                         </a>
                         <div class="mx-3"></div>
-                        <button class="btn btn-danger py-0 px-1" type="button"
+                        <button class="btn btn-danger fa-lg px-2" type="button"
                                 data-bs-toggle="modal" data-bs-target="#<%=modalTarget%>"
                                 data-bs-whatever="<%=producto.getIdProducto()%>">
                             <i class="fas fa-times-circle"></i>

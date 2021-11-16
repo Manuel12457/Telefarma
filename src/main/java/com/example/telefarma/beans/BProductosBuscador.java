@@ -8,7 +8,6 @@ public class BProductosBuscador {
     private String nombreProducto;
     private int stock;
     private double precio;
-    /*Falta foto*/
 
     public String getNombreFarmacia() {
         return nombreFarmacia;
