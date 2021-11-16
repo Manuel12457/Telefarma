@@ -51,6 +51,33 @@ public class PharmacyAdminDao {
 
     }
 
+    public BFarmaciasAdmin obtenerFarmaciaPorId(int id) {
+
+        this.agregarClase();
+
+        BFarmaciasAdmin farmacia = new BFarmaciasAdmin();
+
+        String sql = "select * from telefarma.pharmacy\n" +
+                "where idPharmacy = ?;";
+
+        try (Connection conn = DriverManager.getConnection(url,user,pass);
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setInt(1,id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while(rs.next()) {
+                    farmacia.setRUCFarmacia(rs.getString(2));
+                    farmacia.setNombreFarmacia(rs.getString(3));
+                    farmacia.setEmailFarmacia(rs.getString(4));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return farmacia;
+    }
+
     public ArrayList<BFarmaciasAdmin> listarFarmaciasAdminPorDistrito(String distrito, String busqueda) {
 
         this.agregarClase();
@@ -195,6 +222,33 @@ public class PharmacyAdminDao {
             return "ne";
         }
         return "e";
+    }
+
+    public String editarFarmacia(String ruc, String nombre, String correo, String direccion, String distrito, int idPharmacy) {
+
+        this.agregarClase();
+
+        String sql = "update telefarma.pharmacy set RUC = ?,name = ?,mail = ?,address = ?,District_name = ?\n" +
+                "where idPharmacy = ?;";
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setString(1, ruc);
+            pstmt.setString(2, nombre);
+            pstmt.setString(3, correo);
+            pstmt.setString(4, direccion);
+            pstmt.setString(5, distrito);
+            pstmt.setInt(6, idPharmacy);
+            System.out.println(pstmt);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "ne";
+        }
+        return "e";
+
     }
 
     public boolean conPedidosPendientes(int idPharmacy){

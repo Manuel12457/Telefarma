@@ -7,6 +7,7 @@
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="resultban" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="estadoRegistro" scope="request" type="java.lang.String"/>
+<jsp:useBean id="estadoEdicion" scope="request" type="java.lang.String"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -46,6 +47,18 @@
                     <%} else if (estadoRegistro.equals("ne")) {%>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         Hubo un problema con el registro de la farmacia
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <%}%>
+
+                    <%if (estadoEdicion.equals("e")) { %>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        Farmacia editada exitosamente
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <%} else if (estadoEdicion.equals("ne")) {%>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        Hubo un problema con la edición de la farmacia
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     <%}%>
@@ -93,7 +106,7 @@
                                     <div class="card-header h-100 shadow border-0 text-white"
                                          style="background-image: url('${pageContext.request.contextPath}<%=imgs[cardCount-1]%>');  background-size: cover">
                                         <div class="d-flex justify-content-end ">
-                                            <a role="button" href="" class="btn btn-tele pe-2 pt-1"><i
+                                            <a role="button" href="<%=request.getContextPath()%>/PharmacyAdminServlet?action=editarForm&distrito=<%=farmacia.getDistritoFarmacia()%>&id=<%=farmacia.getIdPharmacy()%>" class="btn btn-tele pe-2 pt-1"><i
                                                     class="fas fa-edit"></i></i>
                                             </a>
                                         </div>
