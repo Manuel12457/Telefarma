@@ -1,5 +1,6 @@
 <%@ page import="com.example.telefarma.beans.BFarmaciasCliente" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:useBean id="listaFarmaciasDistrito" scope="request"
              type="java.util.ArrayList<com.example.telefarma.beans.BFarmaciasCliente>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>

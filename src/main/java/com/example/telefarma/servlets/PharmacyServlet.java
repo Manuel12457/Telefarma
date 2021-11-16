@@ -17,7 +17,7 @@ public class PharmacyServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        response.setCharacterEncoding("UTF-8");
         String busqueda;
         int pagina;
         int pagTotales;
@@ -90,6 +90,8 @@ public class PharmacyServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+
         String busqueda;
         PharmacyDao pharmacyDao = new PharmacyDao();
 

@@ -13,6 +13,8 @@ public class ClientProductsServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html");
 
         int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
@@ -36,6 +38,8 @@ public class ClientProductsServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+
         switch(request.getParameter("action")) {
             case "buscar":
                 String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
