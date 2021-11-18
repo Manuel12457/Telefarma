@@ -13,11 +13,11 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
         <title>Telefarma - Inicio sesión</title>
-        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/style.css">
     </head>
     <body>
         <section
@@ -28,7 +28,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 d-flex flex-column justify-content-center align-content-center align-middle">
-                                <img src="assets/img/pexels-photo-5699982.jpeg" class="rounded d-none d-md-block"
+                                <img src="${pageContext.request.contextPath}/res/img/pexels-photo-5699982.jpeg" class="rounded d-none d-md-block"
                                      style="height: 90%;"
                                      alt="telefarma">
                             </div>
@@ -89,6 +89,6 @@
                 </div>
             </div>
         </section>
-        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="${pageContext.request.contextPath}/res/bootstrap/js/bootstrap.min.js"></script>
     </body>
 </html>

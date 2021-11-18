@@ -13,8 +13,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
         <title>Telefarma - Cambiar contraseña</title>
-        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-        <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/style.css">
     </head>
 
     <body>
@@ -42,14 +42,14 @@
                                         </button>
                                     </div>
                                 </form>
-                                <a class="text-center" href="index.html">Volver al Inicio de Sesión</a>
+                                <a class="text-center" href="${pageContext.request.contextPath}/SessionServlet?action=pantallaInicio">Volver al Inicio de Sesión</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="${pageContext.request.contextPath}/res/bootstrap/js/bootstrap.min.js"></script>
     </body>
 
 </html>
