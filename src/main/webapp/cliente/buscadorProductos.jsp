@@ -4,6 +4,7 @@
              type="java.util.ArrayList<com.example.telefarma.beans.BProductosBuscador>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="sessionClient" scope="session" type="com.example.telefarma.beans.BClient" class="com.example.telefarma.beans.BClient"/>
 <%String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");%>
 
 <!DOCTYPE html>
@@ -22,10 +23,11 @@
     </head>
     <body>
         <!--Barra de Navegación Superior-->
+        <%String a = sessionClient.getName() + " " + sessionClient.getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
-            <jsp:param name="nombre" value="Paco Perez"/>
-            <jsp:param name="servletBusqueda" value="ClientProductsServlet?"/>
+            <jsp:param name="nombre" value="<%=a%>"/>
+            <jsp:param name="servletBusqueda" value="ClientServlet?action=buscarProduct"/>
             <jsp:param name="busquedaPlaceholder" value="Busca un producto"/>
         </jsp:include>
 
@@ -47,7 +49,7 @@
                             <%--Loop de productos--%>
                             <% for (BProductosBuscador producto : listaProductosBusqueda) { %>
                             <div class="col">
-                                <div onclick="location.href='<%=request.getContextPath()%>/details?productid=<%=producto.getIdProducto()%>'"
+                                <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&productid=<%=producto.getIdProducto()%>'"
                                      class="card card-producto">
                                     <div class="card-header">
                                         <h6><%= producto.getNombreProducto() %>
@@ -83,7 +85,7 @@
             </div>
             <!--Paginación-->
             <%
-                String servlet = "/ClientProductsServlet?busqueda=" + busqueda + "&";
+                String servlet = "/ClientServlet?action=buscarProducto&busqueda=" + busqueda + "&";
             %>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>

@@ -25,7 +25,7 @@
     </head>
     <body>
         <%
-            String servletBusqueda = "ClientPharmacyProductsServlet?idPharmacy=" + idPharmacy + "&";
+            String servletBusqueda = "ClientServlet?action=buscarProductosDeFarmacia&idPharmacy=" + idPharmacy + "&";
             String busquedaPlaceholder = "Busca un producto en " + infoFarmacia.get(0);
         %>
         <!--Barra de Navegación Superior-->
@@ -76,7 +76,7 @@
                         <%--Loop de productos--%>
                         <% for (BProductosBuscador producto : productosDeLaFarmacia) { %>
                         <div class="col">
-                            <div onclick="location.href='<%=request.getContextPath()%>/details?productid=<%=producto.getIdProducto()%>'"
+                            <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&productid=<%=producto.getIdProducto()%>'"
                                  class="card card-producto">
                                 <div class="card-header">
                                     <h6><%= producto.getNombreProducto() %>
@@ -102,7 +102,7 @@
                 </div>
             </div>
             <!--Paginación-->
-            <%String servlet = "/ClientPharmacyProductsServlet?busqueda=" + busqueda + "&idPharmacy=" + idPharmacy + "&";%>
+            <%String servlet = "/ClientServlet?action=farmaciaYProductos&busqueda=" + busqueda + "&idPharmacy=" + idPharmacy + "&";%>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>

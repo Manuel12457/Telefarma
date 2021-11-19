@@ -13,13 +13,13 @@
     <div class="row w-100 align-items-center pe-sm-4 ps-0 my-2">
         <!--Logo telefarma-->
         <div class="col-md-3 col-sm-5 col-6 d-flex justify-content-center ps-xxl-2 ps-xl-5 ps-lg-4 ps-md-5 ps-2">
-            <a class="navbar-brand py-0" href="${pageContext.request.contextPath}/">
+            <a class="navbar-brand py-0" href="${pageContext.request.contextPath}/ClientServlet">
                 <p class="logo-header mb-0">TeleFarma</p>
             </a>
         </div>
         <!--Buscador de productos-->
         <div class="col-md-7 d-none d-md-block ps-0"> <!--desaparece en menores a medium-->
-            <form method="post" action="<%=request.getContextPath()%>/<%=servletBusqueda%>action=buscar">
+            <form method="post" action="<%=request.getContextPath()%>/<%=servletBusqueda%>">
                 <div class="input-group">
                     <div style="width:40%">
                         <input type="search" name="busqueda" class="form-control" placeholder="<%=busquedaPlaceholder%>"
@@ -85,7 +85,7 @@
                             </a>
                         </div>
                         <div class="p-2">
-                            <a href="<%=request.getContextPath()%>/ClientOrdersServlet"
+                            <a href="<%=request.getContextPath()%>/ClientServlet?action=historial"
                                class="text-dark text-decoration-none">
                                 <span><i class="fas fa-list"></i></span>
                                 <span>Historial de compras</span>

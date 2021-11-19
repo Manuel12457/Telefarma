@@ -26,7 +26,7 @@
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="Paco Perez"/>
-            <jsp:param name="servletBusqueda" value="ClientProductsServlet?"/>
+            <jsp:param name="servletBusqueda" value="ClientServlet?action=buscarProduct"/>
             <jsp:param name="busquedaPlaceholder" value="Busca un producto"/>
         </jsp:include>
 
@@ -73,7 +73,7 @@
                                     imageCount++; //el loop será solo de 3 veces por el limit, entonces será f1,f2,f3
                             %>
                             <div class="col">
-                                <div onclick="location.href='<%= request.getContextPath()%>/ClientPharmacyProductsServlet?idPharmacy=<%= farmacia.getIdPharmacy() %>'"
+                                <div onclick="location.href='<%= request.getContextPath()%>/ClientServlet?action=farmaciaYProductos&idPharmacy=<%= farmacia.getIdPharmacy() %>'"
                                      class="card card-farmacia f<%= imageCount %>">
                                     <h2><%= farmacia.getNombreFarmacia() %>
                                     </h2>
@@ -92,7 +92,7 @@
                         </div>
                         <!--Boton ver más-->
                         <div class="d-flex justify-content-end">
-                            <a href="<%=request.getContextPath()%>/ClientDistrictPharmaciesServlet?district=<%=listaFarmaciasDistrito.get(0).getDistritoFarmacia()%>"
+                            <a href="<%=request.getContextPath()%>/ClientServlet?action=farmaciasDeDistrito&district=<%=listaFarmaciasDistrito.get(0).getDistritoFarmacia()%>"
                                class="btn btn-tele" role="button" >Ver más</a>
                         </div>
                     </div>
@@ -107,7 +107,7 @@
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
-                <jsp:param name="servlet" value="/?"/>
+                <jsp:param name="servlet" value="/ClientServlet?action=mostrarFarmacias&"/>
             </jsp:include>
         </main>
 

@@ -25,7 +25,7 @@
     </head>
     <body>
         <%
-            String servletBusqueda = "ClientDistrictPharmaciesServlet?district=" + district + "&";
+            String servletBusqueda = "ClientServlet?action=buscarFarmaciaDeDistrito&district=" + district + "&";
             String busquedaPlaceholder = "Busca una farmacia en " + district;
         %>
         <!--Barra de Navegación Superior-->
@@ -59,7 +59,7 @@
                                     imageCount++;
                             %>
                             <div class="col">
-                                <div onclick="location.href='<%= request.getContextPath()%>/ClientPharmacyProductsServlet?idPharmacy=<%= farmacia.getIdPharmacy() %>'"
+                                <div onclick="location.href='<%= request.getContextPath()%>/ClientServlet?action=farmaciaYProductos&idPharmacy=<%= farmacia.getIdPharmacy() %>'"
                                      class="card card-farmacia f<%= imageCount %>">
                                     <h2><%= farmacia.getNombreFarmacia() %>
                                     </h2>
@@ -80,7 +80,7 @@
                 </div>
             </div>
             <!--Paginación-->
-            <%String servlet = "/ClientDistrictPharmaciesServlet?busqueda=" + busqueda + "&district=" + district + "&";%>
+            <%String servlet = "/ClientServlet?action=farmaciasDeDistrito&busqueda=" + busqueda + "&district=" + district + "&";%>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>

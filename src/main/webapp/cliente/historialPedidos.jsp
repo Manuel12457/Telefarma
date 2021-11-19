@@ -29,7 +29,7 @@
             <!--Logo: Vuelve al home-->
             <div class="logo-content border-bottom">
                 <div class="logo">
-                    <div onclick="location.href='<%=request.getContextPath()%>/';" class="logo-name">TeleFarma</div>
+                    <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet';" class="logo-name">TeleFarma</div>
                 </div>
                 <i class='fas fa-bars' id="btn-sidebar"></i>
             </div>
@@ -44,7 +44,7 @@
                 </li>
                 <!--Ver historial de compras-->
                 <li>
-                    <a href="<%=request.getContextPath()%>/ClientOrdersServlet">
+                    <a href="<%=request.getContextPath()%>/ClientServlet?action=historial">
                         <i class='fas fa-list-alt'></i>
                         <span class="links_name">Compras</span>
                     </a>
@@ -83,7 +83,7 @@
                             <div class="rounded py-2">
                                 <%--Buscador de pedidos--%>
                                 <form class="mb-4" method="post"
-                                      action="<%=request.getContextPath()%>/ClientOrdersServlet?action=buscar&idClient=<%=idClient%>">
+                                      action="<%=request.getContextPath()%>/ClientServlet?action=buscarHistorial&idClient=<%=idClient%>">
                                     <div class="input-group justify-content-center">
                                         <div class="form-outline" style="width: 36%">
                                             <input type="search" id="buscarPedido" class="form-control"
@@ -197,7 +197,7 @@
                             <jsp:include page="../paginacion.jsp">
                                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
-                                <jsp:param name="servlet" value="/ClientOrdersSerlvet?"/>
+                                <jsp:param name="servlet" value="/ClientServlet?action=historial"/>
                             </jsp:include>
                         </div>
                     </div>

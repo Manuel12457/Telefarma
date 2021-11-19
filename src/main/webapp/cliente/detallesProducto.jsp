@@ -20,7 +20,7 @@
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="Paco Perez"/>
-            <jsp:param name="servletBusqueda" value="ClientProductsServlet?"/>
+            <jsp:param name="servletBusqueda" value="ClientServlet?action=buscarProduct"/>
             <jsp:param name="busquedaPlaceholder" value="Busca un producto"/>
         </jsp:include>
         <!--Contenido-->
