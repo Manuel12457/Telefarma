@@ -1,11 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: LENOVO
-  Date: 18/11/2021
-  Time: 02:43 p. m.
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,6 +9,7 @@
         <title>Telefarma - Cambiar contraseña</title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/style.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css">
     </head>
 
     <body>
@@ -23,8 +18,8 @@
                 style="min-height: 700px;">
             <div class="container d-flex justify-content-center">
                 <div class="card border-0 responsive-form">
-                    <div class="card-header" style="background-color: white;">
-                        <h4 class="my-2" style="color: var(--bs-orange)">Cambiar contraseña</h4>
+                    <div class="card-header card-header-tele">
+                        <h4 class="my-2">Cambiar contraseña</h4>
                     </div>
                     <div class="card-body">
                         <div class="container w-75">
@@ -37,7 +32,7 @@
                                         <input class="form-control" type="password" name="password" placeholder="Confirmar contraseña">
                                     </div>
                                     <div class="mb-3">
-                                        <button class="btn btn-primary d-block w-100" type="submit" style="background: var(--bs-orange); border-color: var(--bs-orange)">
+                                        <button class="btn btn-tele d-block w-100" type="submit" style="background: var(--bs-orange); border-color: var(--bs-orange)">
                                             <strong>Registrarse</strong>
                                         </button>
                                     </div>

@@ -1,6 +1,6 @@
 a {
   font-size: 14px;
-  color: darkcyan;
+  color: #393f81;
 }
 
 body {
@@ -10,11 +10,14 @@ body {
   background-size: 100% 100%;
 }
 
-.responsive-login {
-  width: 75%;
+.responsive-login-form {
+  width: 50%;
 }
-@media screen and (max-width: 992px) {
-  .responsive-login { width:100%; }
+
+@media (max-width: 768px) {
+  .responsive-login-form {
+    width: 100%!important;
+  }
 }
 
 .responsive-form {

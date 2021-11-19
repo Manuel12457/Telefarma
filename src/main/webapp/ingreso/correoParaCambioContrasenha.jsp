@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Andika&amp;display=swap">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css">
   </head>
 
   <body>
@@ -24,8 +25,8 @@
             style="min-height: auto;">
       <div class="container d-flex justify-content-center">
         <div class="card border-0 responsive-form">
-          <div class="card-header" style="background-color: white;">
-            <h4 class="my-2" style="color: var(--bs-orange)">Cambio de contraseña</h4>
+          <div class="card-header card-header-tele">
+            <h4 class="my-2">Cambio de contraseña</h4>
           </div>
           <div class="card-body">
             <div class="container" style="width: 70%">
@@ -35,7 +36,7 @@
                     <input class="form-control" type="email" name="email" placeholder="Correo">
                   </div>
                   <div class="mb-3">
-                    <button class="btn btn-primary d-block w-100" type="submit" style="background: var(--bs-orange); border-color: var(--bs-orange)">
+                    <button class="btn btn-tele d-block w-100" type="submit" style="background: var(--bs-orange); border-color: var(--bs-orange)">
                       <strong>Enviar correo</strong>
                     </button>
                   </div>

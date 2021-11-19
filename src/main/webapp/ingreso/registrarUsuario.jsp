@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: LENOVO
-  Date: 18/11/2021
-  Time: 03:10 p. m.
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
 <jsp:useBean id="cliente" scope="request" type="com.example.telefarma.beans.BClient"/>
@@ -13,6 +6,7 @@
 <jsp:useBean id="errMail" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="errDNINum" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="errDNILong" scope="request" type="java.lang.Integer"/>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,6 +17,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Andika&amp;display=swap">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/style.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css">
     </head>
 
     <body>
@@ -31,24 +26,31 @@
                 style="min-height: 700px;">
             <div class="container d-flex justify-content-center">
                 <div class="card border-0 responsive-form">
-                    <div class="card-header" style="background-color: white;">
-                        <h4 class="my-2" style="color: var(--bs-orange)">Registro</h4>
+                    <div class="card-header card-header-tele">
+                        <h4 class="my-2">Registro</h4>
                     </div>
                     <div class="card-body">
                         <div class="container w-75">
                             <div class="row my-4">
-                                <form method="post" action="<%=request.getContextPath()%>/SessionServlet?action=registrar">
+                                <form method="post"
+                                      action="<%=request.getContextPath()%>/SessionServlet?action=registrar">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <input class="form-control mb-3" type="text" name="nombre" placeholder="Nombre" value="<%=cliente.getName()%>" maxlength="45" required>
+                                            <input class="form-control mb-3" type="text" name="nombre"
+                                                   placeholder="Nombre" value="<%=cliente.getName()%>" maxlength="45"
+                                                   required>
                                         </div>
                                         <div class="col-md-6">
-                                            <input class="form-control mb-3" type="text" name="apellido" placeholder="Apellido" value="<%=cliente.getLastName()%>" maxlength="45" required>
+                                            <input class="form-control mb-3" type="text" name="apellido"
+                                                   placeholder="Apellido" value="<%=cliente.getLastName()%>"
+                                                   maxlength="45" required>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-5 mb-3">
-                                            <input class="form-control" aria-describedby="validationServer03Feedback" type="text" name="dni" placeholder="DNI" value="<%=cliente.getDni()%>" maxlength="8" required>
+                                            <input class="form-control" aria-describedby="validationServer03Feedback"
+                                                   type="text" name="dni" placeholder="DNI"
+                                                   value="<%=cliente.getDni()%>" maxlength="8" required>
                                         </div>
                                         <div class="col-md-7 mb-3">
                                             <select class="form-select" name="distrito" id="farmaDistrict" required>
@@ -58,23 +60,31 @@
                                                 <option value="">Seleccione su distrito</option>
                                                 <%}%>
                                                 <%for (String distrito : listaDistritosSistema) {%>
-                                                <option value="<%=distrito%>" <%=cliente.getDistrito().equals(distrito) ? "selected" : ""%> ><%=distrito%></option>
+                                                <option value="<%=distrito%>" <%=cliente.getDistrito().equals(distrito) ? "selected" : ""%> ><%=distrito%>
+                                                </option>
                                                 <%}%>
 
                                             </select>
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <input class="form-control" aria-describedby="validationServer03Feedback" type="email" name="email" placeholder="Correo" value="<%=cliente.getMail()%>" maxlength="70" required>
+                                        <input class="form-control" aria-describedby="validationServer03Feedback"
+                                               type="email" name="email" placeholder="Correo"
+                                               value="<%=cliente.getMail()%>" maxlength="70" required>
                                     </div>
                                     <div class="mb-3">
-                                        <input class="form-control" aria-describedby="validationServer03Feedback" type="password" name="password" placeholder="Contraseña" maxlength="60" required>
+                                        <input class="form-control" aria-describedby="validationServer03Feedback"
+                                               type="password" name="password" placeholder="Contraseña" maxlength="60"
+                                               required>
                                     </div>
                                     <div class="mb-3">
-                                        <input class="form-control" aria-describedby="validationServer03Feedback" type="password" name="passwordC" placeholder="Confirmar contraseña" maxlength="60" required>
+                                        <input class="form-control" aria-describedby="validationServer03Feedback"
+                                               type="password" name="passwordC" placeholder="Confirmar contraseña"
+                                               maxlength="60" required>
                                     </div>
                                     <div class="mb-3">
-                                        <button class="btn btn-primary d-block w-100" type="submit" style="background: var(--bs-orange); border-color: var(--bs-orange)">
+                                        <button class="btn btn-tele d-block w-100" type="submit"
+                                                style="background: var(--bs-orange); border-color: var(--bs-orange)">
                                             <strong>Registrarse</strong>
                                         </button>
                                     </div>
@@ -83,38 +93,54 @@
                                     <%if (errContrasenha == 1) {%>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         Las contraseñas ingresadas no coinciden
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
                                     </div>
-                                    <%}
-                                        if (errMail == 1) { %>
+                                    <%
+                                        }
+                                        if (errMail == 1) {
+                                    %>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         El correo ingresado ya ha sido registrado
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
                                     </div>
-                                    <%}
-                                        if (errDNI == 1) { %>
+                                    <%
+                                        }
+                                        if (errDNI == 1) {
+                                    %>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         El DNI ingresado ya ha sido registrado
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
                                     </div>
-                                    <%} else {
-                                            if (errDNINum == 1) { %>
+                                    <%
+                                    } else {
+                                        if (errDNINum == 1) {
+                                    %>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         El DNI debe contener únicamente números
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
                                     </div>
-                                    <%} else {
-                                    if (errDNILong == 1) {%>
+                                    <%
+                                    } else {
+                                        if (errDNILong == 1) {
+                                    %>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         El DNI debe contener 8 números
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
                                     </div>
-                                    <%}
-                                    }
-                                    }%>
+                                    <%
+                                                }
+                                            }
+                                        }
+                                    %>
 
                                 </form>
-                                <a class="text-center" href="<%=request.getContextPath()%>/SessionServlet">¿Ya tiene una cuenta? Inicie sesión</a>
+                                <a class="text-center" href="<%=request.getContextPath()%>/SessionServlet">¿Ya tiene una
+                                    cuenta? Inicie sesión</a>
                             </div>
                         </div>
                     </div>
