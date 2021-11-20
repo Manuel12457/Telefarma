@@ -91,4 +91,34 @@ public class SessionDao {
 
     }
 
+    public boolean validarCorreo(String correo) {
+
+        this.agregarClase();
+
+        String sql = "select idClient as 'id' from telefarma.client\n" +
+                "where mail = ?\n" +
+                "union\n" +
+                "select idPharmacy from telefarma.pharmacy\n" +
+                "where mail = ?;";
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setString(1, correo);
+            pstmt.setString(2, correo);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if(rs.next()) { //El correo ingresado existe
+                    return true;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return false;
+
+    }
+
 }

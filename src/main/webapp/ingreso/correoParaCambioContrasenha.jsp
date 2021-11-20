@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<jsp:useBean id="err" scope="request" type="java.lang.String"/>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,7 +32,15 @@
           <div class="card-body">
             <div class="container" style="width: 70%">
               <div class="row my-4">
-                <form>
+                <% if (err.equals("ne")) { %>
+                <div class="alert alert-danger alert-dismissible fade show"
+                     role="alert">
+                  El correo que usted ha ingresado no está registrado
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"
+                          aria-label="Close"></button>
+                </div>
+                <% } %>
+                <form method="post" action="<%=request.getContextPath()%>/?action=correoParaContrasenha">
                   <div class="mb-3">
                     <input class="form-control" type="email" name="email" placeholder="Correo">
                   </div>
@@ -41,7 +50,7 @@
                     </button>
                   </div>
                 </form>
-                <a class="text-center" href="<%=request.getContextPath()%>/SessionServlet">Volver al Inicio de Sesión</a>
+                <a class="text-center" href="<%=request.getContextPath()%>/">Volver al Inicio de Sesión</a>
               </div>
             </div>
           </div>

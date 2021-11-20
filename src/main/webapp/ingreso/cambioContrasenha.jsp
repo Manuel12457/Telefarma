@@ -37,7 +37,7 @@
                                         </button>
                                     </div>
                                 </form>
-                                <a class="text-center" href="${pageContext.request.contextPath}/SessionServlet?action=pantallaInicio">Volver al Inicio de Sesión</a>
+                                <a class="text-center" href="${pageContext.request.contextPath}/?action=pantallaInicio">Volver al Inicio de Sesión</a>
                             </div>
                         </div>
                     </div>

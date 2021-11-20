@@ -30,7 +30,7 @@
                                 <!--Form login-->
                                 <div class="col-6 d-flex align-items-center responsive-login-form">
                                     <div class="card-body p-4 p-lg-5 text-black text-center">
-                                        <form>
+                                        <form method="post" action="<%=request.getContextPath()%>/?">
                                             <!--Logo-->
                                             <div class="d-flex align-items-center mb-3 pb-1 justify-content-center">
                                                 <h1 class="logo-header" style="font-size: 48px;">
@@ -71,11 +71,11 @@
                                                 </button>
                                             </div>
                                             <!--Contraseña olvidada-->
-                                            <a href="<%=request.getContextPath()%>/SessionServlet?action=mail">¿Olvidó
+                                            <a href="<%=request.getContextPath()%>/?action=mail">¿Olvidó
                                                 su contraseña?</a>
                                             <!--Registrarse-->
                                             <p class="mb-5 pb-lg-2" style="color: #393f81;">¿Eres nuevo aquí? <a
-                                                    href="<%=request.getContextPath()%>/SessionServlet?action=registrarForm">Regístrate</a>
+                                                    href="<%=request.getContextPath()%>/?action=registrarForm">Regístrate</a>
                                             </p>
                                         </form>
                                     </div>

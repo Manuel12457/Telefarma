@@ -33,7 +33,7 @@
                         <div class="container w-75">
                             <div class="row my-4">
                                 <form method="post"
-                                      action="<%=request.getContextPath()%>/SessionServlet?action=registrar">
+                                      action="<%=request.getContextPath()%>/?action=registrar">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <input class="form-control mb-3" type="text" name="nombre"
@@ -139,7 +139,7 @@
                                     %>
 
                                 </form>
-                                <a class="text-center" href="<%=request.getContextPath()%>/SessionServlet">¿Ya tiene una
+                                <a class="text-center" href="<%=request.getContextPath()%>/">¿Ya tiene una
                                     cuenta? Inicie sesión</a>
                             </div>
                         </div>

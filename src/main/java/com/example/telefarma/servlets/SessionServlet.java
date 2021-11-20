@@ -10,7 +10,7 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-@WebServlet(name = "SessionServlet", value = "/SessionServlet")
+@WebServlet(name = "SessionServlet", value = "")
 public class SessionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,6 +28,7 @@ public class SessionServlet extends HttpServlet {
                 view.forward(request, response);
                 break;
             case "mail":
+                request.setAttribute("err","e");
                 view = request.getRequestDispatcher("/ingreso/correoParaCambioContrasenha.jsp");
                 view.forward(request, response);
                 break;
@@ -83,7 +84,7 @@ public class SessionServlet extends HttpServlet {
                     /*Registra el usuario*/
                     client.setPassword(contrasenha);
                     String err = s.registrarUsuario(client);
-                    response.sendRedirect(request.getContextPath() + "/SessionServlet?registro=" + err);
+                    response.sendRedirect(request.getContextPath() + "/?registro=" + err);
                 } else {
 
                     if (contrasenhasCoinciden) {
@@ -118,6 +119,21 @@ public class SessionServlet extends HttpServlet {
                     view = request.getRequestDispatcher("/ingreso/registrarUsuario.jsp");
                     view.forward(request, response);
 
+                }
+
+                break;
+            case "correoParaContrasenha":
+
+                String mail = request.getParameter("email") == null ? "" : request.getParameter("email");
+                System.out.println(mail);
+                System.out.println(s.validarCorreo(mail));
+                if (s.validarCorreo(mail)) {
+                    view = request.getRequestDispatcher("/ingreso/correoCambioContrasenhaEnviado.jsp");
+                    view.forward(request, response);
+                } else {
+                    request.setAttribute("err","ne");
+                    view = request.getRequestDispatcher("/ingreso/correoParaCambioContrasenha.jsp");
+                    view.forward(request, response);
                 }
 
                 break;
