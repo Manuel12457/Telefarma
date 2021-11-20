@@ -172,6 +172,18 @@ public class ClientServlet extends HttpServlet {
 
                 break;
 
+            case "addCarrito":
+
+                int idProduct = Integer.parseInt(request.getParameter("idProduct"));
+                BDetallesProducto productoCarrito = clientProductsDao.obtenerDetalles(idProduct);
+                request.setAttribute("producto", productoCarrito);
+
+                //Vista
+                view = request.getRequestDispatcher("/cliente/carritoCompras.jsp");
+                view.forward(request, response);
+
+                break;
+
 
         }
 

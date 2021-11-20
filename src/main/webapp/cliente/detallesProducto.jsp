@@ -100,9 +100,10 @@
                                         </td>
                                         <!--Botón añadir a carrito-->
                                         <td class="text-end">
-                                            <button type="button" class="btn btn-tele btn-md mr-1 mb-2">
+                                            <a role="button" class="btn btn-tele btn-md mr-1 mb-2"
+                                               href="<%=request.getContextPath()%>/ClientServlet?action=addCarrito&idProduct=<%=producto.getProductid()%>">
                                                 <i class="fas fa-shopping-cart"></i> Añadir al carrito
-                                            </button>
+                                            </a>
                                         </td>
                                     </tr>
                                 </tbody>

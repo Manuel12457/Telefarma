@@ -1,0 +1,265 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%--<jsp:useBean id="idProduct" scope="request" type="com.example.telefarma.beans.BDetallesProducto"/>--%>
+<jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BDetallesProducto"/>
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>Telefarma - Carrito de compras</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css"
+              type="text/css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css" type="text/css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <!--Cabecera Principal cliente-->
+        <jsp:include page="../barraSuperior.jsp">
+            <jsp:param name="tipoUsuario" value="cliente"/>
+            <jsp:param name="nombre" value="Paco Perez"/>
+            <jsp:param name="servletBusqueda" value="ClientServlet?action=buscarProduct"/>
+            <jsp:param name="busquedaPlaceholder" value="Busca un producto"/>
+        </jsp:include>
+
+        <!--Contenido-->
+        <main>
+            <!--Alinear cabecera con contenido-->
+            <div class="card-header my-5"></div>
+            <!--Carrito-->
+            <div class="container pb-5 mt-2 mt-md-3">
+                <div class="row">
+                    <!--Productos en carrito-->
+                    <div class="col-md-9 col-xl-8">
+                        <!--Items de la farmacia 1-->
+                        <div>
+                            <!--Nombre cabecera-->
+                            <h3 class="cart-header px-4 py-3">
+                                <span><%=producto.getNombreFarmacia()%></span>
+                                <div><h6 class="mb-0">Fecha de Recojo:&nbsp;&nbsp;<input type="datetime-local" style="max-width: 180px;" required></h6></div>
+                            </h3>
+                            <!--Producto-->
+                            <div class="d-sm-flex justify-content-between my-4 px-lg-2 px-xl-5 pb-4 border-bottom">
+                                <!--Bloque 1-->
+                                <div class="d-sm-flex">
+                                    <!--Imagen del producto-->
+                                    <div class="cart-item-thumb mx-auto">
+                                        <img src="<%=request.getContextPath()%>/Image?idProduct=<%=producto.getProductid()%>"
+                                             class="img-carrito">
+                                    </div>
+                                    <!--Info del producto-->
+                                    <div class="pt-1 pt-md-3 ps-sm-3 ps-0 text-sm-start text-center">
+                                        <!--Nombre-->
+                                        <h5 class="mb-sm-3 mb-1"><%=producto.getNombreProducto()%></h5>
+                                        <!--Precios-->
+                                        <div>
+                                            <span class="text-muted"><i class="fas fa-tag"></i> Precio:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                            <span class="font-size-lgr ms-sm-2 ms-0 ">s/ <%=producto.getPrice()%></span>
+                                        </div>
+                                        <div>
+                                            <span class="text-muted"><i class="fas fa-tags"></i> Subtotal:</span>
+                                            <span class="font-size-lgr ms-sm-2 ms-0 ">s/ 20.40</span> <%--PENDIENTE JS CANTIDAD X PRECIO--%>
+                                        </div>
+                                        <%
+                                            if (producto.getRequierePrescripcion()) {
+                                        %>
+                                        <label for="formFile" class="form-label">
+                                            Subir receta</label>
+                                        <input class="form-control" type="file" id="formFile"
+                                               accept="image/png, image/gif, image/jpeg"
+                                               name="receta">
+                                        <%
+                                            }
+                                        %>
+                                    </div>
+                                </div>
+                                <!--Bloque 2-->
+                                <div class="pt-sm-0 pt-2 pe-md-3 pe-0 mx-sm-0 mx-auto text-sm-left text-center"
+                                     style="max-width: 10rem;">
+                                    <!--Cantidad-->
+                                    <div class="form-group mt-sm-4 mt-0">
+                                        <!--Label-->
+                                        <span class="text-muted">Cantidad:</span>
+                                        <!--Botones-->
+                                        <div class="d-flex justify-content-center">
+                                            <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
+                                                    class="btn btn-tele" id="menos" type="button">
+                                                <i class="fas fa-minus fa-xs"></i>
+                                            </button>
+                                            <input class="form-control border-start-0 border-end-0 text-center"
+                                                   type="number" style="width:46px;" id="contador"
+                                                   value="1" min="1" max="<%=producto.getStock()%>"/>
+                                            <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
+                                                    class="btn btn-tele" id="mas" type="button">
+                                                <i class="fas fa-plus fa-xs"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!--Botón borrar-->
+                                    <button class="btn btn-danger btn-sm mt-sm-4 mt-2 w-100" type="button">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+<%--                        <!--Items de la farmacia 2-->--%>
+<%--                        <div>--%>
+<%--                            <!--Nombre cabecera-->--%>
+<%--                            <h3 class="cart-header px-4 py-3">--%>
+<%--                                <span>Inkafarma</span>--%>
+<%--                                <div><h6 class="mb-0">Fecha de Recojo:&nbsp;&nbsp;<input type="datetime-local" style="max-width: 180px;"></h6></div>--%>
+<%--                            </h3>--%>
+<%--                            <!--Producto-->--%>
+<%--                            <div class="d-sm-flex justify-content-between my-4 px-lg-2 px-xl-5 pb-4 border-bottom">--%>
+<%--                                <!--Bloque 1-->--%>
+<%--                                <div class="d-sm-flex">--%>
+<%--                                    <!--Imagen del producto-->--%>
+<%--                                    <div class="cart-item-thumb mx-auto">--%>
+<%--                                        <img src="assets/img/scenery/Captura%20de%20pantalla%202021-09-26%20135448.png"--%>
+<%--                                             class="img-carrito">--%>
+<%--                                    </div>--%>
+<%--                                    <!--Info del producto-->--%>
+<%--                                    <div class="pt-1 pt-md-3 ps-sm-3 ps-0 text-sm-start text-center">--%>
+<%--                                        <!--Nombre-->--%>
+<%--                                        <h5 class="mb-sm-3 mb-1">Paracetamol</h5>--%>
+<%--                                        <!--Precios-->--%>
+<%--                                        <div>--%>
+<%--                                            <span class="text-muted"><i class="fas fa-tag"></i> Precio:&nbsp;&nbsp;&nbsp;&nbsp;</span>--%>
+<%--                                            <span class="font-size-lgr ms-sm-2 ms-0 ">s/ 2.40</span>--%>
+<%--                                        </div>--%>
+<%--                                        <div>--%>
+<%--                                            <span class="text-muted"><i class="fas fa-tags"></i> Subtotal:</span>--%>
+<%--                                            <span class="font-size-lgr ms-sm-2 ms-0 ">s/ 4.80</span>--%>
+<%--                                        </div>--%>
+<%--                                    </div>--%>
+<%--                                </div>--%>
+<%--                                <!--Bloque 2-->--%>
+<%--                                <div class="pt-sm-0 pt-2 pe-md-3 pe-0 mx-sm-0 mx-auto text-sm-left text-center"--%>
+<%--                                     style="max-width: 10rem;">--%>
+<%--                                    <!--Contador-->--%>
+<%--                                    <div class="form-group mt-sm-4 mt-0">--%>
+<%--                                        <!--Label-->--%>
+<%--                                        <span class="text-muted">Cantidad:</span>--%>
+<%--                                        <!--Botones-->--%>
+<%--                                        <div class="d-flex justify-content-center">--%>
+<%--                                            <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()"--%>
+<%--                                                    class="btn btn-tele" id="menos" type="button">--%>
+<%--                                                <i class="fas fa-minus fa-xs"></i>--%>
+<%--                                            </button>--%>
+<%--                                            <input class="form-control border-start-0 border-end-0 text-center"--%>
+<%--                                                   type="number" style="width:46px;" id="contador"--%>
+<%--                                                   value="1" min="1"/>--%>
+<%--                                            <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()"--%>
+<%--                                                    class="btn btn-tele" id="mas" type="button">--%>
+<%--                                                <i class="fas fa-plus fa-xs"></i>--%>
+<%--                                            </button>--%>
+<%--                                        </div>--%>
+<%--                                    </div>--%>
+<%--                                    <!--Botón borrar-->--%>
+<%--                                    <button class="btn btn-danger btn-sm mt-sm-4 mt-2 w-100" type="button">--%>
+<%--                                        <i class="far fa-trash-alt"></i>--%>
+<%--                                    </button>--%>
+<%--                                </div>--%>
+<%--                            </div>--%>
+<%--                            <!--Producto-->--%>
+<%--                            <div class="d-sm-flex justify-content-between my-4 px-lg-2 px-xl-5 pb-4 border-bottom">--%>
+<%--                                <!--Bloque 1-->--%>
+<%--                                <div class="d-sm-flex">--%>
+<%--                                    <!--Imagen del producto-->--%>
+<%--                                    <div class="cart-item-thumb mx-auto">--%>
+<%--                                        <img src="assets/img/scenery/amsa_metamizol_1g_2ml_3.png"--%>
+<%--                                             class="img-carrito">--%>
+<%--                                    </div>--%>
+<%--                                    <!--Info del producto-->--%>
+<%--                                    <div class="pt-1 pt-md-3 ps-sm-3 ps-0 text-sm-start text-center">--%>
+<%--                                        <!--Nombre-->--%>
+<%--                                        <h5 class="mb-sm-3 mb-1">Metamizol</h5>--%>
+<%--                                        <!--Precios-->--%>
+<%--                                        <div>--%>
+<%--                                            <span class="text-muted"><i class="fas fa-tag"></i> Precio:&nbsp;&nbsp;&nbsp;&nbsp;</span>--%>
+<%--                                            <span class="font-size-lgr ms-sm-2 ms-0 ">s/ 4.60</span>--%>
+<%--                                        </div>--%>
+<%--                                        <div>--%>
+<%--                                            <span class="text-muted"><i class="fas fa-tags"></i> Subtotal:</span>--%>
+<%--                                            <span class="font-size-lgr ms-sm-2 ms-0 ">s/ 9.20</span>--%>
+<%--                                        </div>--%>
+<%--                                    </div>--%>
+<%--                                </div>--%>
+<%--                                <!--Bloque 2-->--%>
+<%--                                <div class="pt-sm-0 pt-2 pe-md-3 pe-0 mx-sm-0 mx-auto text-sm-left text-center"--%>
+<%--                                     style="max-width: 10rem;">--%>
+<%--                                    <!--Contador-->--%>
+<%--                                    <div class="form-group mt-sm-4 mt-0">--%>
+<%--                                        <!--Label-->--%>
+<%--                                        <span class="text-muted">Cantidad:</span>--%>
+<%--                                        <!--Botones-->--%>
+<%--                                        <div class="d-flex justify-content-center">--%>
+<%--                                            <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()"--%>
+<%--                                                    class="btn btn-tele" id="menos" type="button">--%>
+<%--                                                <i class="fas fa-minus fa-xs"></i>--%>
+<%--                                            </button>--%>
+<%--                                            <input class="form-control border-start-0 border-end-0 text-center"--%>
+<%--                                                   type="number" style="width:46px;" id="contador"--%>
+<%--                                                   value="1" min="1"/>--%>
+<%--                                            <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()"--%>
+<%--                                                    class="btn btn-tele" id="mas" type="button">--%>
+<%--                                                <i class="fas fa-plus fa-xs"></i>--%>
+<%--                                            </button>--%>
+<%--                                        </div>--%>
+<%--                                    </div>--%>
+<%--                                    <!--Botón borrar-->--%>
+<%--                                    <button class="btn btn-danger btn-sm mt-sm-4 mt-2 w-100" type="button">--%>
+<%--                                        <i class="far fa-trash-alt"></i>--%>
+<%--                                    </button>--%>
+<%--                                </div>--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
+                    </div>
+                    <!--Costo total-->
+                    <div class="col-md-3 col-xl-4 pt-3 pt-md-0">
+                        <div class="row">
+                            <!--Cabecera resumen-->
+                            <h3 class="cart-header px-4 py-3 justify-content-center">Resumen</h3>
+                            <!--Tabla resumen-->
+                            <div class="table-responsive">
+                                <table class="table table-striped text-center mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Producto</th>
+                                            <th scope="col">Farmacia</th>
+                                            <th scope="col">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-center">14</td> <%--JS CANTIDAD--%>
+                                            <td><%=producto.getNombreProducto()%></td>
+                                            <td><%=producto.getNombreFarmacia()%></td>
+                                            <td>s/ 20.40</td> <%--JS SUBTOTAL CANTIDAD * PRECIO--%>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--Total-->
+                            <div class="h4 text-center py-2">
+                                <span class="font-size-lg">Total:</span>
+                                <span>&nbsp;s/ 325.00</span>
+                            </div>
+                            <!--Boton pedir-->
+                            <button class="btn btn-tele btn-block">
+                                Realizar pedido
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!--JS-->
+        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>

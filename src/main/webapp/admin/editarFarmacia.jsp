@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: LENOVO
-  Date: 16/11/2021
-  Time: 11:34 a. m.
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
 <jsp:useBean id="noValidMail" scope="request" type="java.lang.Integer"/>

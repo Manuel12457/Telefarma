@@ -3,6 +3,7 @@ package com.example.telefarma.daos;
 import com.example.telefarma.beans.BClient;
 
 import java.sql.*;
+import java.util.HashMap;
 
 public class SessionDao {
 
@@ -10,7 +11,7 @@ public class SessionDao {
     String pass = "root";
     String url = "jdbc:mysql://localhost:3306/telefarma";
 
-    private void agregarClase(){
+    private void agregarClase() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -18,18 +19,18 @@ public class SessionDao {
         }
     }
 
-    public boolean dniExiste(String dni){
+    public boolean dniExiste(String dni) {
 
         this.agregarClase();
 
         String sql = "select * from telefarma.client where DNI = ?;";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
-            pstmt.setString(1,dni);
+            pstmt.setString(1, dni);
             try (ResultSet rs = pstmt.executeQuery()) {
-                if(rs.next()) {
+                if (rs.next()) {
                     return false;
                 }
             }
@@ -41,18 +42,18 @@ public class SessionDao {
 
     }
 
-    public boolean mailExiste(String mail){
+    public boolean mailExiste(String mail) {
 
         this.agregarClase();
 
         String sql = "select * from telefarma.client where mail = ?;";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
-            pstmt.setString(1,mail);
+            pstmt.setString(1, mail);
             try (ResultSet rs = pstmt.executeQuery()) {
-                if(rs.next()) {
+                if (rs.next()) {
                     return false;
                 }
             }
@@ -91,15 +92,17 @@ public class SessionDao {
 
     }
 
-    public boolean validarCorreo(String correo) {
+    public HashMap<Integer, String> validarCorreo(String correo) {
 
         this.agregarClase();
 
-        String sql = "select idClient as 'id' from telefarma.client\n" +
-                "where mail = ?\n" +
+        HashMap<Integer, String> hm = new HashMap<>();
+
+        String sql = "select idClient as 'id','client' as 'tipo' from telefarma.client\n" +
+                "where mail = ? \n" +
                 "union\n" +
-                "select idPharmacy from telefarma.pharmacy\n" +
-                "where mail = ?;";
+                "select idPharmacy,'pharmacy' from telefarma.pharmacy\n" +
+                "where mail = ?";
 
         try (Connection conn = DriverManager.getConnection(url, user, pass);
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
@@ -108,8 +111,8 @@ public class SessionDao {
             pstmt.setString(2, correo);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                if(rs.next()) { //El correo ingresado existe
-                    return true;
+                if (rs.next()) { //El correo ingresado existe
+                    hm.put(rs.getInt(1), rs.getString(2));
                 }
             }
 
@@ -117,8 +120,60 @@ public class SessionDao {
             e.printStackTrace();
 
         }
-        return false;
+        return hm;
 
+    }
+
+    public void loadToken(String token, String rol, int id) {
+
+        this.agregarClase();
+
+        String idRol = rol.equals("client") ? "idClient" : "idPharmacy";
+        String sql = "update " + rol + " set rstPassToken = '" + token + "' where " + idRol + " = " + id;
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             Statement stmt = conn.createStatement();) {
+
+            stmt.executeUpdate(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean existeToken(String token, String rol) {
+        this.agregarClase();
+
+        String sql = "select * from " + rol + " where rstPassToken = '" + token + "';";
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql);) {
+
+
+            return rs.next();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void cambiarPassword(String token, String rol, String password) {
+        this.agregarClase();
+
+        String sql1 = "update " + rol + " set password = '" + password + "' where rstPassToken = '" + token + "';";
+        String sql2 = "update " + rol + " set rstPassToken = null where rstPassToken = '" + token + "';";
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             Statement stmt = conn.createStatement();) {
+
+            stmt.executeUpdate(sql1);
+            stmt.executeUpdate(sql2);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

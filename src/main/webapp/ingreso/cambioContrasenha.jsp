@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<jsp:useBean id="rol" scope="request" type="java.lang.String"/>
+<jsp:useBean id="token" scope="request" type="java.lang.String"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -24,12 +26,18 @@
                     <div class="card-body">
                         <div class="container w-75">
                             <div class="row my-2">
-                                <form>
+                                <form method="POST" action="<%=request.getContextPath()%>/?action=cambiarContrasenha">
+                                    <div class="mb-3">
+                                        <input class="form-control" type="text" name="token" value="<%=token%>" hidden>
+                                    </div>
+                                    <div class="mb-3">
+                                        <input class="form-control" type="text" name="rol" value="<%=rol%>" hidden>
+                                    </div>
                                     <div class="mb-3">
                                         <input class="form-control" type="password" name="password" placeholder="Contraseña">
                                     </div>
                                     <div class="mb-3">
-                                        <input class="form-control" type="password" name="password" placeholder="Confirmar contraseña">
+                                        <input class="form-control" type="password" name="passwordConfirm" placeholder="Confirmar contraseña">
                                     </div>
                                     <div class="mb-3">
                                         <button class="btn btn-tele d-block w-100" type="submit" style="background: var(--bs-orange); border-color: var(--bs-orange)">

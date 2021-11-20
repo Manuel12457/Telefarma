@@ -9,6 +9,9 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.UUID;
 
 @WebServlet(name = "SessionServlet", value = "")
 public class SessionServlet extends HttpServlet {
@@ -44,6 +47,17 @@ public class SessionServlet extends HttpServlet {
                 view = request.getRequestDispatcher("/ingreso/registrarUsuario.jsp");
                 view.forward(request, response);
                 break;
+            case "cambiarContrasenha":
+                String token = request.getParameter("token");
+                String rol = request.getParameter("rol");
+
+                SessionDao sessionDao = new SessionDao();
+                if(sessionDao.existeToken(token, rol)) {
+                    request.setAttribute("token", token);
+                    request.setAttribute("rol", rol);
+                    view = request.getRequestDispatcher("/ingreso/cambioContrasenha.jsp");
+                    view.forward(request, response);
+                } // else: vista de error
         }
     }
 
@@ -51,6 +65,7 @@ public class SessionServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
+        String dominio = "http://localhost:8080";
         PharmacyAdminDao pharmacyAdminDao = new PharmacyAdminDao();
         SessionDao s = new SessionDao();
         RequestDispatcher view;
@@ -123,11 +138,28 @@ public class SessionServlet extends HttpServlet {
 
                 break;
             case "correoParaContrasenha":
-
                 String mail = request.getParameter("email") == null ? "" : request.getParameter("email");
+                HashMap<Integer, String > hm = s.validarCorreo(mail);
+
                 System.out.println(mail);
                 System.out.println(s.validarCorreo(mail));
-                if (s.validarCorreo(mail)) {
+                if (!hm.isEmpty()) {
+
+                    String token = UUID.randomUUID().toString().replace("-", "Z");
+
+                    int idUser = 0;
+                    for (int id : hm.keySet()) {
+                        idUser = id;
+                    }
+                    String rol = hm.get(idUser);
+
+                    s.loadToken(token, rol, idUser);
+
+                    String tokenMail = "Ingrese al siguiente enlace para cambiar la contraseña: \n" + dominio +
+                            request.getContextPath() + "/?action=cambiarContrasenha&rol=" + rol + "&token=" + token;
+
+                    MailServlet.sendMail(mail, "Cambio de contraseña", tokenMail);
+
                     view = request.getRequestDispatcher("/ingreso/correoCambioContrasenhaEnviado.jsp");
                     view.forward(request, response);
                 } else {
@@ -136,6 +168,17 @@ public class SessionServlet extends HttpServlet {
                     view.forward(request, response);
                 }
 
+                break;
+
+            case "cambiarContrasenha":
+                String rol = request.getParameter("rol");
+                String token = request.getParameter("token");
+                String password = request.getParameter("password");
+                System.out.println(password);
+                s.cambiarPassword(token, rol, password);
+
+                view = request.getRequestDispatcher("/ingreso/cambioContrasenhaExitoso.jsp");
+                view.forward(request, response);
                 break;
 
         }

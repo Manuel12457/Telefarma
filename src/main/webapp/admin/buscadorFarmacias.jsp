@@ -38,78 +38,102 @@
             <!--Farmacias-->
             <div class="container">
                 <div class="row">
+                    <!--Alertas-->
+                    <%
+                        String alertClass = null;
+                        String alertMssg = null;
+                        if (!estadoRegistro.equals("")) {
+                            switch (estadoRegistro) {
+                                case "e":
+                                    alertClass = "alert-success";
+                                    alertMssg = "Farmacia registrada exitosamente";
+                                    break;
+                                case "ne":
+                                    alertClass = "alert-danger";
+                                    alertMssg = "Hubo un problema con el registro de la farmacia";
+                                    break;
+                            }
+                    %>
+                    <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
+                        <%=alertMssg%>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <%
+                        }
+                        if (!estadoEdicion.equals("")) {
+                            switch (estadoEdicion) {
+                                case "e":
+                                    alertClass = "alert-success";
+                                    alertMssg = "Farmacia editada exitosamente";
+                                    break;
+                                case "ne":
+                                    alertClass = "alert-danger";
+                                    alertMssg = "Hubo un problema con la edición de la farmacia";
+                                    break;
+                            }
+                    %>
+                    <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
+                        <%=alertMssg%>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <%
+                        }
+                        if (resultban != 0) {
+                            switch (resultban) {
+                                case 1:
+                                    alertClass = "alert-success";
+                                    alertMssg = "La farmacia fue baneada con éxito";
+                                    break;
+                                case 2:
+                                    alertClass = "alert-danger";
+                                    alertMssg = "La farmacia tiene al menos un pedido pendiente. Intentalo de nuevo más tarde";
+                                    break;
+                                case 3:
+                                    alertClass = "alert-success";
+                                    alertMssg = "La farmacia seleccionada fue desbaneada";
+                                    break;
+                            }
 
-                    <%if (estadoRegistro.equals("e")) { %>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        Farmacia registrada exitosamente
+                    %>
+                    <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
+                        <%=alertMssg%>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    <%} else if (estadoRegistro.equals("ne")) {%>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        Hubo un problema con el registro de la farmacia
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <%}%>
+                    <% } %>
 
-                    <%if (estadoEdicion.equals("e")) { %>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        Farmacia editada exitosamente
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <%} else if (estadoEdicion.equals("ne")) {%>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        Hubo un problema con la edición de la farmacia
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <%}%>
-
-                    <%if (resultban == 1) {%>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        La farmacia fue baneada con éxito
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <%} else if (resultban == 2) {%>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        La farmacia tiene al menos un pedido pendiente. Intentalo de nuevo más tarde
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <%} else if (resultban == 3) {%>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        La farmacia seleccionada fue desbaneada
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <%}%>
                     <h3 class="text-dark">Farmacias registradas</h3>
                 </div>
                 <%
-                    String[] imgs = new String[3];
-                    imgs[0] = "/res/img/national-cancer-institute-byGTytEGjBo-unsplash.jpg";
-                    imgs[1] = "/res/img/tbel-abuseridze-eBW1nlFdZFw-unsplash.jpg";
-                    imgs[2] = "/res/img/national-cancer-institute-cw2Zn2ZQ9YQ-unsplash.jpg";
-                    int cardCount = 0;
                     for (ArrayList<BFarmaciasAdmin> listaFarmaciasDistrito : listaListaFarmacias) {
                 %>
-                <!--  -->
                 <div class="row">
                     <div class="container px-5 py-2" id="custom-cards-san-miguel">
                         <h4 class="pb-2 border-bottom"
                             style="color: #f57f00"><%= listaFarmaciasDistrito.get(0).getDistritoFarmacia() %>
                         </h4>
-                        <% for (BFarmaciasAdmin farmacia : listaFarmaciasDistrito) {
-                            cardCount++;
-                            if (cardCount == 1) {
-                        %>
                         <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-3">
-                            <% }%>
-                            <div class="col"> <!--deben haber 3 columnas -->
+                            <!--Loop de farmacias por distrito-->
+                            <%
+                                int cardCount = 0;
+                                for (BFarmaciasAdmin farmacia : listaFarmaciasDistrito) {
+                                    cardCount++;
+                                    if (cardCount == 3) {
+                                        cardCount = 1;
+                                    }
+                            %>
+                            <div class="col">
                                 <div class="card">
-                                    <div class="card-header h-100 shadow border-0 text-white"
-                                         style="background-image: url('${pageContext.request.contextPath}<%=imgs[cardCount-1]%>');  background-size: cover">
+                                    <!--Cabecera de farmacia-->
+                                    <div class="card-header h-100 shadow border-0 text-white f<%=cardCount%>">
+                                        <!--Botón editar-->
                                         <div class="d-flex justify-content-end ">
-                                            <a role="button" href="<%=request.getContextPath()%>/PharmacyAdminServlet?action=editarForm&distrito=<%=farmacia.getDistritoFarmacia()%>&id=<%=farmacia.getIdPharmacy()%>" class="btn btn-tele pe-2 pt-1"><i
+                                            <a role="button"
+                                               href="<%=request.getContextPath()%>/PharmacyAdminServlet?action=editarForm&distrito=<%=farmacia.getDistritoFarmacia()%>&id=<%=farmacia.getIdPharmacy()%>"
+                                               class="btn btn-tele pe-2 pt-1"><i
                                                     class="fas fa-edit"></i></i>
                                             </a>
                                         </div>
+                                        <!--Nombre-->
                                         <h2 class="mt-2 mb-3 fw-bold"
                                             style="text-shadow: .5px .5px #2b2b2b;"><%= farmacia.getNombreFarmacia() %>
                                         </h2>
@@ -117,16 +141,19 @@
                                     <div class="card-body">
                                         <div class="d-flex flex-column mt-auto h-100 text-dark align-items-start">
                                             <ul class="">
+                                                <!--Direccion-->
                                                 <h6><i class="fas fa-map-marker-alt fa-xs"></i>&nbsp;Dirección:</h6>
                                                 <li class="d-flex align-items-center ps-4">
                                                     <h6><%= farmacia.getDireccionFarmacia() %>
                                                     </h6>
                                                 </li>
+                                                <!--Email-->
                                                 <h6><i class="fas fa-envelope fa-xs"></i>&nbsp;E-mail:</h6>
                                                 <li class="d-flex align-items-center ps-4">
                                                     <h6><%= farmacia.getEmailFarmacia() %>
                                                     </h6>
                                                 </li>
+                                                <!--RUC-->
                                                 <h6><i class="fas fa-hashtag fa-xs "></i>&nbsp;RUC:</h6>
                                                 <li class="d-flex align-items-center ps-4">
                                                     <h6><%= farmacia.getRUCFarmacia() %>
@@ -154,20 +181,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <%
-                                if (cardCount == 3) {
-                            %>
+                            <% } %>
                         </div>
-                        <%
-                                    cardCount = 0;
-                                }
-                            }
-                            cardCount = 0;
-                        %>
                     </div>
                 </div>
-                <%
-                    }%>
+                <% } %>
             </div>
         </main>
 
