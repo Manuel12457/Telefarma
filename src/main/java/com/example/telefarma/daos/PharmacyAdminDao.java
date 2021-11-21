@@ -8,25 +8,11 @@ import com.example.telefarma.beans.BFarmaciasAdmin;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class PharmacyAdminDao {
-
-    String user = "root";
-    String pass = "root";
-    String url = "jdbc:mysql://localhost:3306/telefarma";
-
-    private void agregarClase(){
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+public class PharmacyAdminDao extends BaseDao {
 
     public ArrayList<String> listarDistritosLimite(int paginaDistritoAdmin, String busqueda, int limite) {
 
         ArrayList<String> listaDistritosPagina = new ArrayList<>();
-
-        this.agregarClase();
 
         /*OBTENGO TODOS LOS DISTRITOS CON FARMACIAS QUE COINCIDAN CON LA BUSQUEDA*/
         String sqlObtenerDistritos = "select f.District_name from telefarma.pharmacy f \n"+
@@ -35,7 +21,7 @@ public class PharmacyAdminDao {
                 "order by count(*) desc \n"+
                 "limit " + paginaDistritoAdmin*limite + "," + limite + ";";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sqlObtenerDistritos)) {
 
@@ -52,15 +38,12 @@ public class PharmacyAdminDao {
     }
 
     public BFarmaciasAdmin obtenerFarmaciaPorId(int id) {
-
-        this.agregarClase();
-
         BFarmaciasAdmin farmacia = new BFarmaciasAdmin();
 
         String sql = "select * from telefarma.pharmacy\n" +
                 "where idPharmacy = ?;";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
             pstmt.setInt(1,id);
@@ -80,15 +63,13 @@ public class PharmacyAdminDao {
 
     public ArrayList<BFarmaciasAdmin> listarFarmaciasAdminPorDistrito(String distrito, String busqueda) {
 
-        this.agregarClase();
-
         ArrayList<BFarmaciasAdmin> listaFarmaciasAdminPorDistrito = new ArrayList<>();
 
         /*OBTENGO LAS FARMACIAS DE LOS DISTRITOS QUE SE MOSTRARAN POR PAGINA*/
         String sqlObtenerFarmacias = "select name, address, mail, RUC, District_name, isBanned, idPharmacy from telefarma.pharmacy\n" +
                 "where lower(name) like '%"+ busqueda +"%' and District_name = '" + distrito + "';";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sqlObtenerFarmacias)) {
 
@@ -112,15 +93,12 @@ public class PharmacyAdminDao {
     }
 
     public ArrayList<String> listarDistritosEnSistema() {
-
-        this.agregarClase();
-
         ArrayList<String> listaDistritos = new ArrayList<>();
 
         /*OBTENGO LAS FARMACIAS DE LOS DISTRITOS QUE SE MOSTRARAN POR PAGINA*/
         String sqlObtenerFarmacias = "select * from district;";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sqlObtenerFarmacias)) {
 
@@ -139,8 +117,6 @@ public class PharmacyAdminDao {
 
         boolean correoUnico = true;
 
-        this.agregarClase();
-
         String sql = "select idClient as 'id',mail,'client' as 'tipo' from telefarma.client\n" +
                 "where mail = ?\n" +
                 "union\n" +
@@ -150,7 +126,7 @@ public class PharmacyAdminDao {
                 "select idAdmin,mail,'admin' from telefarma.administrator\n" +
                 "where mail = ?;";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
             pstmt.setString(1,correo);
@@ -176,12 +152,10 @@ public class PharmacyAdminDao {
 
         boolean rucUnico = true;
 
-        this.agregarClase();
-
         String sql = "select idPharmacy,RUC from pharmacy\n" +
                 "where RUC = ?;";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
             pstmt.setString(1,ruc);
@@ -200,13 +174,10 @@ public class PharmacyAdminDao {
     }
 
     public String registrarFarmacia(String ruc, String nombre, String correo, String direccion, String distrito) {
-
-        this.agregarClase();
-
         String sql = "insert into telefarma.pharmacy (RUC,name,mail,address,District_name)\n" +
                 "values(?,?,?,?,?);";
 
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
             pstmt.setString(1, ruc);
@@ -226,12 +197,10 @@ public class PharmacyAdminDao {
 
     public String editarFarmacia(String ruc, String nombre, String correo, String direccion, String distrito, int idPharmacy) {
 
-        this.agregarClase();
-
         String sql = "update telefarma.pharmacy set RUC = ?,name = ?,mail = ?,address = ?,District_name = ?\n" +
                 "where idPharmacy = ?;";
 
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
             pstmt.setString(1, ruc);
@@ -255,15 +224,13 @@ public class PharmacyAdminDao {
 
         boolean pendiente = false;
 
-        this.agregarClase();
-
         String sql = "select o.idOrder,o.status from orders o\n" +
                 "inner join orderdetails od on (od.idOrder=o.idOrder)\n" +
                 "inner join product p on (p.idProduct=od.idProduct)\n" +
                 "where o.status='Pendiente' and p.idPharmacy="+idPharmacy+"\n" +
                 "group by o.idOrder;";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -278,13 +245,10 @@ public class PharmacyAdminDao {
     }
 
     public void banearFarmacia(int id, String razon){
-
-        this.agregarClase();
-
         String sql = "update pharmacy set isBanned=1, banReason='"+razon+"'\n" +
                 "where idPharmacy="+id+";";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();){
 
             stmt.executeUpdate(sql);
@@ -297,12 +261,10 @@ public class PharmacyAdminDao {
 
     public void desBanearFarmacia(int id){
 
-        this.agregarClase();
-
         String sql = "update pharmacy set isBanned=0, banReason=null\n" +
                 "where idPharmacy="+id+";";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();){
 
             stmt.executeUpdate(sql);

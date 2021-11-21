@@ -34,7 +34,7 @@
         <!--Carrito-->
         <div class="col-md-1 col-sm-2 col-2 ms-sm-auto ms-auto d-flex justify-content-end">
             <%if (tipoUsuario.equals("cliente")) {%>
-            <a class="btn btn-tele-inverso" role="button" href="usuarioCarrito.html">
+            <a class="btn btn-tele-inverso" role="button" href="/ClientServlet?action=carritoCompras">
                 <div style="font-size: 0.60rem"> <!--para cambios más precisos del tamaño-->
                     <i class="fas fa-cart-plus fa-3x"></i>
                 </div>

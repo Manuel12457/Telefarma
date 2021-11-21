@@ -28,7 +28,7 @@ public class ClientServlet extends HttpServlet {
         ClientProductsDao clientProductsDao = new ClientProductsDao();
         ClientOrdersDao clientOrdersDao = new ClientOrdersDao();
 
-        String accion = request.getParameter("action") == null ? "mostrarFarmacias" : request.getParameter("action");
+        String action = request.getParameter("action") == null ? "mostrarFarmacias" : request.getParameter("action");
         RequestDispatcher view;
         int pagina;
         String busqueda;
@@ -36,7 +36,7 @@ public class ClientServlet extends HttpServlet {
         int pagTotales;
         int limiteProductos;
 
-        switch (accion) {
+        switch (action) {
 
             case "mostrarFarmacias":
 
@@ -68,6 +68,7 @@ public class ClientServlet extends HttpServlet {
                 view.forward(request, response);
 
                 break;
+
             case "historial":
 
                 //Pagina a mostrar
@@ -97,8 +98,8 @@ public class ClientServlet extends HttpServlet {
                 view.forward(request, response);
 
                 break;
-            case "farmaciaYProductos":
 
+            case "farmaciaYProductos":
                 //Pagina a mostrar
                 pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
                 limiteProductos = 16;
@@ -121,37 +122,37 @@ public class ClientServlet extends HttpServlet {
                 view.forward(request, response);
 
                 break;
-            case "buscarProducto":
 
+            case "buscarProducto":
                 pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
                 int idCliente = request.getParameter("id") == null ? 1 : Integer.parseInt(request.getParameter("id"));
 
                 limiteProductos = 16;
 
-                request.setAttribute("busqueda",busqueda);
-                request.setAttribute("listaProductosBusqueda", clientProductsDao.listarProductosBusqueda(pagina,busqueda,limiteProductos,idCliente));
-                request.setAttribute("pagActual",pagina);
+                request.setAttribute("busqueda", busqueda);
+                request.setAttribute("listaProductosBusqueda", clientProductsDao.listarProductosBusqueda(pagina, busqueda, limiteProductos, idCliente));
+                request.setAttribute("pagActual", pagina);
 
-                pagTotales = (int)Math.ceil((double)clientProductsDao.cantidadProductos(busqueda)/limiteProductos);
-                request.setAttribute("pagTotales",pagTotales);
+                pagTotales = (int) Math.ceil((double) clientProductsDao.cantidadProductos(busqueda) / limiteProductos);
+                request.setAttribute("pagTotales", pagTotales);
 
                 view = request.getRequestDispatcher("/cliente/buscadorProductos.jsp");
-                view.forward(request,response);
+                view.forward(request, response);
 
                 break;
-            case "detallesProducto":
 
+            case "detallesProducto":
                 int productid = request.getParameter("productid") == null ? 1 : Integer.parseInt(request.getParameter("productid"));
                 BDetallesProducto producto = clientProductsDao.obtenerDetalles(productid);
-                request.setAttribute("producto",producto);
+                request.setAttribute("producto", producto);
 
                 view = request.getRequestDispatcher("/cliente/detallesProducto.jsp");
-                view.forward(request,response);
+                view.forward(request, response);
 
                 break;
-            case "farmaciasDeDistrito":
 
+            case "farmaciasDeDistrito":
                 pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
                 limiteFarmacias = 9;
 
@@ -169,12 +170,14 @@ public class ClientServlet extends HttpServlet {
                 //Vista
                 view = request.getRequestDispatcher("/cliente/mostrarFarmaciasDistrito.jsp");
                 view.forward(request, response);
-
                 break;
 
-            case "addCarrito":
-
+            case "addToCart":
                 int idProduct = Integer.parseInt(request.getParameter("idProduct"));
+
+                int quantity = Integer.parseInt(request.getParameter("quantity"));
+                request.setAttribute("quantity", quantity);
+
                 BDetallesProducto productoCarrito = clientProductsDao.obtenerDetalles(idProduct);
                 request.setAttribute("producto", productoCarrito);
 
@@ -183,8 +186,6 @@ public class ClientServlet extends HttpServlet {
                 view.forward(request, response);
 
                 break;
-
-
         }
 
     }
@@ -201,20 +202,29 @@ public class ClientServlet extends HttpServlet {
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
                 response.sendRedirect(request.getContextPath() + "/ClientServlet?action=farmaciasDeDistrito&busqueda=" + busqueda + "&district=" + district);
                 break;
+
             case "buscarHistorial":
                 int idClient = Integer.parseInt(request.getParameter("idClient"));
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
                 response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial&busqueda=" + busqueda + "&idClient=" + idClient);
                 break;
+
             case "buscarProductosDeFarmacia":
                 int idPharmacy = Integer.parseInt(request.getParameter("idPharmacy"));
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
                 response.sendRedirect(request.getContextPath() + "/ClientServlet?action=farmaciaYProductos&busqueda=" + busqueda + "&idPharmacy=" + idPharmacy);
                 break;
+
             case "buscarProduct":
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-                response.sendRedirect(request.getContextPath()+"/ClientServlet?action=buscarProducto&busqueda="+busqueda);
+                response.sendRedirect(request.getContextPath() + "/ClientServlet?action=buscarProducto&busqueda=" + busqueda);
                 break;
+
+            case "addToCart":
+
+                int quantity = Integer.parseInt(request.getParameter("quantity"));
+                int idProduct = Integer.parseInt(request.getParameter("idProduct"));
+                response.sendRedirect(request.getContextPath() + "/ClientServlet?action=addToCart&quantity=" + quantity + "&idProduct=" + idProduct);
 
             default:
                 break;

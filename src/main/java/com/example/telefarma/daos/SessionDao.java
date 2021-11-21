@@ -5,27 +5,12 @@ import com.example.telefarma.beans.BClient;
 import java.sql.*;
 import java.util.HashMap;
 
-public class SessionDao {
-
-    String user = "root";
-    String pass = "root";
-    String url = "jdbc:mysql://localhost:3306/telefarma";
-
-    private void agregarClase() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+public class SessionDao extends BaseDao {
 
     public boolean dniExiste(String dni) {
-
-        this.agregarClase();
-
         String sql = "select * from telefarma.client where DNI = ?;";
 
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
             pstmt.setString(1, dni);
@@ -44,11 +29,9 @@ public class SessionDao {
 
     public boolean mailExiste(String mail) {
 
-        this.agregarClase();
-
         String sql = "select * from telefarma.client where mail = ?;";
 
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
             pstmt.setString(1, mail);
@@ -66,13 +49,10 @@ public class SessionDao {
     }
 
     public String registrarUsuario(BClient client) {
-
-        this.agregarClase();
-
         String sql = "insert into telefarma.client (name,lastName,DNI,password,mail,District_name)\n" +
                 "values (?,?,?,?,?,?);";
 
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
             pstmt.setString(1, client.getName());
@@ -94,8 +74,6 @@ public class SessionDao {
 
     public HashMap<Integer, String> validarCorreo(String correo) {
 
-        this.agregarClase();
-
         HashMap<Integer, String> hm = new HashMap<>();
 
         String sql = "select idClient as 'id','client' as 'tipo' from telefarma.client\n" +
@@ -104,7 +82,7 @@ public class SessionDao {
                 "select idPharmacy,'pharmacy' from telefarma.pharmacy\n" +
                 "where mail = ?";
 
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
             pstmt.setString(1, correo);
@@ -125,13 +103,10 @@ public class SessionDao {
     }
 
     public void loadToken(String token, String rol, int id) {
-
-        this.agregarClase();
-
         String idRol = rol.equals("client") ? "idClient" : "idPharmacy";
         String sql = "update " + rol + " set rstPassToken = '" + token + "' where " + idRol + " = " + id;
 
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();) {
 
             stmt.executeUpdate(sql);
@@ -142,11 +117,9 @@ public class SessionDao {
     }
 
     public boolean existeToken(String token, String rol) {
-        this.agregarClase();
-
         String sql = "select * from " + rol + " where rstPassToken = '" + token + "';";
 
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql);) {
 
@@ -160,12 +133,11 @@ public class SessionDao {
     }
 
     public void cambiarPassword(String token, String rol, String password) {
-        this.agregarClase();
 
         String sql1 = "update " + rol + " set password = '" + password + "' where rstPassToken = '" + token + "';";
         String sql2 = "update " + rol + " set rstPassToken = null where rstPassToken = '" + token + "';";
 
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();) {
 
             stmt.executeUpdate(sql1);

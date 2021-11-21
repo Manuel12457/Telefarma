@@ -6,27 +6,13 @@ import com.example.telefarma.beans.BProductosBuscador;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class ClientProductsDao {
-
-    String user = "root";
-    String pass = "root";
-    String url = "jdbc:mysql://localhost:3306/telefarma";
-
-    private void agregarClase(){
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+public class ClientProductsDao extends BaseDao {
 
     public int cantidadProductos(String busqueda){
 
-        this.agregarClase();
-
         int cantidad = 0;
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("select count(*) from product p\n" +
                      "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
@@ -44,8 +30,6 @@ public class ClientProductsDao {
 
     public ArrayList<BProductosBuscador> listarProductosBusqueda(int pagina, String busqueda, int limite, int id) {
 
-        this.agregarClase();
-
         ArrayList<BProductosBuscador> listaProductosBuscador = new ArrayList<>();
 
         String sql = "select f.name,f.District_name,p.idProduct,p.name,stock,price from telefarma.product p\n" +
@@ -60,7 +44,7 @@ public class ClientProductsDao {
                 "order by District_name\n" +
                 "limit " + pagina*limite + "," + limite + ";";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);){
 
             pstmt.setString(1,"%"+busqueda.toLowerCase()+"%");
@@ -88,20 +72,13 @@ public class ClientProductsDao {
     }
 
     public BDetallesProducto obtenerDetalles(int productid) {
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
         BDetallesProducto producto = new BDetallesProducto();
 
-        String sql = "select p.idProduct, p.name, ph.name,  p.description, p.stock,p.price, p.requiresPrescription from product p\n" +
+        String sql = "select p.idProduct, p.name, ph.name,  p.description, p.stock,p.price, p.requiresPrescription, ph.idPharmacy from product p\n" +
                 "inner join pharmacy ph on p.idPharmacy = ph.idPharmacy\n" +
                 "where idProduct=?;";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);){
 
             pstmt.setInt(1,productid);
@@ -116,6 +93,7 @@ public class ClientProductsDao {
                     producto.setStock(rs.getInt(5));
                     producto.setPrice(rs.getDouble(6));
                     producto.setRequierePrescripcion(rs.getBoolean(7));
+                    producto.setIdFarmacia(rs.getInt(8));
                 }
             }
 

@@ -7,25 +7,13 @@ import com.example.telefarma.beans.BProductosBuscador;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class ClientOrdersDao {
-    String user = "root";
-    String pass = "root";
-    String url = "jdbc:mysql://localhost:3306/telefarma";
-
-    private void agregarClase() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+public class ClientOrdersDao extends BaseDao {
 
     public ArrayList<BClientOrders> listarOrdenes(String busqueda, int pagina, int limite, int id) {
-        this.agregarClase();
 
         ArrayList<BClientOrders> listaOrdenes = new ArrayList<>();
 
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement("select o.idOrder,f.name,o.orderDate,o.pickUpDate,sum(p.price*od.quantity),o.status \n" +
                      "from orders o \n" +
                      "inner join orderdetails od on (od.idOrder=o.idOrder) \n" +
@@ -63,11 +51,10 @@ public class ClientOrdersDao {
     }
 
     public void agregarOrderDetails(BClientOrders orden) {
-        this.agregarClase();
 
         ArrayList<BOrderDetails> listaDetails = new ArrayList<>();
 
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("select o.idOrder,od.quantity,p.name,p.price,p.price*od.quantity as 'totalProducto',p.idProduct\n" +
                      "from orders o \n" +
@@ -92,9 +79,8 @@ public class ClientOrdersDao {
     }
 
     public void agregarTimeDiff(BClientOrders orden) {
-        this.agregarClase();
 
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("select pickUpDate,timestampdiff(SQL_TSI_HOUR,now(),pickUpDate) \n" +
                      "from orders o \n" +

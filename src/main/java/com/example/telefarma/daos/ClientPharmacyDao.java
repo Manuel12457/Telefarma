@@ -7,26 +7,12 @@ import com.example.telefarma.beans.BProductosBuscador;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class ClientPharmacyDao {
-
-    String user = "root";
-    String pass = "root";
-    String url = "jdbc:mysql://localhost:3306/telefarma";
-
-    private void agregarClase(){
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+public class ClientPharmacyDao extends BaseDao {
 
     public int cantidadDistritosConFarmacia(){
-        this.agregarClase();
-
         int cantidad = 0;
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("select count(*) from (select District_name from pharmacy\n" +
                      "where isBanned = 0\n" +
@@ -45,8 +31,6 @@ public class ClientPharmacyDao {
 
     public ArrayList<String> listarDistritosLimite(int paginaDistritoCliente,int limite) {
 
-        this.agregarClase();
-
         ArrayList<String> listaDistritosPagina = new ArrayList<>();
 
         //Distritos ordenados por su cant. de farmacias (1ero distrito del cliente) + limit
@@ -64,7 +48,7 @@ public class ClientPharmacyDao {
                 "cantFarmacias desc\n" +
                 "limit " + paginaDistritoCliente*limite + "," + limite + ";";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sqlObtenerDistritos)) {
 
@@ -80,11 +64,9 @@ public class ClientPharmacyDao {
     }
 
     public int cantidadFarmaciasPorDistrito(String distrito, String busqueda) {
-        this.agregarClase();
-
         int cantidad = 0;
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement("select count(*) from (select * from pharmacy\n" +
                      "where isBanned = 0 and District_name = '" + distrito + "'\n and " +
                      "name like ?) cantFarma;");) {
@@ -107,11 +89,9 @@ public class ClientPharmacyDao {
 
     public ArrayList<BFarmaciasCliente> listarFarmaciasPorDistrito(int pagina, String distrito, String busqueda, int limite) {
 
-        this.agregarClase();
-
         ArrayList<BFarmaciasCliente> listaFarmaciasPorDistrito = new ArrayList<>();
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement("select name, address, District_name, idPharmacy from pharmacy\n" +
                      "where isBanned = 0 and District_name = '" + distrito + "'\n and " +
                      "name like ?\n" +
@@ -140,8 +120,6 @@ public class ClientPharmacyDao {
 
     public ArrayList<BFarmaciasCliente> listarFarmaciasPorDistritoLimite(String distrito, int limite) {
 
-        this.agregarClase();
-
         ArrayList<BFarmaciasCliente> listaFarmaciasClientePorDistrito = new ArrayList<>();
 
         //Farmacias por distrito + limit
@@ -149,7 +127,7 @@ public class ClientPharmacyDao {
                 "where isBanned = 0 and District_name = '" + distrito + "'\n" +
                 "limit "+limite+";";
 
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sqlObtenerFarmacias)) {
 

@@ -1,4 +1,5 @@
 <%@ page import="com.example.telefarma.beans.BDetallesProducto" %>
+<%@ page import="com.example.telefarma.servlets.ClientServlet" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BDetallesProducto"/>
 
@@ -83,28 +84,30 @@
                                     </tr>
                                     <!--Botones aumentar/disminuir-->
                                     <tr>
-                                        <td class="ps-0 pt-0">
-                                            <div class="d-flex">
-                                                <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
-                                                        class="btn btn-tele" id="menos" type="button">
-                                                    <i class="fas fa-minus fa-xs"></i>
+                                        <form method="post" action="<%=request.getContextPath()%>/ClientServlet?action=addToCart&idProduct=<%=producto.getProductid()%>">
+                                            <td class="ps-0 pt-0">
+                                                <div class="d-flex">
+                                                    <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
+                                                            class="btn btn-tele" id="menos" type="button">
+                                                        <i class="fas fa-minus fa-xs"></i>
+                                                    </button>
+                                                    <input class="form-control border-start-0 border-end-0 text-center"
+                                                           type="number" style="width:46px;" id="quantity" name ="quantity"
+                                                           value="1" min="1" max="<%=producto.getStock()%>"/>
+                                                    <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
+                                                            class="btn btn-tele" id="mas" type="button">
+                                                        <i class="fas fa-plus fa-xs"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <!--Botón añadir a carrito-->
+                                            <td class="text-end">
+                                                <button type="submit" class="btn btn-tele btn-md mr-1 mb-2">
+<%--                                                   href="<%=request.getContextPath()%>/ClientServlet?action=addCarrito&idProduct=<%=producto.getProductid()%>&quantity">--%>
+                                                    <i class="fas fa-shopping-cart"></i> Añadir al carrito
                                                 </button>
-                                                <input class="form-control border-start-0 border-end-0 text-center"
-                                                       type="number" style="width:46px;" id="contador"
-                                                       value="1" min="1"/>
-                                                <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
-                                                        class="btn btn-tele" id="mas" type="button">
-                                                    <i class="fas fa-plus fa-xs"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <!--Botón añadir a carrito-->
-                                        <td class="text-end">
-                                            <a role="button" class="btn btn-tele btn-md mr-1 mb-2"
-                                               href="<%=request.getContextPath()%>/ClientServlet?action=addCarrito&idProduct=<%=producto.getProductid()%>">
-                                                <i class="fas fa-shopping-cart"></i> Añadir al carrito
-                                            </a>
-                                        </td>
+                                            </td>
+                                        </form>
                                     </tr>
                                 </tbody>
                             </table>

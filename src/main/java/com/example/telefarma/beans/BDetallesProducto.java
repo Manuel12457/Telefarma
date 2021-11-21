@@ -8,6 +8,7 @@ public class BDetallesProducto {
     private int stock;
     private double price;
     private boolean requierePrescripcion;
+    private int idFarmacia;
 
     public String getNombreProducto() {
         return nombreProducto;
@@ -63,5 +64,13 @@ public class BDetallesProducto {
 
     public void setProductid(int productid) {
         this.productid = productid;
+    }
+
+    public int getIdFarmacia() {
+        return idFarmacia;
+    }
+
+    public void setIdFarmacia(int idFarmacia) {
+        this.idFarmacia = idFarmacia;
     }
 }

@@ -5,11 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class ImageDao {
-
-    String user = "root";
-    String pass = "root";
-    String url = "jdbc:mysql://localhost:3306/telefarma";
+public class ImageDao extends BaseDao {
 
     public byte[] obtenerImagenProducto(String id){
 
@@ -18,13 +14,7 @@ public class ImageDao {
         String sql = "SELECT photo FROM product\n"+
                 "WHERE idProduct="+id;
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -50,13 +40,7 @@ public class ImageDao {
                 "where idProduct = " + idProduct + " and\n" +
                 "idOrder = '" + idOrder + "'";
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try (Connection conn = DriverManager.getConnection(url,user,pass);
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
