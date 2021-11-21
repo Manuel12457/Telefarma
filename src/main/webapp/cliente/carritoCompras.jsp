@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="quantity" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BDetallesProducto"/>
-<!--Lista de productos
-<jsp:useBean id="listaProductos" scope="request" type="java.util.HashMap<com.example.telefarma.beans.BFarmaciasCliente,com.example.telefarma.beans.BDetallesProducto>"/>-->
+<!--Lista de productos-->
+<%//<jsp:useBean id="listaProductos" scope="request" type="java.util.HashMap<com.example.telefarma.beans.BFarmaciasCliente,com.example.telefarma.beans.BDetallesProducto>"/>%>
 
 <!DOCTYPE html>
 <html lang="en">
