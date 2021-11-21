@@ -5,6 +5,7 @@
              type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BFarmaciasCliente>>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="estadoOrden" scope="request" type="java.lang.String"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,6 +37,26 @@
             <div class="card-header my-5"></div>
             <!--Farmacias-->
             <div class="container">
+                <!--Avisos-->
+                <%
+                    String alertClass = ""; String alertMssg = "";
+                    if (!estadoOrden.equals("")) {
+                        switch (estadoOrden) {
+                            case "e":
+                                alertClass = "alert-success";
+                                alertMssg = "La orden se realizó con éxito";
+                                break;
+                            case "ne":
+                                alertClass = "alert-danger";
+                                alertMssg = "Algo salió mal con tu orden";
+                                break;
+                        }
+                %>
+                <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
+                    <%=alertMssg%>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <%}%>
                 <!--Mismo Distrito-->
                 <%
                     boolean otraFarmaciaMostrada = false;

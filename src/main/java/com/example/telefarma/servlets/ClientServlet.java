@@ -3,21 +3,24 @@ package com.example.telefarma.servlets;
 import com.example.telefarma.beans.BClientOrders;
 import com.example.telefarma.beans.BDetallesProducto;
 import com.example.telefarma.beans.BFarmaciasCliente;
-import com.example.telefarma.daos.ClientOrdersDao;
-import com.example.telefarma.daos.ClientPharmacyDao;
-import com.example.telefarma.daos.ClientProductsDao;
-import com.example.telefarma.daos.PharmacyProductsDao;
+import com.example.telefarma.daos.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @WebServlet(name = "ClientServlet", value = "/ClientServlet")
+@MultipartConfig
+
 public class ClientServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -29,6 +32,7 @@ public class ClientServlet extends HttpServlet {
         ClientOrdersDao clientOrdersDao = new ClientOrdersDao();
 
         String action = request.getParameter("action") == null ? "mostrarFarmacias" : request.getParameter("action");
+        String estadoOrden = request.getParameter("orden") == null ? "" : request.getParameter("orden");
         RequestDispatcher view;
         int pagina;
         String busqueda;
@@ -53,6 +57,7 @@ public class ClientServlet extends HttpServlet {
                 int numDistritos = clientPharmacyDao.cantidadDistritosConFarmacia();
                 request.setAttribute("pagTotales", (int) Math.ceil((double) numDistritos / limiteDistritos));
                 request.setAttribute("numDistritos", limiteDistritos);
+                request.setAttribute("estadoOrden",estadoOrden);
 
                 //Lista de listas de farmacias por distrito
                 ArrayList<ArrayList<BFarmaciasCliente>> listaFarmacias = new ArrayList<>();
@@ -194,6 +199,7 @@ public class ClientServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
+        int idClient = request.getParameter("idClient") == null ? 1 : Integer.parseInt(request.getParameter("idClient"));
         String busqueda;
 
         switch (request.getParameter("action")) {
@@ -204,7 +210,7 @@ public class ClientServlet extends HttpServlet {
                 break;
 
             case "buscarHistorial":
-                int idClient = Integer.parseInt(request.getParameter("idClient"));
+
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
                 response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial&busqueda=" + busqueda + "&idClient=" + idClient);
                 break;
@@ -225,6 +231,47 @@ public class ClientServlet extends HttpServlet {
                 int quantity = Integer.parseInt(request.getParameter("quantity"));
                 int idProduct = Integer.parseInt(request.getParameter("idProduct"));
                 response.sendRedirect(request.getContextPath() + "/ClientServlet?action=addToCart&quantity=" + quantity + "&idProduct=" + idProduct);
+                break;
+
+            case "registrarPedido":
+                OrdersDao ordersDao = new OrdersDao();
+                OrderDetailsDao orderDetailsDao = new OrderDetailsDao();
+
+                String exito = "e";
+
+                int i = 0;
+                while(request.getParameter("idFarmacia"+i) != null){
+                    String idFarmacia = request.getParameter("idFarmacia"+i);
+                    String pickUpDate = request.getParameter("pickUpDate"+i);
+                    System.out.println(pickUpDate);
+
+                    String idOrder = ordersDao.generarOrden(idClient,pickUpDate);
+
+                    int j = 0;
+                    while(request.getParameter("idProducto"+i+"-"+j) != null){
+                        int idProducto = Integer.parseInt(request.getParameter("idProducto"+i+"-"+j));
+                        int cantidad = Integer.parseInt(request.getParameter("cantidad"+i+"-"+j));
+
+                        if(!orderDetailsDao.agregarOrderDetails(idOrder,idProducto,cantidad)){
+                            exito = "ne";
+                        }
+
+                        // Obtener Imagen
+                        Part recetaPart = request.getPart("receta");
+
+                        if (recetaPart.getSize() > 0) {
+                            InputStream recetaStream = recetaPart.getInputStream();
+                            if(!orderDetailsDao.agregarReceta(idOrder,idProducto,recetaStream)){
+                                exito = "nr";
+                            }
+                        }
+                        j++;
+                    }
+                    i++;
+                }
+                response.sendRedirect(request.getContextPath()+"/ClientServlet?orden="+exito);
+
+                break;
 
             default:
                 break;

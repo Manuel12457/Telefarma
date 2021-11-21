@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Andika&amp;display=swap">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/style.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css">
+        <meta http-equiv="Refresh" content="5;url=<%=request.getContextPath()%>/">
     </head>
 
     <body>
