@@ -195,6 +195,10 @@ public class PharmacyAdminServlet extends HttpServlet {
                 boolean correoPasaE;
                 boolean correoValidoE = pharmacyAdminDao.validarCorreoFarmacia(f.getEmailFarmacia());
 
+                System.out.println("Correo ingresado: " + f.getEmailFarmacia());
+                System.out.println("Correo de la farmacia: " + fa.getEmailFarmacia());
+                System.out.println("El correo no esta en el DB: " + correoValidoE);
+
                 if (f.getEmailFarmacia().equals(fa.getEmailFarmacia())) { /*V*/
                     if (!correoValidoE) { /*V*/
                         correoPasaE = true;
@@ -203,14 +207,19 @@ public class PharmacyAdminServlet extends HttpServlet {
                     }
                 } else {
                     if (!correoValidoE) {
-                        correoPasaE = true;
-                    } else {
                         correoPasaE = false;
+                    } else {
+                        correoPasaE = true;
                     }
                 }
+                System.out.println("Deberia no haber error de correo: " + correoPasaE);
 
                 boolean rucPasaE;
                 boolean rucValidoE = pharmacyAdminDao.validarRUCFarmacia(f.getRUCFarmacia());
+
+                System.out.println("Ruc ingresado: " + f.getRUCFarmacia());
+                System.out.println("Ruc de la farmacia: " + fa.getRUCFarmacia());
+                System.out.println("Ruc no esta en el DB: " + rucValidoE);
 
                 if (f.getRUCFarmacia().equals(fa.getRUCFarmacia())) { /*V*/
                     if (!rucValidoE) { /*V*/
@@ -220,25 +229,23 @@ public class PharmacyAdminServlet extends HttpServlet {
                     }
                 } else {
                     if (!rucValidoE) {
-                        rucPasaE = true;
-                    } else {
                         rucPasaE = false;
+                    } else {
+                        rucPasaE = true;
                     }
                 }
+                System.out.println("Deberia no haber error de ruc: " + rucPasaE);
 
                 boolean rucNumeroE = false;
                 boolean longitudRucE = f.getRUCFarmacia().length() == 11;
+                System.out.println("Longitud de 11 numeros: " + longitudRucE);
 
                 try {
                     long rucNum = Long.parseLong(f.getRUCFarmacia());
                     rucNumeroE = true;
                 } catch (NumberFormatException e) {
                 }
-
-                System.out.println(correoValidoE);
-                System.out.println(rucValidoE);
-                System.out.println(rucNumeroE);
-                System.out.println(longitudRucE);
+                System.out.println("Ruc contiene solo numeros: " + rucNumeroE);
 
                 if (correoPasaE && rucPasaE && rucNumeroE && longitudRucE) {
                     String estadoEdicion = pharmacyAdminDao.editarFarmacia(f.getRUCFarmacia(), f.getNombreFarmacia(), f.getEmailFarmacia(), f.getDireccionFarmacia(), f.getDistritoFarmacia(), f.getIdPharmacy());
@@ -253,9 +260,9 @@ public class PharmacyAdminServlet extends HttpServlet {
                         }
                     } else {
                         if (!correoValidoE) {
-                            request.setAttribute("noValidMail", 0);
-                        } else {
                             request.setAttribute("noValidMail", 1);
+                        } else {
+                            request.setAttribute("noValidMail", 0);
                         }
                     }
 
@@ -267,9 +274,9 @@ public class PharmacyAdminServlet extends HttpServlet {
                         }
                     } else {
                         if (!rucValidoE) {
-                            request.setAttribute("noValidRUC", 0);
-                        } else {
                             request.setAttribute("noValidRUC", 1);
+                        } else {
+                            request.setAttribute("noValidRUC", 0);
                         }
                     }
 

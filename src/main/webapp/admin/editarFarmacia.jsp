@@ -101,25 +101,36 @@
                                         El correo que ha ingresado ya esta en uso
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
-                                    <%}
-                                        if (noValidRUC == 1) { %>
+                                    <%
+                                        }
+                                        if (noValidRUC == 1) {
+                                    %>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         El RUC que ha ingresado ya esta en uso
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
                                     </div>
-                                    <%}
-                                        if (noNumRUC == 1) { %>
+                                    <%
+                                    } else {
+                                        if (noNumRUC == 1) {
+                                    %>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         El RUC debe contener únicamente números
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
                                     </div>
-                                    <%}
-                                        if (noLongRuc == 1) { %>
+                                    <%
+                                    } else {
+                                        if (noLongRuc == 1) {
+                                    %>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         El RUC debe contener 11 números
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
                                     </div>
-                                    <%}%>
+                                    <%}
+                                    }
+                                    }%>
 
 
 

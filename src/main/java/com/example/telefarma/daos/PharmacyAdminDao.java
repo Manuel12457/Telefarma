@@ -135,9 +135,7 @@ public class PharmacyAdminDao extends BaseDao {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    if (rs.getString(2).equals(correo)) {
                         correoUnico = false;
-                    }
                 }
             }
 

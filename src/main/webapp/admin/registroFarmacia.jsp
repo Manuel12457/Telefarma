@@ -143,7 +143,7 @@
                                                 aria-label="Close"></button>
                                     </div>
                                     <%
-                                        }
+                                        } else {
                                         if (noNumRUC == 1) {
                                     %>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -152,7 +152,7 @@
                                                 aria-label="Close"></button>
                                     </div>
                                     <%
-                                        }
+                                        } else {
                                         if (noLongRuc == 1) {
                                     %>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -160,7 +160,9 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="alert"
                                                 aria-label="Close"></button>
                                     </div>
-                                    <%}%>
+                                    <%}
+                                    }
+                                    }%>
                                 </form>
                             </div>
                         </div>

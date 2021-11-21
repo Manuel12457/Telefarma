@@ -28,7 +28,7 @@
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="admin"/>
             <jsp:param name="nombre" value="Admin"/>
-            <jsp:param name="servletBusqueda" value="PharmacyAdminServlet?"/>
+            <jsp:param name="servletBusqueda" value="PharmacyAdminServlet?action=buscar"/>
             <jsp:param name="busquedaPlaceholder" value="Busca una farmacia"/>
         </jsp:include>
 
