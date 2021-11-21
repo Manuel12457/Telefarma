@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BDetallesProducto"/>
 <jsp:useBean id="quantity" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BDetallesProducto"/>
+<!--Lista de productos
+<jsp:useBean id="listaProductos" scope="request" type="java.util.HashMap<com.example.telefarma.beans.BFarmaciasCliente,com.example.telefarma.beans.BDetallesProducto>"/>-->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,7 +38,11 @@
                     <!--Productos en carrito-->
                     <div class="col-md-9 col-xl-8">
                         <!--Items de la farmacia 1-->
-                        <%for(int i=0;i<1;i++){%>
+                        <%
+                            // Arraylist<BFarmaciasCliente> listaFarmacias = new Arraylist<BFarmaciasCliente>(listaProductos.keySet());
+                            for(int i=0;i<1;i++){
+                                // BFarmaciasCliente farmacia = listaFarmacias.get(i);
+                        %>
                         <div class="cart-items-container">
                             <!--Nombre cabecera-->
                             <h3 class="cart-header px-4 py-3">
@@ -48,7 +54,9 @@
                                     </h6>
                                 </div>
                             </h3>
-                            <%for(int j=0;j<1;j++){%>
+                            <%for(int j=0;j<1;j++){
+                                // BDetallesProducto producto = listaProductos.get(farmacia).get(j);
+                            %>
                             <!--Producto-->
                             <div class="cart-item d-sm-flex justify-content-between my-4 px-lg-2 px-xl-5 pb-4 border-bottom">
                                 <!--Bloque 1-->
