@@ -29,7 +29,9 @@
             <!--Logo: Vuelve al home-->
             <div class="logo-content border-bottom">
                 <div class="logo">
-                    <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet';" class="logo-name">TeleFarma</div>
+                    <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet';" class="logo-name">
+                        TeleFarma
+                    </div>
                 </div>
                 <i class='fas fa-bars' id="btn-sidebar"></i>
             </div>
@@ -157,7 +159,8 @@
                                                 <td colspan="1">Unidades</td>
                                                 <td colspan="2">Producto</td>
                                                 <td colspan="2">Precio por unidad</td>
-                                                <td colspan="2">Total</td>
+                                                <td colspan="1">Total</td>
+                                                <td colspan="1">Receta</td>
                                             </tr>
                                             <%--Loop de los productos de una orden--%>
                                             <%
@@ -170,7 +173,13 @@
                                                 </td>
                                                 <td colspan="2">s/ <%=String.format("%.2f", details.getPrecioUnit())%>
                                                 </td>
-                                                <td colspan="2">s/ <%=String.format("%.2f", details.getPrecioTotal())%>
+                                                <td colspan="1">s/ <%=String.format("%.2f", details.getPrecioTotal())%>
+                                                </td>
+                                                <td colspan="1">
+                                                    <% if (details.getRequierePrescripcion()) { %>
+                                                    <a class="text-white" data-bs-toggle="modal" role="button"
+                                                       data-bs-target="#dt-receta-<%=details.getOrder()%><%=details.getIdProduct()%>">Ver receta</a>
+                                                    <% } else { %> - <% } %> <!--Sin receta-->
                                                 </td>
                                             </tr>
                                             <%
@@ -205,7 +214,36 @@
             </div>
         </div>
 
+        <%
+            for (BClientOrders orden : listaOrdenes) {
+                for (BOrderDetails details : orden.getListaDetails()){
+        %>
+        <!--Modal Receta-->
+        <div class="modal fade"
+             id="dt-receta-<%=details.getOrder()%><%=details.getIdProduct()%>"
+             tabindex="-1"
+             aria-labelledby="recetaModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0">
+                    <div class="modal-header bg-tele">
+                        <h5 class="modal-title">Receta Médica</h5>
+                        <button type="button"
+                                class="btn-close btn-close-white"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <img src="<%=request.getContextPath()%>/Image?idProduct=<%=details.getIdProduct()%>&idOrder=<%=details.getOrder()%>"
+                             style="max-height: 450px; max-width: 450px">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%
+            }}
+        %>
         <!--JS-->
+
         <script src="${pageContext.request.contextPath}/res/js/main.js"></script>
         <script src="${pageContext.request.contextPath}/res/bootstrap/js/bootstrap.min.js"></script>
     </body>

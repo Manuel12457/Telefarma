@@ -56,7 +56,7 @@ public class ClientOrdersDao extends BaseDao {
 
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("select o.idOrder,od.quantity,p.name,p.price,p.price*od.quantity as 'totalProducto',p.idProduct\n" +
+             ResultSet rs = stmt.executeQuery("select o.idOrder,od.quantity,p.name,p.price,p.price*od.quantity as 'totalProducto',p.idProduct,p.requiresPrescription\n" +
                      "from orders o \n" +
                      "inner join orderdetails od on (od.idOrder=o.idOrder) \n" +
                      "inner join product p on (p.idProduct=od.idProduct) \n" +
@@ -64,10 +64,14 @@ public class ClientOrdersDao extends BaseDao {
 
             while (rs.next()) {
                 BOrderDetails orderDetails = new BOrderDetails();
+                orderDetails.setOrder(rs.getString(1));
                 orderDetails.setUnidades(rs.getInt(2));
                 orderDetails.setProducto(rs.getString(3));
                 orderDetails.setPrecioUnit(rs.getDouble(4));
                 orderDetails.setPrecioTotal(rs.getDouble(5));
+                orderDetails.setIdProduct(rs.getInt(6));
+                orderDetails.setRequierePrescripcion(rs.getBoolean(7));
+
                 listaDetails.add(orderDetails);
             }
 
