@@ -176,6 +176,7 @@ public class SessionServlet extends HttpServlet {
                 String password = request.getParameter("password");
                 System.out.println(password);
                 s.cambiarPassword(token, rol, password);
+                s.borrarToken(token, rol);
 
                 view = request.getRequestDispatcher("/ingreso/cambioContrasenhaExitoso.jsp");
                 view.forward(request, response);

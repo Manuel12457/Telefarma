@@ -2,7 +2,6 @@ package com.example.telefarma.daos;
 
 import com.example.telefarma.beans.BClientOrders;
 import com.example.telefarma.beans.BOrderDetails;
-import com.example.telefarma.beans.BProductosBuscador;
 
 import java.sql.*;
 import java.util.ArrayList;

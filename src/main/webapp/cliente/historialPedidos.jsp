@@ -213,7 +213,7 @@
                 </div>
             </div>
         </div>
-
+        <%--Los modals se crean afuera para que estén fuera del background--%>
         <%
             for (BClientOrders orden : listaOrdenes) {
                 for (BOrderDetails details : orden.getListaDetails()){
@@ -226,7 +226,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content border-0">
                     <div class="modal-header bg-tele">
-                        <h5 class="modal-title">Receta Médica</h5>
+                        <h5 class="modal-title text-white">Receta Médica</h5>
                         <button type="button"
                                 class="btn-close btn-close-white"
                                 data-bs-dismiss="modal"
@@ -240,7 +240,8 @@
             </div>
         </div>
         <%
-            }}
+                }
+            }
         %>
         <!--JS-->
 

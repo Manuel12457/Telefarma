@@ -16,7 +16,6 @@ import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 @WebServlet(name = "ClientServlet", value = "/ClientServlet")
 @MultipartConfig

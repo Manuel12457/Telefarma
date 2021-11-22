@@ -1,8 +1,6 @@
 package com.example.telefarma.daos;
 
 import com.example.telefarma.beans.BFarmaciasCliente;
-import com.example.telefarma.beans.BProductosBuscador;
-/*import jdk.internal.jimage.ImageReaderFactory;*/
 
 import java.sql.*;
 import java.util.ArrayList;

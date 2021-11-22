@@ -148,4 +148,18 @@ public class SessionDao extends BaseDao {
         }
     }
 
+    public void borrarToken(String token, String rol) {
+
+        String sql1 = "update " + rol + " set rstPassToken = null where rstPassToken = '" + token + "';";
+
+        try (Connection conn = this.getConnection();
+             Statement stmt = conn.createStatement();) {
+
+            stmt.executeUpdate(sql1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

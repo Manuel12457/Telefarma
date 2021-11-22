@@ -153,7 +153,7 @@
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content border-0">
                                                     <div class="modal-header bg-tele">
-                                                        <h5 class="modal-title">Receta Médica</h5>
+                                                        <h5 class="modal-title text-white">Receta Médica</h5>
                                                         <button type="button" class="btn-close btn-close-white"
                                                                 data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
