@@ -26,7 +26,7 @@
                     <div class="card-body">
                         <div class="container" style="width: 70%">
                             <div class="row my-4 text-center">
-                                <h4>Se ha cambiado la contraseña con éxito =)</h4>
+                                <h4>El token ingresado es invalido</h4>
                                 <a class="text-center" href="<%=request.getContextPath()%>/">Volver al Inicio de
                                     Sesión</a>
                             </div>

@@ -132,6 +132,25 @@ public class SessionDao extends BaseDao {
         return false;
     }
 
+    public boolean tokenRepetido(String token) {
+        String sql = "select count(*) from (select rstPassToken from client where rstPassToken = " + token +
+                " union select rstPassToken from pharmacy where rstPassToken = " + token + ") tabla;";
+
+        try (Connection conn = this.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql);) {
+
+            if (rs.getInt(1) > 1) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
     public void cambiarPassword(String token, String rol, String password) {
 
         String sql1 = "update " + rol + " set password = '" + password + "' where rstPassToken = '" + token + "';";

@@ -57,7 +57,10 @@ public class SessionServlet extends HttpServlet {
                     request.setAttribute("rol", rol);
                     view = request.getRequestDispatcher("/ingreso/cambioContrasenha.jsp");
                     view.forward(request, response);
-                } // else: vista de error
+                } else {
+                    view = request.getRequestDispatcher("/ingreso/tokenInvalido.jsp");
+                    view.forward(request, response);
+                }
         }
     }
 
@@ -146,6 +149,9 @@ public class SessionServlet extends HttpServlet {
                 if (!hm.isEmpty()) {
 
                     String token = UUID.randomUUID().toString().replace("-", "Z");
+                    while (s.tokenRepetido(token)) {
+                        token = UUID.randomUUID().toString().replace("-", "Z");
+                    }
 
                     int idUser = 0;
                     for (int id : hm.keySet()) {
