@@ -27,9 +27,9 @@ public class PharmacyDao extends BaseDao {
         return cantidad;
     }
 
-    public ArrayList<BProductoVisualizacion> listaProductosFarmacia(int pagina, String busqueda, int idFarmacia, int limite) {
+    public ArrayList<BProductVisualizacion> listaProductosFarmacia(int pagina, String busqueda, int idFarmacia, int limite) {
 
-        ArrayList<BProductoVisualizacion> listaProductos = new ArrayList<>();
+        ArrayList<BProductVisualizacion> listaProductos = new ArrayList<>();
 
         String sql = "select p.idProduct, p.name, p.description, p.stock, p.price, p.requiresPrescription from telefarma.product p\n" +
                 "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
@@ -41,7 +41,7 @@ public class PharmacyDao extends BaseDao {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                BProductoVisualizacion producto = new BProductoVisualizacion();
+                BProductVisualizacion producto = new BProductVisualizacion();
                 producto.setIdProducto(rs.getInt(1));
                 producto.setNombre(rs.getString(2));
                 producto.setDescripcion(rs.getString(3));
@@ -58,7 +58,7 @@ public class PharmacyDao extends BaseDao {
         return listaProductos;
     }
 
-    public void agregarposibleEliminar(BProductoVisualizacion producto) {
+    public void agregarposibleEliminar(BProductVisualizacion producto) {
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement("select p.idProduct, o.idOrder from product p\n" +
@@ -77,9 +77,9 @@ public class PharmacyDao extends BaseDao {
         }
     }
 
-    public ArrayList<BPharmacyOrders> listarOrdenes(int pagina, String busqueda, int limite, int id) {
+    public ArrayList<BOrders> listarOrdenes(int pagina, String busqueda, int limite, int id) {
 
-        ArrayList<BPharmacyOrders> listaOrdenes = new ArrayList<>();
+        ArrayList<BOrders> listaOrdenes = new ArrayList<>();
 
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
@@ -95,7 +95,7 @@ public class PharmacyDao extends BaseDao {
                      "limit " + pagina * limite + "," + limite + ";")) {
 
             while (rs.next()) {
-                BPharmacyOrders pharmacyOrders = new BPharmacyOrders();
+                BOrders pharmacyOrders = new BOrders();
                 pharmacyOrders.setIdOrder(rs.getString(1));
                 pharmacyOrders.setEstado(rs.getString(2));
                 pharmacyOrders.setNombreCliente(rs.getString(3));
@@ -114,7 +114,7 @@ public class PharmacyDao extends BaseDao {
         return listaOrdenes;
     }
 
-    public void agregarOrderDetails(BPharmacyOrders orden) {
+    public void agregarOrderDetails(BOrders orden) {
 
         ArrayList<BOrderDetails> listaDetails = new ArrayList<>();
 
@@ -147,7 +147,7 @@ public class PharmacyDao extends BaseDao {
         orden.setListaDetails(listaDetails);
     }
 
-    public void agregarDayDiff(BPharmacyOrders orden) {
+    public void agregarDayDiff(BOrders orden) {
 
         String sql = "select pickUpDate,timestampdiff(SQL_TSI_DAY,pickUpDate,now()) \n" +
                 "from telefarma.orders o \n" +
@@ -185,7 +185,7 @@ public class PharmacyDao extends BaseDao {
 
     }
 
-    public boolean registrarProducto(BProducto producto) { //retorna falso si surge una excepcion
+    public boolean registrarProducto(BProduct producto) { //retorna falso si surge una excepcion
 
         String sql = "insert into telefarma.product (idPharmacy,name,description,stock,price,requiresPrescription)\n" +
                 "values (?,?,?,?,?,?)";
@@ -272,9 +272,9 @@ public class PharmacyDao extends BaseDao {
         return count == 1;
     }
 
-    public BProducto obtenerProducto(int idProducto) {
+    public BProduct obtenerProducto(int idProducto) {
 
-        BProducto producto = new BProducto();
+        BProduct producto = new BProduct();
         producto.setIdProducto(idProducto);
         String sql = "select name, description, stock, price, requiresPrescription from telefarma.product " +
                 "where idProduct=" + idProducto + ";";
@@ -298,7 +298,7 @@ public class PharmacyDao extends BaseDao {
         return producto;
     }
 
-    public boolean editarProducto(BProducto producto) {
+    public boolean editarProducto(BProduct producto) {
         String sql = "update telefarma.product set name=?,description=?,stock=?,price=?,requiresPrescription=? " +
                 "where idProduct=?";
 

@@ -1,7 +1,6 @@
 package com.example.telefarma.daos;
 
-import com.example.telefarma.beans.BDetallesProducto;
-import com.example.telefarma.beans.BProductosBuscador;
+import com.example.telefarma.beans.BProduct;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -28,9 +27,9 @@ public class ClientProductsDao extends BaseDao {
         return cantidad;
     }
 
-    public ArrayList<BProductosBuscador> listarProductosBusqueda(int pagina, String busqueda, int limite, int id) {
+    public ArrayList<BProduct> listarProductosBusqueda(int pagina, String busqueda, int limite, int id) {
 
-        ArrayList<BProductosBuscador> listaProductosBuscador = new ArrayList<>();
+        ArrayList<BProduct> listaProductosBuscador = new ArrayList<>();
 
         String sql = "select f.name,f.District_name,p.idProduct,p.name,stock,price from telefarma.product p\n" +
                 "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
@@ -53,11 +52,11 @@ public class ClientProductsDao extends BaseDao {
             try(ResultSet rs = pstmt.executeQuery()) {
 
                 while (rs.next()) {
-                    BProductosBuscador productoBuscador = new BProductosBuscador();
+                    BProduct productoBuscador = new BProduct();
                     productoBuscador.setNombreFarmacia(rs.getString(1));
                     productoBuscador.setDistritoFarmacia(rs.getString(2));
                     productoBuscador.setIdProducto(rs.getInt(3));
-                    productoBuscador.setNombreProducto(rs.getString(4));
+                    productoBuscador.setNombre(rs.getString(4));
                     productoBuscador.setStock(rs.getInt(5));
                     productoBuscador.setPrecio(rs.getDouble(6));
                     listaProductosBuscador.add(productoBuscador);
@@ -71,8 +70,8 @@ public class ClientProductsDao extends BaseDao {
         return listaProductosBuscador;
     }
 
-    public BDetallesProducto obtenerDetalles(int productid) {
-        BDetallesProducto producto = new BDetallesProducto();
+    public BProduct obtenerDetalles(int productid) {
+        BProduct producto = new BProduct();
 
         String sql = "select p.idProduct, p.name, ph.name,  p.description, p.stock,p.price, p.requiresPrescription, ph.idPharmacy from product p\n" +
                 "inner join pharmacy ph on p.idPharmacy = ph.idPharmacy\n" +
@@ -86,12 +85,12 @@ public class ClientProductsDao extends BaseDao {
             try(ResultSet rs = pstmt.executeQuery()) {
 
                 while (rs.next()) {
-                    producto.setProductid(rs.getInt(1));
-                    producto.setNombreProducto(rs.getString(2));
+                    producto.setIdProducto(rs.getInt(1));
+                    producto.setNombre(rs.getString(2));
                     producto.setNombreFarmacia(rs.getString(3));
                     producto.setDescripcion(rs.getString(4));
                     producto.setStock(rs.getInt(5));
-                    producto.setPrice(rs.getDouble(6));
+                    producto.setPrecio(rs.getDouble(6));
                     producto.setRequierePrescripcion(rs.getBoolean(7));
                     producto.setIdFarmacia(rs.getInt(8));
                 }

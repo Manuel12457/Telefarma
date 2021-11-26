@@ -1,8 +1,7 @@
-<%@ page import="com.example.telefarma.beans.BFarmaciasCliente" %>
-<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="com.example.telefarma.beans.BPharmacy" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaFarmaciasDistrito" scope="request"
-             type="java.util.ArrayList<com.example.telefarma.beans.BFarmaciasCliente>"/>
+             type="java.util.ArrayList<com.example.telefarma.beans.BPharmacy>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="district" scope="request" type="java.lang.String"/>
@@ -52,7 +51,7 @@
                             <!--Loop de farmacia-->
                             <%
                                 int imageCount = 0;
-                                for (BFarmaciasCliente farmacia : listaFarmaciasDistrito) {
+                                for (BPharmacy farmacia : listaFarmaciasDistrito) {
                                     if (imageCount == 3) {
                                         imageCount = 0; //resetea los estilos para las imagenes
                                     }

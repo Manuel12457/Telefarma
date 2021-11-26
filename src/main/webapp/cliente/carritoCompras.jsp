@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="quantity" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BDetallesProducto"/>
+<jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BProduct"/>
 <!--Lista de productos-->
-<%//<jsp:useBean id="listaProductos" scope="request" type="java.util.HashMap<com.example.telefarma.beans.BFarmaciasCliente,com.example.telefarma.beans.BDetallesProducto>"/>%>
+<%//<jsp:useBean id="listaProductos" scope="request" type="java.util.HashMap<com.example.telefarma.beans.BFarmaciasCliente,com.example.telefarma.beans.BProduct>"/>%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -67,21 +67,21 @@
                                     <div class="d-sm-flex">
                                         <!--Imagen del producto-->
                                         <div class="cart-item-thumb mx-auto">
-                                            <img src="<%=request.getContextPath()%>/Image?idProduct=<%=producto.getProductid()%>"
+                                            <img src="<%=request.getContextPath()%>/Image?idProduct=<%=producto.getIdProducto()%>"
                                                  class="img-carrito">
                                         </div>
                                         <!--Info del producto-->
                                         <div class="pt-1 pt-md-3 ps-sm-3 ps-0 text-sm-start text-center">
                                             <!--Nombre-->
-                                            <h5 class="mb-sm-3 mb-1"><%=producto.getNombreProducto()%>
+                                            <h5 class="mb-sm-3 mb-1"><%=producto.getNombre()%>
                                             </h5>
                                             <!--Precios-->
                                             <div>
                                                 <span class="text-muted"><i class="fas fa-tag"></i> Precio:&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                                <span class="cart-price font-size-lgr ms-sm-2 ms-0 ">s/ <%=producto.getPrice()%></span>
+                                                <span class="cart-price font-size-lgr ms-sm-2 ms-0 ">s/ <%=producto.getPrecio()%></span>
                                             </div>
                                             <div>
-                                                <input value="<%=producto.getProductid()%>"
+                                                <input value="<%=producto.getIdProducto()%>"
                                                        name="idProducto<%=i%>-<%=j%>" hidden>
                                                 <span class="text-muted"><i class="fas fa-tags"></i> Subtotal:</span>
                                                 <span class="cart-subtotal font-size-lgr ms-sm-2 ms-0 "></span>
@@ -131,7 +131,7 @@
                                         </div>
                                         <!--Botón borrar-->
                                         <button class="btn btn-danger btn-sm mt-sm-4 mt-2 w-100" type="button"
-                                                id="remove-<%=producto.getProductid()%>">
+                                                id="remove-<%=producto.getIdProducto()%>">
                                             <i class="far fa-trash-alt"></i>
                                         </button>
                                     </div>
@@ -157,10 +157,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr id="item-resumen-<%=producto.getProductid()%>">
+                                            <tr id="item-resumen-<%=producto.getIdProducto()%>">
                                                 <td class="cart-quantity-resumen text-center">
                                                 </td>
-                                                <td><%=producto.getNombreProducto()%>
+                                                <td><%=producto.getNombre()%>
                                                 </td>
                                                 <td><%=producto.getNombreFarmacia()%>
                                                 </td>

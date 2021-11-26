@@ -1,7 +1,7 @@
-<%@ page import="com.example.telefarma.beans.BProductoVisualizacion" %>
+<%@ page import="com.example.telefarma.beans.BProductVisualizacion" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaProductosBusqueda" scope="request"
-             type="java.util.ArrayList<com.example.telefarma.beans.BProductoVisualizacion>"/>
+             type="java.util.ArrayList<com.example.telefarma.beans.BProductVisualizacion>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <%
@@ -90,7 +90,7 @@
             <div class="container">
                 <!--Loop de productos-->
                 <%
-                    for (BProductoVisualizacion producto : listaProductosBusqueda) {
+                    for (BProductVisualizacion producto : listaProductosBusqueda) {
                 %>
                 <div class="row col-12 justify-content-center align-items-start">
                     <!--Nombre del producto e imagen referencial-->

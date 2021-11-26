@@ -2,14 +2,30 @@ package com.example.telefarma.beans;
 
 import java.util.ArrayList;
 
-public class BClientOrders {
+public class BOrders {
     private String idOrder;
     private String farmaciaAsociada;
+    private String nombreCliente;
     private String fechaRecojo;
     private String fechaOrden;
     private double total;
     private String estado;
     private int timeDiff;
+
+    public String getNombreCliente() {return nombreCliente;}
+
+    public void setNombreCliente(String nombreCliente) {this.nombreCliente = nombreCliente;}
+
+    public int getDayDiff() {
+        return dayDiff;
+    }
+
+    public void setDayDiff(int dayDiff) {
+        this.dayDiff = dayDiff;
+    }
+
+    private int dayDiff;
+
     ArrayList<BOrderDetails> listaDetails;
 
     public String getIdOrder() {

@@ -1,8 +1,8 @@
 package com.example.telefarma.servlets;
 
-import com.example.telefarma.beans.BClientOrders;
-import com.example.telefarma.beans.BDetallesProducto;
-import com.example.telefarma.beans.BFarmaciasCliente;
+import com.example.telefarma.beans.BOrders;
+import com.example.telefarma.beans.BPharmacy;
+import com.example.telefarma.beans.BProduct;
 import com.example.telefarma.daos.*;
 
 import javax.servlet.RequestDispatcher;
@@ -59,10 +59,10 @@ public class ClientServlet extends HttpServlet {
                 request.setAttribute("estadoOrden",estadoOrden);
 
                 //Lista de listas de farmacias por distrito
-                ArrayList<ArrayList<BFarmaciasCliente>> listaFarmacias = new ArrayList<>();
+                ArrayList<ArrayList<BPharmacy>> listaFarmacias = new ArrayList<>();
                 limiteFarmacias = 3;
                 for (String d : distritos) {
-                    ArrayList<BFarmaciasCliente> farmaciasCliente = clientPharmacyDao.listarFarmaciasPorDistritoLimite(d, limiteFarmacias);
+                    ArrayList<BPharmacy> farmaciasCliente = clientPharmacyDao.listarFarmaciasPorDistritoLimite(d, limiteFarmacias);
                     listaFarmacias.add(farmaciasCliente);
                 }
                 request.setAttribute("listaFarmacias", listaFarmacias);
@@ -83,10 +83,10 @@ public class ClientServlet extends HttpServlet {
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
                 request.setAttribute("busqueda", busqueda);
                 int idClient = request.getParameter("idClient") == null ? 1 : Integer.parseInt(request.getParameter("idClient")); //hardcodeado
-                ArrayList<BClientOrders> listaOrdenes = clientOrdersDao.listarOrdenes(busqueda, pagina, limite, idClient);
+                ArrayList<BOrders> listaOrdenes = clientOrdersDao.listarOrdenes(busqueda, pagina, limite, idClient);
 
                 //Agregar detalles de las ordenes del cliente
-                for (BClientOrders orden : listaOrdenes) {
+                for (BOrders orden : listaOrdenes) {
                     clientOrdersDao.agregarOrderDetails(orden);
                     clientOrdersDao.agregarTimeDiff(orden);
                 }
@@ -148,7 +148,7 @@ public class ClientServlet extends HttpServlet {
 
             case "detallesProducto":
                 int productid = request.getParameter("productid") == null ? 1 : Integer.parseInt(request.getParameter("productid"));
-                BDetallesProducto producto = clientProductsDao.obtenerDetalles(productid);
+                BProduct producto = clientProductsDao.obtenerDetalles(productid);
                 request.setAttribute("producto", producto);
 
                 view = request.getRequestDispatcher("/cliente/detallesProducto.jsp");
@@ -182,7 +182,7 @@ public class ClientServlet extends HttpServlet {
                 int quantity = Integer.parseInt(request.getParameter("quantity"));
                 request.setAttribute("quantity", quantity);
 
-                BDetallesProducto productoCarrito = clientProductsDao.obtenerDetalles(idProduct);
+                BProduct productoCarrito = clientProductsDao.obtenerDetalles(idProduct);
                 request.setAttribute("producto", productoCarrito);
 
                 //Vista

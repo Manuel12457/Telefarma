@@ -1,8 +1,8 @@
-<%@ page import="com.example.telefarma.beans.BFarmaciasAdmin" %>
+<%@ page import="com.example.telefarma.beans.BPharmacy" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaListaFarmacias" scope="request"
-             type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BFarmaciasAdmin>>"/>
+             type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BPharmacy>>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="resultban" scope="request" type="java.lang.Integer"/>
@@ -104,7 +104,7 @@
                     <h3 class="text-dark">Farmacias registradas</h3>
                 </div>
                 <%
-                    for (ArrayList<BFarmaciasAdmin> listaFarmaciasDistrito : listaListaFarmacias) {
+                    for (ArrayList<BPharmacy> listaFarmaciasDistrito : listaListaFarmacias) {
                 %>
                 <div class="row">
                     <div class="container px-5 py-2" id="custom-cards-san-miguel">
@@ -115,7 +115,7 @@
                             <!--Loop de farmacias por distrito-->
                             <%
                                 int cardCount = 0;
-                                for (BFarmaciasAdmin farmacia : listaFarmaciasDistrito) {
+                                for (BPharmacy farmacia : listaFarmaciasDistrito) {
                                     cardCount++;
                                     if (cardCount == 3) {
                                         cardCount = 1;

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.example.telefarma.beans.BPharmacyOrders" %>
+<%@ page import="com.example.telefarma.beans.BOrders" %>
 <%@ page import="com.example.telefarma.beans.BOrderDetails" %>
-<jsp:useBean id="listaOrdenes" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BPharmacyOrders>"/>
+<jsp:useBean id="listaOrdenes" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BOrders>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 
@@ -67,7 +67,7 @@
                                 <%
                                     int countOrder = 0;
                                     int countOrderProduct = 0;
-                                    for (BPharmacyOrders orden : listaOrdenes) {
+                                    for (BOrders orden : listaOrdenes) {
                                         countOrder++;
                                 %>
                                 <tr class="cell-1">

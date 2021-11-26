@@ -1,6 +1,6 @@
 package com.example.telefarma.daos;
 
-import com.example.telefarma.beans.BProductosBuscador;
+import com.example.telefarma.beans.BProduct;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -50,9 +50,9 @@ public class PharmacyProductsDao extends BaseDao {
         return cantidad;
     }
 
-    public ArrayList<BProductosBuscador> listaProductosFarmacia(int pagina, String busqueda, int idPharmacy, int limite) {
+    public ArrayList<BProduct> listaProductosFarmacia(int pagina, String busqueda, int idPharmacy, int limite) {
 
-        ArrayList<BProductosBuscador> listaProductos = new ArrayList<>();
+        ArrayList<BProduct> listaProductos = new ArrayList<>();
 
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
@@ -64,9 +64,9 @@ public class PharmacyProductsDao extends BaseDao {
                      "limit " + limite * pagina + "," + limite + ";")) {
 
             while (rs.next()) {
-                BProductosBuscador producto = new BProductosBuscador();
+                BProduct producto = new BProduct();
                 producto.setIdProducto(rs.getInt(1));
-                producto.setNombreProducto(rs.getString(2));
+                producto.setNombre(rs.getString(2));
                 producto.setStock(rs.getInt(3));
                 producto.setPrecio(rs.getDouble(4));
                 listaProductos.add(producto);

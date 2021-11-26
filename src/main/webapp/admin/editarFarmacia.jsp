@@ -4,7 +4,7 @@
 <jsp:useBean id="noValidRUC" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="noNumRUC" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="noLongRuc" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="farmacia" scope="request" type="com.example.telefarma.beans.BFarmaciasAdmin"/>
+<jsp:useBean id="farmacia" scope="request" type="com.example.telefarma.beans.BPharmacy"/>
 
 <!DOCTYPE html>
 <html lang="es">

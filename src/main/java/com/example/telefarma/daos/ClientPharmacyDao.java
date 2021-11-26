@@ -1,6 +1,6 @@
 package com.example.telefarma.daos;
 
-import com.example.telefarma.beans.BFarmaciasCliente;
+import com.example.telefarma.beans.BPharmacy;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -85,9 +85,9 @@ public class ClientPharmacyDao extends BaseDao {
         return cantidad;
     }
 
-    public ArrayList<BFarmaciasCliente> listarFarmaciasPorDistrito(int pagina, String distrito, String busqueda, int limite) {
+    public ArrayList<BPharmacy> listarFarmaciasPorDistrito(int pagina, String distrito, String busqueda, int limite) {
 
-        ArrayList<BFarmaciasCliente> listaFarmaciasPorDistrito = new ArrayList<>();
+        ArrayList<BPharmacy> listaFarmaciasPorDistrito = new ArrayList<>();
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement("select name, address, District_name, idPharmacy from pharmacy\n" +
@@ -100,7 +100,7 @@ public class ClientPharmacyDao extends BaseDao {
             try (ResultSet rs = pstmt.executeQuery()) {
 
                 while (rs.next()) {
-                    BFarmaciasCliente bFarmaciasCliente = new BFarmaciasCliente();
+                    BPharmacy bFarmaciasCliente = new BPharmacy();
                     bFarmaciasCliente.setNombreFarmacia(rs.getString(1));
                     bFarmaciasCliente.setDireccionFarmacia(rs.getString(2));
                     bFarmaciasCliente.setDistritoFarmacia(rs.getString(3));
@@ -116,9 +116,9 @@ public class ClientPharmacyDao extends BaseDao {
         return listaFarmaciasPorDistrito;
     }
 
-    public ArrayList<BFarmaciasCliente> listarFarmaciasPorDistritoLimite(String distrito, int limite) {
+    public ArrayList<BPharmacy> listarFarmaciasPorDistritoLimite(String distrito, int limite) {
 
-        ArrayList<BFarmaciasCliente> listaFarmaciasClientePorDistrito = new ArrayList<>();
+        ArrayList<BPharmacy> listaFarmaciasClientePorDistrito = new ArrayList<>();
 
         //Farmacias por distrito + limit
         String sqlObtenerFarmacias = "select name, address, District_name, idPharmacy from telefarma.pharmacy\n" +
@@ -130,7 +130,7 @@ public class ClientPharmacyDao extends BaseDao {
              ResultSet rs = stmt.executeQuery(sqlObtenerFarmacias)) {
 
             while (rs.next()) {
-                BFarmaciasCliente bFarmaciasCliente = new BFarmaciasCliente();
+                BPharmacy bFarmaciasCliente = new BPharmacy();
                 bFarmaciasCliente.setNombreFarmacia(rs.getString(1));
                 bFarmaciasCliente.setDireccionFarmacia(rs.getString(2));
                 bFarmaciasCliente.setDistritoFarmacia(rs.getString(3));

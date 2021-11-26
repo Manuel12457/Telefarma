@@ -1,6 +1,6 @@
 package com.example.telefarma.servlets;
 
-import com.example.telefarma.beans.BDetallesProducto;
+import com.example.telefarma.beans.BProduct;
 import com.example.telefarma.daos.ClientProductsDao;
 
 import javax.servlet.*;
@@ -18,7 +18,7 @@ public class ProductDetailsServlet extends HttpServlet {
         ClientProductsDao clientProductsDao = new ClientProductsDao();
 
         int productid = request.getParameter("productid") == null ? 1 : Integer.parseInt(request.getParameter("productid"));
-        BDetallesProducto producto = clientProductsDao.obtenerDetalles(productid);
+        BProduct producto = clientProductsDao.obtenerDetalles(productid);
         request.setAttribute("producto",producto);
 
         RequestDispatcher view = request.getRequestDispatcher("/cliente/detallesProducto.jsp");

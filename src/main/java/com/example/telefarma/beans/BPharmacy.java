@@ -1,10 +1,12 @@
 package com.example.telefarma.beans;
 
-public class BFarmaciasCliente {
-
-    private String nombreFarmacia;
-    private String direccionFarmacia;
-    private String distritoFarmacia;
+public class BPharmacy {
+    private String nombreFarmacia = "";
+    private String direccionFarmacia = "";
+    private String emailFarmacia = "";
+    private String RUCFarmacia = "";
+    private String distritoFarmacia = "";
+    private byte isBanned;
     private int idPharmacy;
 
     public String getNombreFarmacia() {
@@ -23,12 +25,36 @@ public class BFarmaciasCliente {
         this.direccionFarmacia = direccionFarmacia;
     }
 
+    public String getEmailFarmacia() {
+        return emailFarmacia;
+    }
+
+    public void setEmailFarmacia(String emailFarmacia) {
+        this.emailFarmacia = emailFarmacia;
+    }
+
+    public String getRUCFarmacia() {
+        return RUCFarmacia;
+    }
+
+    public void setRUCFarmacia(String RUCFarmacia) {
+        this.RUCFarmacia = RUCFarmacia;
+    }
+
     public String getDistritoFarmacia() {
         return distritoFarmacia;
     }
 
     public void setDistritoFarmacia(String distritoFarmacia) {
         this.distritoFarmacia = distritoFarmacia;
+    }
+
+    public byte getIsBanned() {
+        return isBanned;
+    }
+
+    public void setIsBanned(byte isBanned) {
+        this.isBanned = isBanned;
     }
 
     public int getIdPharmacy() {

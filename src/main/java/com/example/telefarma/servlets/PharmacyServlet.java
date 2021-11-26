@@ -32,8 +32,8 @@ public class PharmacyServlet extends HttpServlet {
                 int limiteProductos = 6;
                 pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-                ArrayList<BProductoVisualizacion> listaProductosBusqueda = pharmacyDao.listaProductosFarmacia(pagina, busqueda, idFarmacia, limiteProductos);
-                for (BProductoVisualizacion producto : listaProductosBusqueda) {
+                ArrayList<BProductVisualizacion> listaProductosBusqueda = pharmacyDao.listaProductosFarmacia(pagina, busqueda, idFarmacia, limiteProductos);
+                for (BProductVisualizacion producto : listaProductosBusqueda) {
                     pharmacyDao.agregarposibleEliminar(producto);
                 }
 
@@ -50,10 +50,10 @@ public class PharmacyServlet extends HttpServlet {
                 int limitePedidos = 12;
                 pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-                ArrayList<BPharmacyOrders> listaOrdenes = pharmacyDao.listarOrdenes(pagina, busqueda, limitePedidos, idFarmacia);
+                ArrayList<BOrders> listaOrdenes = pharmacyDao.listarOrdenes(pagina, busqueda, limitePedidos, idFarmacia);
                 pagTotales = (int) Math.ceil((double) pharmacyDao.listarOrdenes(pagina, busqueda, 1000, idFarmacia).size() / limitePedidos);
 
-                for (BPharmacyOrders orden : listaOrdenes) {
+                for (BOrders orden : listaOrdenes) {
                     pharmacyDao.agregarOrderDetails(orden);
                     pharmacyDao.agregarDayDiff(orden);
                 }
@@ -74,7 +74,7 @@ public class PharmacyServlet extends HttpServlet {
                 try {
                     int idProducto = Integer.parseInt(request.getParameter("idProducto"));
                     if (pharmacyDao.productoPerteneceFarmacia(idProducto, idFarmacia)) {
-                        BProducto producto = pharmacyDao.obtenerProducto(idProducto);
+                        BProduct producto = pharmacyDao.obtenerProducto(idProducto);
                         request.setAttribute("producto", producto);
                     } else {
                         response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
@@ -118,7 +118,7 @@ public class PharmacyServlet extends HttpServlet {
                 break;
 
             case "registrarProducto":
-                BProducto p = new BProducto();
+                BProduct p = new BProduct();
                 p.setNombre(request.getParameter("nombre"));
                 p.setDescripcion(request.getParameter("descripcion"));
                 p.setRequierePrescripcion(request.getParameter("requiereReceta").equals("true"));
@@ -148,7 +148,7 @@ public class PharmacyServlet extends HttpServlet {
                 break;
 
             case "editarProducto":
-                BProducto ep = new BProducto();
+                BProduct ep = new BProduct();
                 ep.setNombre(request.getParameter("nombre"));
                 ep.setDescripcion(request.getParameter("descripcion"));
                 ep.setRequierePrescripcion(request.getParameter("requiereReceta").equals("true"));

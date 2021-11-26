@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BProducto"/>
+<jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BProduct"/>
 
 <!DOCTYPE html>
 <html lang="en">

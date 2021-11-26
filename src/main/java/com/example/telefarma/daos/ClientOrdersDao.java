@@ -1,6 +1,6 @@
 package com.example.telefarma.daos;
 
-import com.example.telefarma.beans.BClientOrders;
+import com.example.telefarma.beans.BOrders;
 import com.example.telefarma.beans.BOrderDetails;
 
 import java.sql.*;
@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class ClientOrdersDao extends BaseDao {
 
-    public ArrayList<BClientOrders> listarOrdenes(String busqueda, int pagina, int limite, int id) {
+    public ArrayList<BOrders> listarOrdenes(String busqueda, int pagina, int limite, int id) {
 
-        ArrayList<BClientOrders> listaOrdenes = new ArrayList<>();
+        ArrayList<BOrders> listaOrdenes = new ArrayList<>();
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement("select o.idOrder,f.name,o.orderDate,o.pickUpDate,sum(p.price*od.quantity),o.status \n" +
@@ -29,7 +29,7 @@ public class ClientOrdersDao extends BaseDao {
              try (ResultSet rs = pstmt.executeQuery();) {
 
                  while (rs.next()) {
-                     BClientOrders clientOrders = new BClientOrders();
+                     BOrders clientOrders = new BOrders();
                      clientOrders.setIdOrder(rs.getString(1));
                      clientOrders.setFarmaciaAsociada(rs.getString(2));
                      String dtOrden = rs.getString(3);
@@ -49,7 +49,7 @@ public class ClientOrdersDao extends BaseDao {
         return listaOrdenes;
     }
 
-    public void agregarOrderDetails(BClientOrders orden) {
+    public void agregarOrderDetails(BOrders orden) {
 
         ArrayList<BOrderDetails> listaDetails = new ArrayList<>();
 
@@ -81,7 +81,7 @@ public class ClientOrdersDao extends BaseDao {
         orden.setListaDetails(listaDetails);
     }
 
-    public void agregarTimeDiff(BClientOrders orden) {
+    public void agregarTimeDiff(BOrders orden) {
 
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();

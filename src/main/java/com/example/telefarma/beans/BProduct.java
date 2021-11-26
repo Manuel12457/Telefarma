@@ -1,6 +1,6 @@
 package com.example.telefarma.beans;
 
-public class BProducto {
+public class BProduct {
 
     private int idProducto;
     private String nombre;
@@ -9,6 +9,18 @@ public class BProducto {
     private double precio;
     private boolean requierePrescripcion;
     private int idFarmacia;
+    private String nombreFarmacia;
+    private String distritoFarmacia;
+
+    public boolean isRequierePrescripcion() {return requierePrescripcion;}
+
+    public String getDistritoFarmacia() {return distritoFarmacia;}
+
+    public void setDistritoFarmacia(String distritoFarmacia) {this.distritoFarmacia = distritoFarmacia;}
+
+    public String getNombreFarmacia() {return nombreFarmacia;}
+
+    public void setNombreFarmacia(String nombreFarmacia) {this.nombreFarmacia = nombreFarmacia;}
 
     public int getIdProducto() {
         return idProducto;
@@ -54,9 +66,7 @@ public class BProducto {
         return requierePrescripcion;
     }
 
-    public void setRequierePrescripcion(boolean requierePrescripcion) {
-        this.requierePrescripcion = requierePrescripcion;
-    }
+    public void setRequierePrescripcion(boolean requierePrescripcion) {this.requierePrescripcion = requierePrescripcion;}
 
     public int getIdFarmacia() {
         return idFarmacia;

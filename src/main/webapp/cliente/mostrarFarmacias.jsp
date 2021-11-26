@@ -1,8 +1,8 @@
-<%@ page import="com.example.telefarma.beans.BFarmaciasCliente" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.example.telefarma.beans.BPharmacy" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaFarmacias" scope="request"
-             type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BFarmaciasCliente>>"/>
+             type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BPharmacy>>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="estadoOrden" scope="request" type="java.lang.String"/>
@@ -61,7 +61,7 @@
                 <%
                     boolean otraFarmaciaMostrada = false;
                     String distritoCliente = "Breña";
-                    for (ArrayList<BFarmaciasCliente> listaFarmaciasDistrito : listaFarmacias) {
+                    for (ArrayList<BPharmacy> listaFarmaciasDistrito : listaFarmacias) {
 
                         if (listaFarmaciasDistrito.size() > 0) {
                             if (listaFarmaciasDistrito.get(0).getDistritoFarmacia().equals(distritoCliente)) {
@@ -90,7 +90,7 @@
                             <!--Loop de farmacia-->
                             <%
                                 int imageCount = 0;
-                                for (BFarmaciasCliente farmacia : listaFarmaciasDistrito) {
+                                for (BPharmacy farmacia : listaFarmaciasDistrito) {
                                     imageCount++; //el loop será solo de 3 veces por el limit, entonces será f1,f2,f3
                             %>
                             <div class="col">

@@ -2,11 +2,7 @@ package com.example.telefarma.daos;
 
 import java.sql.*;
 import java.util.ArrayList;
-import com.example.telefarma.beans.BFarmaciasAdmin;
-
-
-import java.sql.*;
-import java.util.ArrayList;
+import com.example.telefarma.beans.BPharmacy;
 
 public class PharmacyAdminDao extends BaseDao {
 
@@ -37,8 +33,8 @@ public class PharmacyAdminDao extends BaseDao {
 
     }
 
-    public BFarmaciasAdmin obtenerFarmaciaPorId(int id) {
-        BFarmaciasAdmin farmacia = new BFarmaciasAdmin();
+    public BPharmacy obtenerFarmaciaPorId(int id) {
+        BPharmacy farmacia = new BPharmacy();
 
         String sql = "select * from telefarma.pharmacy\n" +
                 "where idPharmacy = ?;";
@@ -61,9 +57,9 @@ public class PharmacyAdminDao extends BaseDao {
         return farmacia;
     }
 
-    public ArrayList<BFarmaciasAdmin> listarFarmaciasAdminPorDistrito(String distrito, String busqueda) {
+    public ArrayList<BPharmacy> listarFarmaciasAdminPorDistrito(String distrito, String busqueda) {
 
-        ArrayList<BFarmaciasAdmin> listaFarmaciasAdminPorDistrito = new ArrayList<>();
+        ArrayList<BPharmacy> listaFarmaciasAdminPorDistrito = new ArrayList<>();
 
         /*OBTENGO LAS FARMACIAS DE LOS DISTRITOS QUE SE MOSTRARAN POR PAGINA*/
         String sqlObtenerFarmacias = "select name, address, mail, RUC, District_name, isBanned, idPharmacy from telefarma.pharmacy\n" +
@@ -74,15 +70,15 @@ public class PharmacyAdminDao extends BaseDao {
              ResultSet rs = stmt.executeQuery(sqlObtenerFarmacias)) {
 
             while (rs.next()) {
-                BFarmaciasAdmin bFarmaciasAdmin = new BFarmaciasAdmin();
-                bFarmaciasAdmin.setNombreFarmacia(rs.getString(1));
-                bFarmaciasAdmin.setDireccionFarmacia(rs.getString(2));
-                bFarmaciasAdmin.setEmailFarmacia(rs.getString(3));
-                bFarmaciasAdmin.setRUCFarmacia(rs.getString(4));
-                bFarmaciasAdmin.setDistritoFarmacia(rs.getString(5));
-                bFarmaciasAdmin.setIsBanned(rs.getByte(6));
-                bFarmaciasAdmin.setIdPharmacy(rs.getInt(7));
-                listaFarmaciasAdminPorDistrito.add(bFarmaciasAdmin);
+                BPharmacy bPharmacy = new BPharmacy();
+                bPharmacy.setNombreFarmacia(rs.getString(1));
+                bPharmacy.setDireccionFarmacia(rs.getString(2));
+                bPharmacy.setEmailFarmacia(rs.getString(3));
+                bPharmacy.setRUCFarmacia(rs.getString(4));
+                bPharmacy.setDistritoFarmacia(rs.getString(5));
+                bPharmacy.setIsBanned(rs.getByte(6));
+                bPharmacy.setIdPharmacy(rs.getInt(7));
+                listaFarmaciasAdminPorDistrito.add(bPharmacy);
             }
 
         } catch (SQLException e) {

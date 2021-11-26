@@ -1,8 +1,8 @@
-<%@ page import="com.example.telefarma.beans.BProductosBuscador" %>
+<%@ page import="com.example.telefarma.beans.BProduct" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="infoFarmacia" scope="request" type="java.util.ArrayList<java.lang.String>"/>
 <jsp:useBean id="productosDeLaFarmacia" scope="request"
-             type="java.util.ArrayList<com.example.telefarma.beans.BProductosBuscador>"/>
+             type="java.util.ArrayList<com.example.telefarma.beans.BProduct>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="idPharmacy" scope="request" type="java.lang.Integer"/>
@@ -74,12 +74,12 @@
                 <div class="container">
                     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
                         <%--Loop de productos--%>
-                        <% for (BProductosBuscador producto : productosDeLaFarmacia) { %>
+                        <% for (BProduct producto : productosDeLaFarmacia) { %>
                         <div class="col">
                             <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&productid=<%=producto.getIdProducto()%>'"
                                  class="card card-producto">
                                 <div class="card-header">
-                                    <h6><%= producto.getNombreProducto() %>
+                                    <h6><%= producto.getNombre() %>
                                     </h6>
                                 </div>
                                 <div class="card-body d-flex flex-column">

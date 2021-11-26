@@ -1,7 +1,6 @@
-<%@ page import="com.example.telefarma.beans.BDetallesProducto" %>
 <%@ page import="com.example.telefarma.servlets.ClientServlet" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BDetallesProducto"/>
+<jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BProduct"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,17 +33,17 @@
                     <!--Imagen del producto-->
                     <div class="col-md-5">
                         <div class="row text-center">
-                            <img src="${pageContext.request.contextPath}/Image?idProduct=<%=producto.getProductid()%>"
+                            <img src="${pageContext.request.contextPath}/Image?idProduct=<%=producto.getIdProducto()%>"
                                  class="img-detalles">
                         </div>
                     </div>
                     <!--Info del producto-->
                     <div class="col-md-7">
                         <!--Nombre-->
-                        <h3><%=producto.getNombreProducto()%>
+                        <h3><%=producto.getNombre()%>
                         </h3>
                         <!--Precio-->
-                        <h3><span class="me-1">s/ <%=String.format("%.2f", producto.getPrice())%></span></h3>
+                        <h3><span class="me-1">s/ <%=String.format("%.2f", producto.getPrecio())%></span></h3>
                         <!--Descripción-->
                         <p class="pt-1"><%=producto.getDescripcion()%>
                         </p>
@@ -55,7 +54,7 @@
                                     <!--Farmacia-->
                                     <tr>
                                         <th class="ps-0 w-25" scope="row">Farmacia</th>
-                                        <td><%=producto.getNombreFarmacia()%>
+                                        <td><%=producto.getDistritoFarmacia()%>
                                         </td>
                                     </tr>
                                     <!--Stock-->
@@ -84,7 +83,7 @@
                                     </tr>
                                     <!--Botones aumentar/disminuir-->
                                     <tr>
-                                        <form method="post" action="<%=request.getContextPath()%>/ClientServlet?action=addToCart&idProduct=<%=producto.getProductid()%>">
+                                        <form method="post" action="<%=request.getContextPath()%>/ClientServlet?action=addToCart&idProduct=<%=producto.getIdProducto()%>">
                                             <td class="ps-0 pt-0">
                                                 <div class="d-flex">
                                                     <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()"

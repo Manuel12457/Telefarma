@@ -1,6 +1,6 @@
 package com.example.telefarma.servlets;
 
-import com.example.telefarma.beans.BFarmaciasAdmin;
+import com.example.telefarma.beans.BPharmacy;
 import com.example.telefarma.daos.PharmacyAdminDao;
 
 import javax.servlet.*;
@@ -24,7 +24,7 @@ public class PharmacyAdminServlet extends HttpServlet {
         int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
         String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
         PharmacyAdminDao pharmacyAdminDao = new PharmacyAdminDao();
-        BFarmaciasAdmin f = new BFarmaciasAdmin();
+        BPharmacy f = new BPharmacy();
         ArrayList<String> distritosSistema = pharmacyAdminDao.listarDistritosEnSistema();
 
         RequestDispatcher view;
@@ -54,10 +54,10 @@ public class PharmacyAdminServlet extends HttpServlet {
 
                 request.setAttribute("resultban", resultban);
 
-                ArrayList<ArrayList<BFarmaciasAdmin>> listaListaFarmacias = new ArrayList<ArrayList<BFarmaciasAdmin>>();
+                ArrayList<ArrayList<BPharmacy>> listaListaFarmacias = new ArrayList<ArrayList<BPharmacy>>();
 
                 for (String d : distritos) {
-                    ArrayList<BFarmaciasAdmin> farmaciasAdmin = pharmacyAdminDao.listarFarmaciasAdminPorDistrito(d, busqueda);
+                    ArrayList<BPharmacy> farmaciasAdmin = pharmacyAdminDao.listarFarmaciasAdminPorDistrito(d, busqueda);
                     listaListaFarmacias.add(farmaciasAdmin);
                 }
 
@@ -113,7 +113,7 @@ public class PharmacyAdminServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
         PharmacyAdminDao pharmacyAdminDao = new PharmacyAdminDao();
-        BFarmaciasAdmin f = new BFarmaciasAdmin();
+        BPharmacy f = new BPharmacy();
 
         RequestDispatcher view;
         switch (accion) {
@@ -181,6 +181,7 @@ public class PharmacyAdminServlet extends HttpServlet {
                 int idFarma2 = request.getParameter("id") == null ? 1 : Integer.parseInt(request.getParameter("id"));
                 pharmacyAdminDao.desBanearFarmacia(idFarma2);
                 response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet?result=desban");
+                break;
 
             case "editar":
                 f.setRUCFarmacia(request.getParameter("ruc"));
@@ -190,14 +191,14 @@ public class PharmacyAdminServlet extends HttpServlet {
                 f.setDistritoFarmacia(request.getParameter("distrito"));
                 f.setIdPharmacy(Integer.parseInt(request.getParameter("id")));
 
-                BFarmaciasAdmin fa = pharmacyAdminDao.obtenerFarmaciaPorId(f.getIdPharmacy());
+                BPharmacy fa = pharmacyAdminDao.obtenerFarmaciaPorId(f.getIdPharmacy());
+                System.out.println("El email de fa es: "+fa.getEmailFarmacia());
+                System.out.println("El email de f es: "+f.getEmailFarmacia());
 
                 boolean correoPasaE;
                 boolean correoValidoE = pharmacyAdminDao.validarCorreoFarmacia(f.getEmailFarmacia());
 
                 System.out.println("Correo ingresado: " + f.getEmailFarmacia());
-                System.out.println("Correo de la farmacia: " + fa.getEmailFarmacia());
-                System.out.println("El correo no esta en el DB: " + correoValidoE);
 
                 if (f.getEmailFarmacia().equals(fa.getEmailFarmacia())) { /*V*/
                     if (!correoValidoE) { /*V*/

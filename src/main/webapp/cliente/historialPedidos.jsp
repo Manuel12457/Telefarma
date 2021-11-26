@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.example.telefarma.beans.BClientOrders" %>
+<%@ page import="com.example.telefarma.beans.BOrders" %>
 <%@ page import="com.example.telefarma.beans.BOrderDetails" %>
-<jsp:useBean id="listaOrdenes" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BClientOrders>"/>
+<jsp:useBean id="listaOrdenes" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BOrders>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String"/>
@@ -117,7 +117,7 @@
                                             <%--Loop de pedidos--%>
                                             <%
                                                 int count = 0;
-                                                for (BClientOrders orden : listaOrdenes) {
+                                                for (BOrders orden : listaOrdenes) {
                                                     count++;
                                             %>
                                             <%--Info general de pedidos--%>
@@ -215,7 +215,7 @@
         </div>
         <%--Los modals se crean afuera para que estén fuera del background--%>
         <%
-            for (BClientOrders orden : listaOrdenes) {
+            for (BOrders orden : listaOrdenes) {
                 for (BOrderDetails details : orden.getListaDetails()){
         %>
         <!--Modal Receta-->
