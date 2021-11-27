@@ -1,6 +1,9 @@
 package com.example.telefarma.servlets;
 
+import com.example.telefarma.beans.BAdmin;
 import com.example.telefarma.beans.BClient;
+import com.example.telefarma.beans.BPharmacy;
+import com.example.telefarma.beans.BUsuario;
 import com.example.telefarma.daos.PharmacyAdminDao;
 import com.example.telefarma.daos.SessionDao;
 
@@ -20,6 +23,7 @@ public class SessionServlet extends HttpServlet {
 
         String accion = request.getParameter("action") == null ? "pantallaInicio" : request.getParameter("action");
         String estadoRegistro = request.getParameter("registro") == null ? "" : request.getParameter("registro");
+        String estadoSesion = request.getParameter("estadoSesion") == null ? "" : request.getParameter("estadoSesion");
         PharmacyAdminDao pharmacyAdminDao = new PharmacyAdminDao();
         RequestDispatcher view;
 
@@ -27,6 +31,7 @@ public class SessionServlet extends HttpServlet {
 
             case "pantallaInicio":
                 request.setAttribute("estadoRegistro",estadoRegistro);
+                request.setAttribute("estadoSesion",estadoSesion);
                 view = request.getRequestDispatcher("/ingreso/inicioSesion.jsp");
                 view.forward(request, response);
                 break;
@@ -186,6 +191,45 @@ public class SessionServlet extends HttpServlet {
 
                 view = request.getRequestDispatcher("/ingreso/cambioContrasenhaExitoso.jsp");
                 view.forward(request, response);
+                break;
+            case "ini":
+
+                String usuarioIni = request.getParameter("email") == null ? "" : request.getParameter("email");
+                String passwordIni = request.getParameter("password") == null ? "" : request.getParameter("password");
+
+                BUsuario u = s.validarCorreoContrasenha(usuarioIni,passwordIni);
+
+                if (u != null) {
+                    if (u.getTipoUsuario().equals("client")) {
+                        HttpSession sessionCliente = request.getSession();
+
+                        BClient cliente = s.usuarioClient(u.getIdUsuario());
+
+                        sessionCliente.setAttribute("sessionClient",cliente);
+                        sessionCliente.setMaxInactiveInterval(10*60);
+                        response.sendRedirect(request.getContextPath() + "/ClientServlet" );
+                    } else if (u.getTipoUsuario().equals("pharmacy")) {
+                        HttpSession sessionFarmacia = request.getSession();
+
+                        BPharmacy farmacia = s.usuarioFarmacia(u.getIdUsuario());
+
+                        sessionFarmacia.setAttribute("sessionPharmacy",farmacia);
+                        sessionFarmacia.setMaxInactiveInterval(10*60);
+                        response.sendRedirect(request.getContextPath() + "/PharmacyServlet?id=");
+                    } else if (u.getTipoUsuario().equals("admin")) {
+                        HttpSession sessionAdmin = request.getSession();
+
+                        BAdmin admin = s.usuarioAdmin(u.getIdUsuario());
+
+                        sessionAdmin.setAttribute("sessionAdmin",admin);
+                        sessionAdmin.setMaxInactiveInterval(10*60);
+                        response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet");
+                    }
+
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/SessionServlet?estadoSesion=err");
+                }
+
                 break;
 
         }

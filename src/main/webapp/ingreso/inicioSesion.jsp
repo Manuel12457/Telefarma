@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="estadoRegistro" scope="request" type="java.lang.String"/>
+<jsp:useBean id="estadoSesion" scope="request" type="java.lang.String"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -52,6 +53,14 @@
                                                         aria-label="Close"></button>
                                             </div>
                                             <% } %>
+                                            <% if (estadoSesion.equals("err")) { %>
+                                            <div class="alert alert-success alert-dismissible fade show"
+                                                 role="alert">
+                                                Hubo un problema con su inicio de sesion
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <% }%>
                                             <!--Correo-->
                                             <div class="form-outline mb-4">
                                                 <input class="form-control form-control-lg" type="email" name="email"

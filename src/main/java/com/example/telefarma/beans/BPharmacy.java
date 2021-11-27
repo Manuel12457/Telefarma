@@ -8,6 +8,8 @@ public class BPharmacy {
     private String distritoFarmacia = "";
     private byte isBanned;
     private int idPharmacy;
+    private String password;
+    private String banReason;
 
     public String getNombreFarmacia() {
         return nombreFarmacia;
@@ -63,5 +65,21 @@ public class BPharmacy {
 
     public void setIdPharmacy(int idPharmacy) {
         this.idPharmacy = idPharmacy;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getBanReason() {
+        return banReason;
+    }
+
+    public void setBanReason(String banReason) {
+        this.banReason = banReason;
     }
 }

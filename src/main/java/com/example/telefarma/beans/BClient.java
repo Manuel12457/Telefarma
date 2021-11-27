@@ -2,6 +2,7 @@ package com.example.telefarma.beans;
 
 public class BClient {
 
+    private int idClient;
     private String name = "";
     private String lastName = "";
     private String dni = "";
@@ -55,5 +56,13 @@ public class BClient {
 
     public void setDistrito(String distrito) {
         this.distrito = distrito;
+    }
+
+    public int getIdClient() {
+        return idClient;
+    }
+
+    public void setIdClient(int idClient) {
+        this.idClient = idClient;
     }
 }
