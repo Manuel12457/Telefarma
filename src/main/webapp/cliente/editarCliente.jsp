@@ -7,8 +7,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Telefarma - Editar Usuario</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/estilos.css">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/res/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/res/css/estilos.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
@@ -16,43 +16,10 @@
   </head>
   <body class="user-menu">
 
-    <!--Barra lateral-->
-    <div class="sidebar active">
-      <div class="logo-content border-bottom">
-        <div class="logo">
-          <div onclick="location.href='indexUsuario.html';" class="logo-name">TeleFarma</div>
-        </div>
-        <i class='fas fa-bars' id="btn-sidebar"></i>
-      </div>
-      <ul class="">
-        <li>
-          <a href="usuarioEditar.html">
-            <i class='fas fa-user-edit'></i>
-            <span class="links_name">Editar Usuario</span>
-          </a>
-        </li>
-        <li>
-          <a href="usuarioHistorial.html">
-            <i class='fas fa-list-alt'></i>
-            <span class="links_name">Compras</span>
-          </a>
-        </li>
-      </ul>
-      <div class="content border-top" >
-        <div class="user">
-          <div class="user-details ">
-            <img src="assets/img/images.png" alt="">
-            <div class="name-job">
-              <div class="name">Paco Perez</div>
-              <div class="job">Usuario</div>
-            </div>
-          </div>
-          <a href="index.html" style="color: #f57f00;">
-            <i class='fas fa-sign-out-alt' id="log_out"></i>
-          </a>
-        </div>
-      </div>
-    </div>
+  <%String nombreCliente = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
+  <jsp:include page="../barraLateral.jsp">
+    <jsp:param name="nombre" value="<%=nombreCliente%>"/>
+  </jsp:include>
 
     <!--Card Editar usuario-->
     <div class="container-transition">
@@ -106,8 +73,8 @@
     </div>
 
     <!--JS-->
-    <script src="main.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/res/js/main.js"></script>
+    <script src="${pageContext.request.contextPath}/res/bootstrap/js/bootstrap.min.js"></script>
 
   </body>
 </html>
