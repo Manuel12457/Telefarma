@@ -27,7 +27,7 @@ public class ClientPharmacyDao extends BaseDao {
         return cantidad;
     }
 
-    public ArrayList<String> listarDistritosLimite(int paginaDistritoCliente,int limite) {
+    public ArrayList<String> listarDistritosLimite(int paginaDistritoCliente,int limite, int idClient) {
 
         ArrayList<String> listaDistritosPagina = new ArrayList<>();
 
@@ -42,7 +42,7 @@ public class ClientPharmacyDao extends BaseDao {
                 "order by (d.name = (select d.name from district d\n" +
                 "inner join client c\n" +
                 "                    on (d.name = c.District_name)\n" +
-                "                    where c.idClient = 1)) desc,\n" +
+                "                    where c.idClient = " + idClient + ")) desc,\n" +
                 "cantFarmacias desc\n" +
                 "limit " + paginaDistritoCliente*limite + "," + limite + ";";
 

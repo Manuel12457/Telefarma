@@ -3,16 +3,16 @@ package com.example.telefarma.daos;
 import com.example.telefarma.beans.BAdmin;
 import com.example.telefarma.beans.BClient;
 import com.example.telefarma.beans.BPharmacy;
-import com.example.telefarma.beans.BUsuario;
+import com.example.telefarma.dtos.DtoUsuario;
 
 import java.sql.*;
 import java.util.HashMap;
 
 public class SessionDao extends BaseDao {
 
-    public BUsuario validarCorreoContrasenha(String mail, String contrasenha) {
+    public DtoUsuario validarCorreoContrasenha(String mail, String contrasenha) {
 
-        BUsuario usuario = new BUsuario();
+        DtoUsuario usuario = new DtoUsuario();
 
         String sql = "select idClient as 'id','client' as 'tipo' from telefarma.client\n" +
                 "where mail = ? and password = ?\n" +

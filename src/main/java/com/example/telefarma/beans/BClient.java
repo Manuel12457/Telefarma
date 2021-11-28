@@ -3,12 +3,12 @@ package com.example.telefarma.beans;
 public class BClient {
 
     private int idClient;
-    private String name = "";
-    private String lastName = "";
-    private String dni = "";
-    private String password = "";
-    private String mail = "";
-    private String distrito = "";
+    private String name;
+    private String lastName;
+    private String dni;
+    private String password;
+    private String mail;
+    private String distrito;
 
     public String getName() {
         return name;

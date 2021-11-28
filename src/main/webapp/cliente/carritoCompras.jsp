@@ -3,6 +3,7 @@
 <jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BProduct"/>
 <!--Lista de productos-->
 <%//<jsp:useBean id="listaProductos" scope="request" type="java.util.HashMap<com.example.telefarma.beans.BFarmaciasCliente,com.example.telefarma.beans.BProduct>"/>%>
+<jsp:useBean id="sessionClient" scope="session" type="com.example.telefarma.beans.BClient" class="com.example.telefarma.beans.BClient"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,9 +21,10 @@
     </head>
     <body>
         <!--Cabecera Principal cliente-->
+        <%String nombreCliente = sessionClient.getName() + " " + sessionClient.getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
-            <jsp:param name="nombre" value="Paco Perez"/>
+            <jsp:param name="nombre" value="<%=nombreCliente%>"/>
             <jsp:param name="servletBusqueda" value="ClientServlet?action=buscarProduct"/>
             <jsp:param name="busquedaPlaceholder" value="Busca un producto"/>
         </jsp:include>

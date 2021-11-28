@@ -5,10 +5,7 @@
              type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BPharmacy>>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="resultban" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="estadoRegistro" scope="request" type="java.lang.String"/>
-<jsp:useBean id="estadoEdicion" scope="request" type="java.lang.String"/>
-
+<jsp:useBean id="sessionAdmin" scope="session" type="com.example.telefarma.beans.BAdmin"/>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -25,9 +22,10 @@
     </head>
     <body>
         <%--Cabecera de admin--%>
+        <%String admin = "Admin " + sessionAdmin.getIdAdmin();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="admin"/>
-            <jsp:param name="nombre" value="Admin"/>
+            <jsp:param name="nombre" value="<%=admin%>"/>
             <jsp:param name="servletBusqueda" value="PharmacyAdminServlet?action=buscar"/>
             <jsp:param name="busquedaPlaceholder" value="Busca una farmacia"/>
         </jsp:include>
@@ -42,42 +40,51 @@
                     <%
                         String alertClass = null;
                         String alertMssg = null;
-                        if (!estadoRegistro.equals("")) {
-                            switch (estadoRegistro) {
-                                case "e":
-                                    alertClass = "alert-success";
-                                    alertMssg = "Farmacia registrada exitosamente";
-                                    break;
-                                case "ne":
-                                    alertClass = "alert-danger";
-                                    alertMssg = "Hubo un problema con el registro de la farmacia";
-                                    break;
-                            }
+                        String estadoRegistro = (String) session.getAttribute("registro");
+                        if (estadoRegistro != null) {
+                            if (!estadoRegistro.equals("")) {
+                                switch (estadoRegistro) {
+                                    case "e":
+                                        alertClass = "alert-success";
+                                        alertMssg = "Farmacia registrada exitosamente";
+                                        break;
+                                    case "ne":
+                                        alertClass = "alert-danger";
+                                        alertMssg = "Hubo un problema con el registro de la farmacia";
+                                        break;
+                                }
+                        }
+
                     %>
                     <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
                         <%=alertMssg%>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    <%
+                    <%session.removeAttribute("registro");
                         }
-                        if (!estadoEdicion.equals("")) {
-                            switch (estadoEdicion) {
-                                case "e":
-                                    alertClass = "alert-success";
-                                    alertMssg = "Farmacia editada exitosamente";
-                                    break;
-                                case "ne":
-                                    alertClass = "alert-danger";
-                                    alertMssg = "Hubo un problema con la edición de la farmacia";
-                                    break;
-                            }
+                        String estadoEdicion = (String) session.getAttribute("edicion");
+                        if (estadoEdicion != null) {
+                            if (!estadoEdicion.equals("")) {
+                                switch (estadoEdicion) {
+                                    case "e":
+                                        alertClass = "alert-success";
+                                        alertMssg = "Farmacia editada exitosamente";
+                                        break;
+                                    case "ne":
+                                        alertClass = "alert-danger";
+                                        alertMssg = "Hubo un problema con la edición de la farmacia";
+                                        break;
+                                }
+                        }
                     %>
                     <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
                         <%=alertMssg%>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    <%
+                    <%session.removeAttribute("edicion");
                         }
+                        if (session.getAttribute("baneo") != null) {
+                        Integer resultban = (Integer) session.getAttribute("baneo");
                         if (resultban != 0) {
                             switch (resultban) {
                                 case 1:
@@ -93,13 +100,15 @@
                                     alertMssg = "La farmacia seleccionada fue desbaneada";
                                     break;
                             }
-
                     %>
                     <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
                         <%=alertMssg%>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    <% } %>
+                    <%
+                        }
+                    }
+                        session.removeAttribute("baneo");%>
 
                     <h3 class="text-dark">Farmacias registradas</h3>
                 </div>

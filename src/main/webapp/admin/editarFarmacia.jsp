@@ -1,9 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
-<jsp:useBean id="noValidMail" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="noValidRUC" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="noNumRUC" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="noLongRuc" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="farmacia" scope="request" type="com.example.telefarma.beans.BPharmacy"/>
 
 <!DOCTYPE html>
@@ -96,45 +92,50 @@
                                         <input class="btn btn-tele" type="submit" id="" value="Editar farmacia"/>
                                     </div>
                                     <br>
-                                    <%if (noValidMail == 1) {%>
+                                    <%
+                                            int noValidMail = (Integer) session.getAttribute("noValidMail");
+                                            if (noValidMail == 1) {%>
+
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         El correo que ha ingresado ya esta en uso
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
                                     </div>
-                                    <%
-                                        }
-                                        if (noValidRUC == 1) {
+                                    <%session.removeAttribute("noValidMail");
+                                            }
+                                            int noValidRUC = (Integer) session.getAttribute("noValidRUC");
+                                            if (noValidRUC == 1) {
                                     %>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         El RUC que ha ingresado ya esta en uso
                                         <button type="button" class="btn-close" data-bs-dismiss="alert"
                                                 aria-label="Close"></button>
                                     </div>
-                                    <%
+                                    <%session.removeAttribute("noValidRUC");
                                     } else {
-                                        if (noNumRUC == 1) {
+                                                int noNumRUC = (Integer) session.getAttribute("noNumRUC");
+                                                if (noNumRUC == 1) {
                                     %>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         El RUC debe contener únicamente números
                                         <button type="button" class="btn-close" data-bs-dismiss="alert"
                                                 aria-label="Close"></button>
                                     </div>
-                                    <%
+                                    <%session.removeAttribute("noNumRUC");
                                     } else {
-                                        if (noLongRuc == 1) {
+                                                    int noLongRUC = (Integer) session.getAttribute("noLongRuc");
+                                        if (noLongRUC == 1) {
                                     %>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         El RUC debe contener 11 números
                                         <button type="button" class="btn-close" data-bs-dismiss="alert"
                                                 aria-label="Close"></button>
                                     </div>
-                                    <%}
+                                    <%session.removeAttribute("noLongRuc");
+                                        }
                                     }
-                                    }%>
-
-
-
-
+                                    }
+                                    %>
                                 </form>
                             </div>
                         </div>

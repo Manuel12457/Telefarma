@@ -37,12 +37,12 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <input class="form-control mb-3" type="text" name="nombre"
-                                                   placeholder="Nombre" value="<%=cliente.getName()%>" maxlength="45"
+                                                   placeholder="Nombre" value="<%=cliente.getName() == null ? "" : cliente.getName()%>" maxlength="45"
                                                    required>
                                         </div>
                                         <div class="col-md-6">
                                             <input class="form-control mb-3" type="text" name="apellido"
-                                                   placeholder="Apellido" value="<%=cliente.getLastName()%>"
+                                                   placeholder="Apellido" value="<%=cliente.getLastName() == null ? "" : cliente.getLastName()%>"
                                                    maxlength="45" required>
                                         </div>
                                     </div>
@@ -50,7 +50,7 @@
                                         <div class="col-md-5 mb-3">
                                             <input class="form-control" aria-describedby="validationServer03Feedback"
                                                    type="text" name="dni" placeholder="DNI"
-                                                   value="<%=cliente.getDni()%>" maxlength="8" required>
+                                                   value="<%=cliente.getDni() == null ? "" : cliente.getDni()%>" maxlength="8" required>
                                         </div>
                                         <div class="col-md-7 mb-3">
                                             <select class="form-select" name="distrito" id="farmaDistrict" required>
@@ -70,7 +70,7 @@
                                     <div class="mb-3">
                                         <input class="form-control" aria-describedby="validationServer03Feedback"
                                                type="email" name="email" placeholder="Correo"
-                                               value="<%=cliente.getMail()%>" maxlength="70" required>
+                                               value="<%=cliente.getMail() == null ? "" : cliente.getMail()%>" maxlength="70" required>
                                     </div>
                                     <div class="mb-3">
                                         <input class="form-control" aria-describedby="validationServer03Feedback"

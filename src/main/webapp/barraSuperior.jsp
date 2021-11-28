@@ -98,7 +98,7 @@
         </div>
         <div class="mt-auto p-2 w-100">
             <div class="offcanvas-body border-top pt-4">
-                <a href="#" class="text-dark text-decoration-none">
+                <a href="<%=request.getContextPath()%>/?action=logout" class="text-dark text-decoration-none">
                     <span><i class="fas fa-sign-out-alt"></i></span>
                     <span>Cerrar sesión</span>
                 </a>

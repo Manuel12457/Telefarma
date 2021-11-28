@@ -1,6 +1,7 @@
 <%@ page import="com.example.telefarma.servlets.ClientServlet" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BProduct"/>
+<jsp:useBean id="sessionClient" scope="session" type="com.example.telefarma.beans.BClient" class="com.example.telefarma.beans.BClient"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -17,9 +18,10 @@
         <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
     </head>
     <body>
+        <%String nombreCliente = sessionClient.getName() + " " + sessionClient.getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
-            <jsp:param name="nombre" value="Paco Perez"/>
+            <jsp:param name="nombre" value="<%=nombreCliente%>"/>
             <jsp:param name="servletBusqueda" value="ClientServlet?action=buscarProduct"/>
             <jsp:param name="busquedaPlaceholder" value="Busca un producto"/>
         </jsp:include>
@@ -54,7 +56,7 @@
                                     <!--Farmacia-->
                                     <tr>
                                         <th class="ps-0 w-25" scope="row">Farmacia</th>
-                                        <td><%=producto.getDistritoFarmacia()%>
+                                        <td><%=producto.getNombreFarmacia()%>
                                         </td>
                                     </tr>
                                     <!--Stock-->

@@ -5,6 +5,7 @@
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="sessionClient" scope="session" type="com.example.telefarma.beans.BClient" class="com.example.telefarma.beans.BClient"/>
+
 <%String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");%>
 
 <!DOCTYPE html>

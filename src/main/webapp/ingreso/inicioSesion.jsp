@@ -31,7 +31,7 @@
                                 <!--Form login-->
                                 <div class="col-6 d-flex align-items-center responsive-login-form">
                                     <div class="card-body p-4 p-lg-5 text-black text-center">
-                                        <form method="post" action="<%=request.getContextPath()%>/?">
+                                        <form method="post" action="<%=request.getContextPath()%>/?action=ini">
                                             <!--Logo-->
                                             <div class="d-flex align-items-center mb-3 pb-1 justify-content-center">
                                                 <h1 class="logo-header" style="font-size: 48px;">

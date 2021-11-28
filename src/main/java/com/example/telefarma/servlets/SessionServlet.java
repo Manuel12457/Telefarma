@@ -3,7 +3,7 @@ package com.example.telefarma.servlets;
 import com.example.telefarma.beans.BAdmin;
 import com.example.telefarma.beans.BClient;
 import com.example.telefarma.beans.BPharmacy;
-import com.example.telefarma.beans.BUsuario;
+import com.example.telefarma.dtos.DtoUsuario;
 import com.example.telefarma.daos.PharmacyAdminDao;
 import com.example.telefarma.daos.SessionDao;
 
@@ -12,7 +12,6 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -66,6 +65,11 @@ public class SessionServlet extends HttpServlet {
                     view = request.getRequestDispatcher("/ingreso/tokenInvalido.jsp");
                     view.forward(request, response);
                 }
+                break;
+            case "logout":
+                request.getSession().invalidate();
+                response.sendRedirect(request.getContextPath());
+                break;
         }
     }
 
@@ -197,7 +201,7 @@ public class SessionServlet extends HttpServlet {
                 String usuarioIni = request.getParameter("email") == null ? "" : request.getParameter("email");
                 String passwordIni = request.getParameter("password") == null ? "" : request.getParameter("password");
 
-                BUsuario u = s.validarCorreoContrasenha(usuarioIni,passwordIni);
+                DtoUsuario u = s.validarCorreoContrasenha(usuarioIni,passwordIni);
 
                 if (u != null) {
                     if (u.getTipoUsuario().equals("client")) {

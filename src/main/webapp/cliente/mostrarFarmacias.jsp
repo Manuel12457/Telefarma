@@ -6,6 +6,7 @@
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="estadoOrden" scope="request" type="java.lang.String"/>
+<jsp:useBean id="sessionClient" scope="session" type="com.example.telefarma.beans.BClient"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -24,9 +25,10 @@
 
     <body>
         <!--Barra de Navegación Superior-->
+        <%String nombreCliente = sessionClient.getName() + " " + sessionClient.getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
-            <jsp:param name="nombre" value="Paco Perez"/>
+            <jsp:param name="nombre" value="<%=nombreCliente%>"/>
             <jsp:param name="servletBusqueda" value="ClientServlet?action=buscarProduct"/>
             <jsp:param name="busquedaPlaceholder" value="Busca un producto"/>
         </jsp:include>
@@ -60,7 +62,7 @@
                 <!--Mismo Distrito-->
                 <%
                     boolean otraFarmaciaMostrada = false;
-                    String distritoCliente = "Breña";
+                    String distritoCliente = sessionClient.getDistrito();
                     for (ArrayList<BPharmacy> listaFarmaciasDistrito : listaFarmacias) {
 
                         if (listaFarmaciasDistrito.size() > 0) {

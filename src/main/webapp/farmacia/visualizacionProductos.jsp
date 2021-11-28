@@ -4,6 +4,7 @@
              type="java.util.ArrayList<com.example.telefarma.beans.BProductVisualizacion>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="sessionPharmacy" scope="session" type="com.example.telefarma.beans.BPharmacy" class="com.example.telefarma.beans.BPharmacy"/>
 <%
     String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
     String result = request.getParameter("result");
@@ -23,10 +24,11 @@
         <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
     </head>
     <body>
+
         <%--Cabecera de admin--%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="farmacia"/>
-            <jsp:param name="nombre" value="Farmacia"/>
+            <jsp:param name="nombre" value="<%=sessionPharmacy.getNombreFarmacia()%>"/>
             <jsp:param name="servletBusqueda" value="PharmacyServlet?action=buscarProducto&"/>
             <jsp:param name="busquedaPlaceholder" value="Busca un producto"/>
         </jsp:include>

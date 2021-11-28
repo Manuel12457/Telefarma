@@ -1,5 +1,6 @@
 package com.example.telefarma.servlets;
 
+import com.example.telefarma.beans.BClient;
 import com.example.telefarma.beans.BOrders;
 import com.example.telefarma.beans.BPharmacy;
 import com.example.telefarma.beans.BProduct;
@@ -9,10 +10,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -29,6 +27,9 @@ public class ClientServlet extends HttpServlet {
         PharmacyProductsDao pharmacyProductsDao = new PharmacyProductsDao();
         ClientProductsDao clientProductsDao = new ClientProductsDao();
         ClientOrdersDao clientOrdersDao = new ClientOrdersDao();
+
+        HttpSession session = request.getSession();
+        BClient client = (BClient) session.getAttribute("sessionClient");
 
         String action = request.getParameter("action") == null ? "mostrarFarmacias" : request.getParameter("action");
         String estadoOrden = request.getParameter("orden") == null ? "" : request.getParameter("orden");
@@ -48,8 +49,8 @@ public class ClientServlet extends HttpServlet {
                 int limiteDistritos = 3;
 
                 //Listar distritos por página
-                ArrayList<String> distritos = clientPharmacyDao.listarDistritosLimite(paginaDistritoCliente, limiteDistritos);
-                request.setAttribute("listaDistritosAMostrar", clientPharmacyDao.listarDistritosLimite(paginaDistritoCliente, limiteDistritos));
+                ArrayList<String> distritos = clientPharmacyDao.listarDistritosLimite(paginaDistritoCliente, limiteDistritos, client.getIdClient());
+                request.setAttribute("listaDistritosAMostrar", clientPharmacyDao.listarDistritosLimite(paginaDistritoCliente, limiteDistritos, client.getIdClient()));
 
                 //Botones paginacion
                 request.setAttribute("pagActual", paginaDistritoCliente);
@@ -75,6 +76,7 @@ public class ClientServlet extends HttpServlet {
 
             case "historial":
 
+                request.getSession().setAttribute("sessionClient", client);
                 //Pagina a mostrar
                 pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
                 int limite = 12;
@@ -105,6 +107,7 @@ public class ClientServlet extends HttpServlet {
 
             case "farmaciaYProductos":
                 //Pagina a mostrar
+                request.getSession().setAttribute("sessionClient", client);
                 pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
                 limiteProductos = 16;
 
@@ -128,6 +131,7 @@ public class ClientServlet extends HttpServlet {
                 break;
 
             case "buscarProducto":
+                request.getSession().setAttribute("sessionClient", client);
                 pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
                 int idCliente = request.getParameter("id") == null ? 1 : Integer.parseInt(request.getParameter("id"));
@@ -147,6 +151,7 @@ public class ClientServlet extends HttpServlet {
                 break;
 
             case "detallesProducto":
+                request.getSession().setAttribute("sessionClient", client);
                 int productid = request.getParameter("productid") == null ? 1 : Integer.parseInt(request.getParameter("productid"));
                 BProduct producto = clientProductsDao.obtenerDetalles(productid);
                 request.setAttribute("producto", producto);
@@ -157,6 +162,7 @@ public class ClientServlet extends HttpServlet {
                 break;
 
             case "farmaciasDeDistrito":
+                request.getSession().setAttribute("sessionClient", client);
                 pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
                 limiteFarmacias = 9;
 
@@ -177,6 +183,7 @@ public class ClientServlet extends HttpServlet {
                 break;
 
             case "addToCart":
+                request.getSession().setAttribute("sessionClient", client);
                 int idProduct = Integer.parseInt(request.getParameter("idProduct"));
 
                 int quantity = Integer.parseInt(request.getParameter("quantity"));

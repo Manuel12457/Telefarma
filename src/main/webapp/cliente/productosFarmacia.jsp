@@ -7,6 +7,7 @@
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="idPharmacy" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String" class="java.lang.String"/>
+<jsp:useBean id="sessionClient" scope="session" type="com.example.telefarma.beans.BClient" class="com.example.telefarma.beans.BClient"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,9 +30,10 @@
             String busquedaPlaceholder = "Busca un producto en " + infoFarmacia.get(0);
         %>
         <!--Barra de Navegación Superior-->
+        <%String nombreCliente = sessionClient.getName() + " " + sessionClient.getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
-            <jsp:param name="nombre" value="Paco Perez"/>
+            <jsp:param name="nombre" value="<%=nombreCliente%>"/>
             <jsp:param name="servletBusqueda" value="<%=servletBusqueda%>"/>
             <jsp:param name="busquedaPlaceholder" value="<%=busquedaPlaceholder%>"/>
         </jsp:include>

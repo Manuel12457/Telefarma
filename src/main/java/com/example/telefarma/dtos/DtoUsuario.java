@@ -1,6 +1,6 @@
-package com.example.telefarma.beans;
+package com.example.telefarma.dtos;
 
-public class BUsuario {
+public class DtoUsuario {
 
     private int idUsuario;
     private String tipoUsuario;
