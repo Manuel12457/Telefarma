@@ -60,7 +60,7 @@
                                                 <option value="">Seleccione su distrito</option>
                                                 <%}%>
                                                 <%for (String distrito : listaDistritosSistema) {%>
-                                                <option value="<%=distrito%>" <%=cliente.getDistrito().equals(distrito) ? "selected" : ""%> ><%=distrito%>
+                                                <option value="<%=distrito%>" <%=cliente.getDistrito()!=null?(cliente.getDistrito().equals(distrito) ? "selected" : ""):""%> ><%=distrito%>
                                                 </option>
                                                 <%}%>
 

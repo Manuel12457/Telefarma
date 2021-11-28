@@ -9,6 +9,7 @@ import com.example.telefarma.dtos.DtoSesion;
 import com.example.telefarma.dtos.DtoUsuario;
 import com.example.telefarma.daos.PharmacyAdminDao;
 import com.example.telefarma.daos.SessionDao;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -30,7 +31,7 @@ public class SessionServlet extends HttpServlet {
         //Dando hacia atras se puede retornar al inicio de sesion. Falta ver eso
         if (accion.equals("logout")) {
             request.getSession().invalidate();
-            response.sendRedirect(request.getContextPath());
+            response.sendRedirect(request.getContextPath()+"/");
         } else if (sesionActiva != null && sesionActiva.getI() != 0) {
             System.out.println("exito");
             if (sesionActiva.getClient() != null) {
@@ -117,6 +118,7 @@ public class SessionServlet extends HttpServlet {
                 String contrasenha = request.getParameter("password");
                 String contrasenhaC = request.getParameter("passwordC");
 
+
                 boolean contrasenhasCoinciden = contrasenha.equals(contrasenhaC);
                 boolean dniValido = s.dniExiste(client.getDni());
                 boolean mailValido = s.mailExiste(client.getMail());
@@ -132,7 +134,8 @@ public class SessionServlet extends HttpServlet {
 
                 if (contrasenhasCoinciden && dniValido && mailValido && dniNumero && dniLongitud) {
                     /*Registra el usuario*/
-                    client.setPassword(contrasenha);
+                    String md5pass = DigestUtils.md5Hex(contrasenha);
+                    client.setPassword(md5pass);
                     String err = s.registrarUsuario(client);
                     view = request.getRequestDispatcher("/ingreso/registroExitoso.jsp");
                     view.forward(request, response);
@@ -193,8 +196,8 @@ public class SessionServlet extends HttpServlet {
                 String rol = request.getParameter("rol");
                 String token = request.getParameter("token");
                 String password = request.getParameter("password");
-                System.out.println(password);
-                s.cambiarPassword(token, rol, password);
+                String md5pass = DigestUtils.md5Hex(password);
+                s.cambiarPassword(token, rol, md5pass); //reemplazar por md5pass
                 s.borrarToken(token, rol);
 
                 view = request.getRequestDispatcher("/ingreso/cambioContrasenhaExitoso.jsp");
@@ -204,8 +207,9 @@ public class SessionServlet extends HttpServlet {
 
                 String usuarioIni = request.getParameter("email") == null ? "" : request.getParameter("email");
                 String passwordIni = request.getParameter("password") == null ? "" : request.getParameter("password");
-
-                DtoUsuario u = s.validarCorreoContrasenha(usuarioIni, passwordIni);
+                String md5passIni = DigestUtils.md5Hex(passwordIni);
+                System.out.println(md5passIni);
+                DtoUsuario u = s.validarCorreoContrasenha(usuarioIni, md5passIni); //reemplazar por md5passIni
                 DtoSesion sesion = new DtoSesion();
 
                 if (u.getTipoUsuario() != null) {
