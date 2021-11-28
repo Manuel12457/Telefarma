@@ -13,7 +13,7 @@ import java.util.ArrayList;
 @WebServlet(name = "PharmacyServlet", value = "/PharmacyServlet")
 @MultipartConfig
 public class PharmacyServlet extends HttpServlet {
-    int idFarmacia = 5; //hardcodeado
+    //int idFarmacia = 5; //hardcodeado
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -22,6 +22,11 @@ public class PharmacyServlet extends HttpServlet {
         int pagina;
         int pagTotales;
         RequestDispatcher view;
+
+        HttpSession session = request.getSession();
+        BPharmacy pharmacy = (BPharmacy) session.getAttribute("sessionPharmacy");
+
+        int idFarmacia = pharmacy.getIdPharmacy();
 
         PharmacyDao pharmacyDao = new PharmacyDao();
         String accion = request.getParameter("action") == null ? "buscarProducto" : request.getParameter("action");
@@ -47,6 +52,8 @@ public class PharmacyServlet extends HttpServlet {
                 break;
 
             case "buscarPedido":
+
+                request.getSession().setAttribute("sessionPharmacy", pharmacy);
                 int limitePedidos = 12;
                 pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
@@ -94,6 +101,11 @@ public class PharmacyServlet extends HttpServlet {
 
         String busqueda;
         PharmacyDao pharmacyDao = new PharmacyDao();
+
+        HttpSession session = request.getSession();
+        BPharmacy pharmacy = (BPharmacy) session.getAttribute("sessionPharmacy");
+
+        int idFarmacia = pharmacy.getIdPharmacy();
 
         switch (request.getParameter("action")) {
             case "buscarProducto":
