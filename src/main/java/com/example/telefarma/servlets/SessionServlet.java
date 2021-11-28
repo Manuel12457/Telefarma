@@ -203,7 +203,7 @@ public class SessionServlet extends HttpServlet {
 
                 DtoUsuario u = s.validarCorreoContrasenha(usuarioIni,passwordIni);
 
-                if (u != null) {
+                if (u.getTipoUsuario() != null) {
                     if (u.getTipoUsuario().equals("client")) {
                         HttpSession sessionCliente = request.getSession();
 
@@ -231,7 +231,7 @@ public class SessionServlet extends HttpServlet {
                     }
 
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/SessionServlet?estadoSesion=err");
+                    response.sendRedirect(request.getContextPath() + "/?estadoSesion=err");
                 }
 
                 break;
