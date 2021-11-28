@@ -218,6 +218,7 @@
         <%
             for (BOrders orden : listaOrdenes) {
                 for (BOrderDetails details : orden.getListaDetails()){
+                    if (details.getRequierePrescripcion()){
         %>
         <!--Modal Receta-->
         <div class="modal fade"
@@ -241,6 +242,7 @@
             </div>
         </div>
         <%
+                    }
                 }
             }
         %>
