@@ -1,20 +1,21 @@
 <%@ page import="com.example.telefarma.beans.BProduct" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="infoFarmacia" scope="request" type="java.util.ArrayList<java.lang.String>"/>
+<jsp:useBean id="infoFarmacia" scope="request" type="com.example.telefarma.beans.BPharmacy"/>
 <jsp:useBean id="productosDeLaFarmacia" scope="request"
              type="java.util.ArrayList<com.example.telefarma.beans.BProduct>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="idPharmacy" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String" class="java.lang.String"/>
-<jsp:useBean id="sessionClient" scope="session" type="com.example.telefarma.beans.BClient" class="com.example.telefarma.beans.BClient"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion" class="com.example.telefarma.dtos.DtoSesion"/>
+
 
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - <%=infoFarmacia.get(0)%>
+        <title>Telefarma - <%=infoFarmacia.getNombreFarmacia()%>
         </title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css"
               type="text/css">
@@ -27,10 +28,10 @@
     <body>
         <%
             String servletBusqueda = "ClientServlet?action=buscarProductosDeFarmacia&idPharmacy=" + idPharmacy + "&";
-            String busquedaPlaceholder = "Busca un producto en " + infoFarmacia.get(0);
+            String busquedaPlaceholder = "Busca un producto en " + infoFarmacia.getNombreFarmacia();
         %>
         <!--Barra de Navegación Superior-->
-        <%String nombreCliente = sessionClient.getName() + " " + sessionClient.getLastName();%>
+        <%String nombreCliente = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
@@ -48,17 +49,17 @@
                 <div class="container text-center">
                     <!--Nombre-->
                     <div class="row">
-                        <h1><%= infoFarmacia.get(0) %>
+                        <h1><%= infoFarmacia.getNombreFarmacia() %>
                         </h1>
                     </div>
                     <!--Distrito-->
                     <div class="row">
-                        <h5><%= infoFarmacia.get(1) %>
+                        <h5><%= infoFarmacia.getDistritoFarmacia() %>
                         </h5>
                     </div>
                     <!--Dirección-->
                     <div class="row mb-3">
-                        <h6><i class="fas fa-map-marker-alt fa-xs"></i>&nbsp;&nbsp;<%= infoFarmacia.get(2) %>
+                        <h6><i class="fas fa-map-marker-alt fa-xs"></i>&nbsp;&nbsp;<%= infoFarmacia.getDireccionFarmacia() %>
                         </h6>
                     </div>
                     <!--Titulo-->
@@ -78,7 +79,7 @@
                         <%--Loop de productos--%>
                         <% for (BProduct producto : productosDeLaFarmacia) { %>
                         <div class="col">
-                            <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&productid=<%=producto.getIdProducto()%>'"
+                            <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProducto()%>'"
                                  class="card card-producto">
                                 <div class="card-header">
                                     <h6><%= producto.getNombre() %>

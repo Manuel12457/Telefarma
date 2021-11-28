@@ -12,6 +12,21 @@ public class BProduct {
     private String nombreFarmacia;
     private String distritoFarmacia;
 
+    public BProduct(int idProducto, String nombre, String descripcion, int stock, double precio, boolean requierePrescripcion, int idFarmacia, String nombreFarmacia, String distritoFarmacia) {
+        this.idProducto = idProducto;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.stock = stock;
+        this.precio = precio;
+        this.requierePrescripcion = requierePrescripcion;
+        this.idFarmacia = idFarmacia;
+        this.nombreFarmacia = nombreFarmacia;
+        this.distritoFarmacia = distritoFarmacia;
+    }
+
+    public BProduct() {
+    }
+
     public boolean isRequierePrescripcion() {return requierePrescripcion;}
 
     public String getDistritoFarmacia() {return distritoFarmacia;}

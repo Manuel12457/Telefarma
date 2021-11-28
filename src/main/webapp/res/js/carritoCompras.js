@@ -5,6 +5,12 @@ if (document.readyState === 'loading') {
     ready()
 }
 
+function cambioCantidad(context) {
+    var form = document.getElementsByTagName("form")[1]
+    form.action = context + '/ClientServlet?action=test'
+    form.submit()
+}
+
 function ready() {
     //Busca cambios del quantity para recalcular totales y cantidades cada 500ms
     setInterval(updateCart, 500);

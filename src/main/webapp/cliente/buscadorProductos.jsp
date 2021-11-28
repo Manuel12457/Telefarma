@@ -50,7 +50,7 @@
                             <%--Loop de productos--%>
                             <% for (BProduct producto : listaProductosBusqueda) { %>
                             <div class="col">
-                                <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&productid=<%=producto.getIdProducto()%>'"
+                                <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProducto()%>'"
                                      class="card card-producto">
                                     <div class="card-header">
                                         <h6><%= producto.getNombre() %>

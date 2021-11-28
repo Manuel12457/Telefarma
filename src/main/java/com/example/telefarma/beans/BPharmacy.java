@@ -9,6 +9,23 @@ public class BPharmacy {
     private byte isBanned;
     private int idPharmacy;
     private String password;
+
+    public BPharmacy(String nombreFarmacia, String direccionFarmacia, String emailFarmacia, String RUCFarmacia, String distritoFarmacia, byte isBanned, int idPharmacy, String password, String banReason) {
+        this.nombreFarmacia = nombreFarmacia;
+        this.direccionFarmacia = direccionFarmacia;
+        this.emailFarmacia = emailFarmacia;
+        this.RUCFarmacia = RUCFarmacia;
+        this.distritoFarmacia = distritoFarmacia;
+        this.isBanned = isBanned;
+        this.idPharmacy = idPharmacy;
+        this.password = password;
+        this.banReason = banReason;
+    }
+
+    public BPharmacy() {
+
+    }
+
     private String banReason;
 
     public String getNombreFarmacia() {

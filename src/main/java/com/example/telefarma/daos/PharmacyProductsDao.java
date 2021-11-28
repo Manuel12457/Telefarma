@@ -1,5 +1,6 @@
 package com.example.telefarma.daos;
 
+import com.example.telefarma.beans.BPharmacy;
 import com.example.telefarma.beans.BProduct;
 
 import java.sql.*;
@@ -7,26 +8,27 @@ import java.util.ArrayList;
 
 public class PharmacyProductsDao extends BaseDao {
 
-    public ArrayList<String> datosFarmacia(int idFarmacia) {
+    public BPharmacy datosFarmacia(int idFarmacia) {
 
-        ArrayList<String> datosFarmacia = new ArrayList<>();
+        BPharmacy pharmacy = new BPharmacy();
 
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("select name,District_name,address from pharmacy\n" +
                      "where idPharmacy=" + idFarmacia + ";")) {
 
-            while (rs.next()) {
-                datosFarmacia.add(rs.getString(1));
-                datosFarmacia.add(rs.getString(2));
-                datosFarmacia.add(rs.getString(3));
+            if(rs.next()) {
+                pharmacy.setIdPharmacy(idFarmacia);
+                pharmacy.setNombreFarmacia(rs.getString(1));
+                pharmacy.setDistritoFarmacia(rs.getString(2));
+                pharmacy.setDireccionFarmacia(rs.getString(3));
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return datosFarmacia;
+        return pharmacy;
     }
 
     public int cantidadProductos(String busqueda, int idFarmacia) {

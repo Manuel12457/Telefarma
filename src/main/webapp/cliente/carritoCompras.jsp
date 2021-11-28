@@ -1,9 +1,18 @@
+<%@ page import="java.time.LocalDateTime" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.Duration" %>
+<%@ page import="com.example.telefarma.dtos.DtoPharmacy" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.example.telefarma.dtos.DtoProductoCarrito" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="quantity" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BProduct"/>
-<!--Lista de productos-->
-<%//<jsp:useBean id="listaProductos" scope="request" type="java.util.HashMap<com.example.telefarma.beans.BFarmaciasCliente,com.example.telefarma.beans.BProduct>"/>%>
-<jsp:useBean id="sessionClient" scope="session" type="com.example.telefarma.beans.BClient" class="com.example.telefarma.beans.BClient"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"
+             class="com.example.telefarma.dtos.DtoSesion"/>
+<jsp:useBean id="listaCarrito" scope="session"
+             type="java.util.HashMap<com.example.telefarma.dtos.DtoPharmacy, java.util.ArrayList<com.example.telefarma.dtos.DtoProductoCarrito>>"/>
+<%
+    LocalDateTime now = LocalDateTime.now().plus(Duration.parse("PT30M"));
+    String dateNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "T" + now.format(DateTimeFormatter.ofPattern("HH:mm"));
+%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,9 +28,9 @@
         <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
         <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
     </head>
-    <body>
+    <body onload="ready('<%=request.getContextPath()%>')">
         <!--Cabecera Principal cliente-->
-        <%String nombreCliente = sessionClient.getName() + " " + sessionClient.getLastName();%>
+        <%String nombreCliente = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
@@ -43,25 +52,29 @@
                         <div class="col-md-9 col-xl-8">
                             <!--Items de la farmacia 1-->
                             <%
-                                // Arraylist<BFarmaciasCliente> listaFarmacias = new Arraylist<BFarmaciasCliente>(listaProductos.keySet());
-                                for (int i = 0; i < 1; i++) {
-                                    // BFarmaciasCliente farmacia = listaFarmacias.get(i);
+                                ArrayList<DtoPharmacy> listaFarmacias = new ArrayList<DtoPharmacy>(listaCarrito.keySet());
+                                for (int i = 0; i < listaFarmacias.size(); i++) {
+                                    DtoPharmacy farmacia = listaFarmacias.get(i);
                             %>
                             <div class="cart-items-container">
                                 <!--Nombre cabecera-->
                                 <h3 class="cart-header px-4 py-3">
-                                    <span><%=producto.getNombreFarmacia()%></span>
+                                    <span><%=farmacia.getNombreFarmacia()%></span>
                                     <div>
                                         <h6 class="mb-0">Fecha de Recojo:&nbsp;&nbsp;
-                                            <input value="<%=producto.getIdFarmacia()%>" name="idFarmacia<%=i%>" hidden>
-                                            <input type="datetime-local" name="pickUpDate<%=i%>"
-                                                   style="max-width: 180px;" required>
+                                            <input value="<%=farmacia.getIdPharmacy()%>" name="idFarmacia<%=i%>" hidden>
+                                            <input type="datetime-local" name="pickUpDate<%=i%>" min="<%=dateNow%>"
+                                                   style="max-width: 180px;"
+                                                <%String pickUpDate = farmacia.getFechaRecojo() != null ? farmacia.getFechaRecojo() : "";%>
+                                                   value="<%=pickUpDate%>"
+                                                   required>
                                         </h6>
                                     </div>
                                 </h3>
                                 <%
-                                    for (int j = 0; j < 1; j++) {
-                                        // BDetallesProducto producto = listaProductos.get(farmacia).get(j);
+                                    ArrayList<DtoProductoCarrito> listaProductos = listaCarrito.get(farmacia);
+                                    for (int j = 0; j < listaProductos.size(); j++) {
+                                        DtoProductoCarrito producto = listaProductos.get(j);
                                 %>
                                 <!--Producto-->
                                 <div class="cart-item d-sm-flex justify-content-between my-4 px-lg-2 px-xl-5 pb-4 border-bottom">
@@ -96,15 +109,14 @@
                                                 Receta:
                                                 <input class="form-control form-control-sm custom-file-control"
                                                        type="file"
-                                                       id="formFile" accept="image/png, image/gif, image/jpeg"
-                                                       name="receta" required>
+                                                       id="conReceta" accept="image/png, image/gif, image/jpeg"
+                                                       name="receta<%=i%>-<%=j%>" required>
                                             </span>
                                             </div>
                                             <%} else {%>
-
                                             <input class="form-control form-control-sm custom-file-control" type="file"
-                                                   id="formFile" accept="image/png, image/gif, image/jpeg"
-                                                   name="receta" hidden>
+                                                   id="sinReceta" accept="image/png, image/gif, image/jpeg"
+                                                   name="receta<%=i%>-<%=j%>" hidden>
                                             <%}%>
                                         </div>
                                     </div>
@@ -117,18 +129,22 @@
                                             <span class="text-muted">Cantidad:</span>
                                             <!--Botones-->
                                             <div class="d-flex justify-content-center">
-                                                <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
+                                                <button onclick="this.parentNode.querySelector('input[type=number]').stepDown();"
                                                         class="btn btn-tele" id="menos" type="button">
                                                     <i class="fas fa-minus fa-xs"></i>
                                                 </button>
+                                                <%--                                                <form method="post" action="<%=request.getContextPath()%>/ClientServlet?action=test" id="form-<%=producto.getIdProducto()%>">--%>
                                                 <input class="cart-quantity form-control border-start-0 border-end-0 text-center"
                                                        type="number" style="width:46px;" id="contador"
-                                                       value="<%=quantity%>" min="1" max="<%=producto.getStock()%>"
-                                                       name="cantidad<%=i%>-<%=j%>"/>
+                                                       value="<%=producto.getCantidad()%>" min="1"
+                                                       max="<%=producto.getStock()%>"
+                                                       name="cantidad<%=i%>-<%=j%>"
+                                                       onchange="cambioCantidad('<%=request.getContextPath()%>')"/>
                                                 <button onclick=" this.parentNode.querySelector('input[type=number]').stepUp()"
-                                                class="btn btn-tele" id="mas" type="button">
-                                                <i class="fas fa-plus fa-xs"></i>
+                                                        class="btn btn-tele" id="mas" type="button">
+                                                    <i class="fas fa-plus fa-xs"></i>
                                                 </button>
+                                                <%--                                                </form>--%>
                                             </div>
                                         </div>
                                         <!--Botón borrar-->
@@ -142,6 +158,7 @@
                             </div>
                             <%}%>
                         </div>
+
                         <!--Costo total-->
                         <div class="col-md-3 col-xl-4 pt-3 pt-md-0">
                             <div class="row">
@@ -159,6 +176,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <%
+                                                for (DtoPharmacy farmacia : listaFarmacias) {
+                                                    for (DtoProductoCarrito producto : listaCarrito.get(farmacia)) {
+                                            %>
                                             <tr id="item-resumen-<%=producto.getIdProducto()%>">
                                                 <td class="cart-quantity-resumen text-center">
                                                 </td>
@@ -169,6 +190,10 @@
                                                 <td class="cart-subtotal-resumen">
                                                 </td>
                                             </tr>
+                                            <%
+                                                    }
+                                                }
+                                            %>
                                         </tbody>
                                     </table>
                                 </div>

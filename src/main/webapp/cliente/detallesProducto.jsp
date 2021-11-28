@@ -1,7 +1,7 @@
 <%@ page import="com.example.telefarma.servlets.ClientServlet" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BProduct"/>
-<jsp:useBean id="sessionClient" scope="session" type="com.example.telefarma.beans.BClient" class="com.example.telefarma.beans.BClient"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion" class="com.example.telefarma.dtos.DtoSesion"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +18,7 @@
         <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
     </head>
     <body>
-        <%String nombreCliente = sessionClient.getName() + " " + sessionClient.getLastName();%>
+        <%String nombreCliente = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
@@ -104,7 +104,6 @@
                                             <!--Botón añadir a carrito-->
                                             <td class="text-end">
                                                 <button type="submit" class="btn btn-tele btn-md mr-1 mb-2">
-<%--                                                   href="<%=request.getContextPath()%>/ClientServlet?action=addCarrito&idProduct=<%=producto.getProductid()%>&quantity">--%>
                                                     <i class="fas fa-shopping-cart"></i> Añadir al carrito
                                                 </button>
                                             </td>

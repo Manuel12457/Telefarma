@@ -3,6 +3,8 @@ package com.example.telefarma.servlets;
 import com.example.telefarma.beans.BAdmin;
 import com.example.telefarma.beans.BClient;
 import com.example.telefarma.beans.BPharmacy;
+import com.example.telefarma.dtos.DtoPharmacy;
+import com.example.telefarma.dtos.DtoProductoCarrito;
 import com.example.telefarma.dtos.DtoSesion;
 import com.example.telefarma.dtos.DtoUsuario;
 import com.example.telefarma.daos.PharmacyAdminDao;
@@ -47,13 +49,13 @@ public class SessionServlet extends HttpServlet {
 
                 case "pantallaInicio":
 
-                    request.setAttribute("estadoSesion",estadoSesion);
+                    request.setAttribute("estadoSesion", estadoSesion);
                     view = request.getRequestDispatcher("/ingreso/inicioSesion.jsp");
                     view.forward(request, response);
 
                     break;
                 case "mail":
-                    request.setAttribute("err","e");
+                    request.setAttribute("err", "e");
                     view = request.getRequestDispatcher("/ingreso/correoParaCambioContrasenha.jsp");
                     view.forward(request, response);
                     break;
@@ -61,11 +63,11 @@ public class SessionServlet extends HttpServlet {
                     ArrayList<String> distritosSistema = pharmacyAdminDao.listarDistritosEnSistema();
                     request.setAttribute("cliente", new BClient());
                     request.setAttribute("listaDistritosSistema", distritosSistema);
-                    request.setAttribute("errContrasenha",0);
-                    request.setAttribute("errDNI",0);
-                    request.setAttribute("errMail",0);
-                    request.setAttribute("errDNINum",0);
-                    request.setAttribute("errDNILong",0);
+                    request.setAttribute("errContrasenha", 0);
+                    request.setAttribute("errDNI", 0);
+                    request.setAttribute("errMail", 0);
+                    request.setAttribute("errDNINum", 0);
+                    request.setAttribute("errDNILong", 0);
                     view = request.getRequestDispatcher("/ingreso/registrarUsuario.jsp");
                     view.forward(request, response);
                     break;
@@ -74,7 +76,7 @@ public class SessionServlet extends HttpServlet {
                     String rol = request.getParameter("rol");
 
                     SessionDao sessionDao = new SessionDao();
-                    if(sessionDao.existeToken(token, rol)) {
+                    if (sessionDao.existeToken(token, rol)) {
                         request.setAttribute("token", token);
                         request.setAttribute("rol", rol);
                         view = request.getRequestDispatcher("/ingreso/cambioContrasenha.jsp");
@@ -153,7 +155,7 @@ public class SessionServlet extends HttpServlet {
                 break;
             case "correoParaContrasenha":
                 String mail = request.getParameter("email") == null ? "" : request.getParameter("email");
-                HashMap<Integer, String > hm = s.validarCorreo(mail);
+                HashMap<Integer, String> hm = s.validarCorreo(mail);
 
                 System.out.println(mail);
                 System.out.println(s.validarCorreo(mail));
@@ -180,7 +182,7 @@ public class SessionServlet extends HttpServlet {
                     view = request.getRequestDispatcher("/ingreso/correoCambioContrasenhaEnviado.jsp");
                     view.forward(request, response);
                 } else {
-                    request.setAttribute("err","ne");
+                    request.setAttribute("err", "ne");
                     view = request.getRequestDispatcher("/ingreso/correoParaCambioContrasenha.jsp");
                     view.forward(request, response);
                 }
@@ -200,45 +202,49 @@ public class SessionServlet extends HttpServlet {
                 break;
             case "ini":
 
-                    String usuarioIni = request.getParameter("email") == null ? "" : request.getParameter("email");
-                    String passwordIni = request.getParameter("password") == null ? "" : request.getParameter("password");
+                String usuarioIni = request.getParameter("email") == null ? "" : request.getParameter("email");
+                String passwordIni = request.getParameter("password") == null ? "" : request.getParameter("password");
 
-                    DtoUsuario u = s.validarCorreoContrasenha(usuarioIni,passwordIni);
-                    DtoSesion sesion = new DtoSesion();
+                DtoUsuario u = s.validarCorreoContrasenha(usuarioIni, passwordIni);
+                DtoSesion sesion = new DtoSesion();
 
-                    if (u.getTipoUsuario() != null) {
-                        if (u.getTipoUsuario().equals("client")) {
-                            HttpSession sessionCliente = request.getSession();
+                if (u.getTipoUsuario() != null) {
+                    if (u.getTipoUsuario().equals("client")) {
+                        HttpSession sessionCliente = request.getSession();
 
-                            sesion.setClient(s.usuarioClient(u.getIdUsuario()));
-                            sesion.setI(1);
+                        sesion.setClient(s.usuarioClient(u.getIdUsuario()));
+                        sesion.setI(1);
 
-                            sessionCliente.setAttribute("sesion",sesion);
-                            sessionCliente.setMaxInactiveInterval(10*60);
-                            response.sendRedirect(request.getContextPath() + "/ClientServlet" );
-                        } else if (u.getTipoUsuario().equals("pharmacy")) {
-                            HttpSession sessionFarmacia = request.getSession();
+                        sessionCliente.setAttribute("sesion", sesion);
+                        sessionCliente.setMaxInactiveInterval(10 * 60);
 
-                            sesion.setPharmacy(s.usuarioFarmacia(u.getIdUsuario()));
-                            sesion.setI(1);
+                        sessionCliente.setAttribute("listaCarrito", new HashMap<DtoPharmacy, DtoProductoCarrito>());
 
-                            sessionFarmacia.setAttribute("sesion",sesion);
-                            sessionFarmacia.setMaxInactiveInterval(10*60);
-                            response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
-                        } else if (u.getTipoUsuario().equals("admin")) {
-                            HttpSession sessionAdmin = request.getSession();
 
-                            sesion.setAdmin(s.usuarioAdmin(u.getIdUsuario()));
-                            sesion.setI(1);
+                        response.sendRedirect(request.getContextPath() + "/ClientServlet");
+                    } else if (u.getTipoUsuario().equals("pharmacy")) {
+                        HttpSession sessionFarmacia = request.getSession();
 
-                            sessionAdmin.setAttribute("sesion",sesion);
-                            sessionAdmin.setMaxInactiveInterval(10*60);
-                            response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet");
-                        }
+                        sesion.setPharmacy(s.usuarioFarmacia(u.getIdUsuario()));
+                        sesion.setI(1);
 
-                    } else {
-                        response.sendRedirect(request.getContextPath() + "/?estadoSesion=err");
+                        sessionFarmacia.setAttribute("sesion", sesion);
+                        sessionFarmacia.setMaxInactiveInterval(10 * 60);
+                        response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
+                    } else if (u.getTipoUsuario().equals("admin")) {
+                        HttpSession sessionAdmin = request.getSession();
+
+                        sesion.setAdmin(s.usuarioAdmin(u.getIdUsuario()));
+                        sesion.setI(1);
+
+                        sessionAdmin.setAttribute("sesion", sesion);
+                        sessionAdmin.setMaxInactiveInterval(10 * 60);
+                        response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet");
                     }
+
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/?estadoSesion=err");
+                }
 
                 break;
 

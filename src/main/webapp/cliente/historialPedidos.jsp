@@ -7,7 +7,7 @@
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion" class="com.example.telefarma.dtos.DtoSesion"/>
 <%
-    int idClient = sesion.getClient().getIdClient(); //hardcodeado
+    int idClient = sesion.getClient().getIdClient();
 %>
 
 <!DOCTYPE html>
