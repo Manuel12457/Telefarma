@@ -15,13 +15,13 @@ public class SessionDao extends BaseDao {
         DtoUsuario usuario = new DtoUsuario();
 
         String sql = "select idClient as 'id','client' as 'tipo' from telefarma.client\n" +
-                "where mail = ? and password = ?\n" +
+                "where mail = ? and password = MD5(?)\n" +
                 "union\n" +
                 "select idPharmacy,'pharmacy' from telefarma.pharmacy\n" +
-                "where mail = ? and password = ?\n" +
+                "where mail = ? and password = MD5(?)\n" +
                 "union\n" +
                 "select idAdmin,'admin' from telefarma.administrator\n" +
-                "where mail = ? and password = ?;";
+                "where mail = ? and password = MD5(?);";
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
@@ -34,8 +34,6 @@ public class SessionDao extends BaseDao {
             pstmt.setString(6,contrasenha);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if(rs.next()) {
-                    System.out.println(rs.getString(1));
-                    System.out.println(rs.getString(2));
 
                     String id = rs.getString(1);
                     String tipo = rs.getString(2);
@@ -106,7 +104,6 @@ public class SessionDao extends BaseDao {
             pstmt.setString(4, client.getPassword());
             pstmt.setString(5, client.getMail());
             pstmt.setString(6, client.getDistrito());
-            System.out.println(pstmt);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {

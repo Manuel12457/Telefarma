@@ -22,94 +22,100 @@ public class PharmacyServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         //HttpSession session = request.getSession();
         DtoSesion sesionPharmacy = (DtoSesion) request.getSession().getAttribute("sesion");
-        BPharmacy pharmacy = sesionPharmacy.getPharmacy();
 
-        if (sesionPharmacy != null && sesionPharmacy.getPharmacy() != null) {
+        if (sesionPharmacy != null) {
+            BPharmacy pharmacy = sesionPharmacy.getPharmacy();
 
-            String busqueda;
-            int pagina;
-            int pagTotales;
-            RequestDispatcher view;
+            if (sesionPharmacy.getPharmacy() != null) {
 
-            //HttpSession session = request.getSession();
-            //BPharmacy pharmacy = (BPharmacy) session.getAttribute("sessionPharmacy");
+                String busqueda;
+                int pagina;
+                int pagTotales;
+                RequestDispatcher view;
 
-            int idFarmacia = pharmacy.getIdPharmacy();
+                //HttpSession session = request.getSession();
+                //BPharmacy pharmacy = (BPharmacy) session.getAttribute("sessionPharmacy");
 
-            PharmacyDao pharmacyDao = new PharmacyDao();
-            String accion = request.getParameter("action") == null ? "buscarProducto" : request.getParameter("action");
+                int idFarmacia = pharmacy.getIdPharmacy();
 
-            switch (accion) {
+                PharmacyDao pharmacyDao = new PharmacyDao();
+                String accion = request.getParameter("action") == null ? "buscarProducto" : request.getParameter("action");
 
-                case "buscarProducto":
-                    int limiteProductos = 6;
-                    pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
-                    busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-                    ArrayList<BProductVisualizacion> listaProductosBusqueda = pharmacyDao.listaProductosFarmacia(pagina, busqueda, idFarmacia, limiteProductos);
-                    for (BProductVisualizacion producto : listaProductosBusqueda) {
-                        pharmacyDao.agregarposibleEliminar(producto);
-                    }
+                switch (accion) {
 
-                    pagTotales = (int) Math.ceil((double) pharmacyDao.cantidadProductos(busqueda, idFarmacia) / limiteProductos);
-                    request.setAttribute("listaProductosBusqueda", listaProductosBusqueda);
-                    request.setAttribute("pagActual", pagina);
-                    request.setAttribute("pagTotales", pagTotales);
+                    case "buscarProducto":
+                        int limiteProductos = 6;
+                        pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
+                        busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
+                        ArrayList<BProductVisualizacion> listaProductosBusqueda = pharmacyDao.listaProductosFarmacia(pagina, busqueda, idFarmacia, limiteProductos);
+                        for (BProductVisualizacion producto : listaProductosBusqueda) {
+                            pharmacyDao.agregarposibleEliminar(producto);
+                        }
 
-                    view = request.getRequestDispatcher("/farmacia/visualizacionProductos.jsp");
-                    view.forward(request, response);
-                    break;
+                        pagTotales = (int) Math.ceil((double) pharmacyDao.cantidadProductos(busqueda, idFarmacia) / limiteProductos);
+                        request.setAttribute("listaProductosBusqueda", listaProductosBusqueda);
+                        request.setAttribute("pagActual", pagina);
+                        request.setAttribute("pagTotales", pagTotales);
 
-                case "buscarPedido":
+                        view = request.getRequestDispatcher("/farmacia/visualizacionProductos.jsp");
+                        view.forward(request, response);
+                        break;
 
-                    request.getSession().setAttribute("sesion", sesionPharmacy);
-                    int limitePedidos = 12;
-                    pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
-                    busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-                    ArrayList<BOrders> listaOrdenes = pharmacyDao.listarOrdenes(pagina, busqueda, limitePedidos, idFarmacia);
-                    pagTotales = (int) Math.ceil((double) pharmacyDao.listarOrdenes(pagina, busqueda, 1000, idFarmacia).size() / limitePedidos);
+                    case "buscarPedido":
 
-                    for (BOrders orden : listaOrdenes) {
-                        pharmacyDao.agregarOrderDetails(orden);
-                        pharmacyDao.agregarDayDiff(orden);
-                    }
+                        request.getSession().setAttribute("sesion", sesionPharmacy);
+                        int limitePedidos = 12;
+                        pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
+                        busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
+                        ArrayList<BOrders> listaOrdenes = pharmacyDao.listarOrdenes(pagina, busqueda, limitePedidos, idFarmacia);
+                        pagTotales = (int) Math.ceil((double) pharmacyDao.listarOrdenes(pagina, busqueda, 1000, idFarmacia).size() / limitePedidos);
 
-                    request.setAttribute("listaOrdenes", listaOrdenes);
-                    request.setAttribute("pagActual", pagina);
-                    request.setAttribute("pagTotales", pagTotales);
+                        for (BOrders orden : listaOrdenes) {
+                            pharmacyDao.agregarOrderDetails(orden);
+                            pharmacyDao.agregarDayDiff(orden);
+                        }
 
-                    view = request.getRequestDispatcher("/farmacia/gestionPedidos.jsp");
-                    view.forward(request, response);
-                    break;
+                        request.setAttribute("listaOrdenes", listaOrdenes);
+                        request.setAttribute("pagActual", pagina);
+                        request.setAttribute("pagTotales", pagTotales);
 
-                case "registrarProducto":
-                    view = request.getRequestDispatcher("/farmacia/registrarProducto.jsp");
-                    view.forward(request, response);
+                        view = request.getRequestDispatcher("/farmacia/gestionPedidos.jsp");
+                        view.forward(request, response);
+                        break;
 
-                case "editarProducto":
-                    try {
-                        int idProducto = Integer.parseInt(request.getParameter("idProducto"));
-                        if (pharmacyDao.productoPerteneceFarmacia(idProducto, idFarmacia)) {
-                            BProduct producto = pharmacyDao.obtenerProducto(idProducto);
-                            request.setAttribute("producto", producto);
-                        } else {
+                    case "registrarProducto":
+                        view = request.getRequestDispatcher("/farmacia/registrarProducto.jsp");
+                        view.forward(request, response);
+
+                    case "editarProducto":
+                        try {
+                            int idProducto = Integer.parseInt(request.getParameter("idProducto"));
+                            if (pharmacyDao.productoPerteneceFarmacia(idProducto, idFarmacia)) {
+                                BProduct producto = pharmacyDao.obtenerProducto(idProducto);
+                                request.setAttribute("producto", producto);
+                            } else {
+                                response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
+                            }
+                        } catch (Exception e) {
                             response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
                         }
-                    } catch (Exception e) {
-                        response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
-                    }
-                    view = request.getRequestDispatcher("/farmacia/editarProducto.jsp");
-                    view.forward(request, response);
-                    break;
+                        view = request.getRequestDispatcher("/farmacia/editarProducto.jsp");
+                        view.forward(request, response);
+                        break;
+                }
+
+            } else {
+                if (sesionPharmacy.getClient() != null) {
+                    response.sendRedirect(request.getContextPath() + "/ClientServlet");
+                } else if (sesionPharmacy.getAdmin() != null) {
+                    response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet");
+                }
             }
 
         } else {
-        //Pendiente
-            if (sesionPharmacy.getClient() != null) {
-                response.sendRedirect(request.getContextPath() + "/ClientServlet");
-            } else if (sesionPharmacy.getAdmin() != null) {
-                response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet");
-            }
+            response.sendRedirect(request.getContextPath());
         }
+
     }
 
     @Override

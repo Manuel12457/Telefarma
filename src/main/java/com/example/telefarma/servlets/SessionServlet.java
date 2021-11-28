@@ -207,9 +207,9 @@ public class SessionServlet extends HttpServlet {
 
                 String usuarioIni = request.getParameter("email") == null ? "" : request.getParameter("email");
                 String passwordIni = request.getParameter("password") == null ? "" : request.getParameter("password");
-                String md5passIni = DigestUtils.md5Hex(passwordIni);
-                System.out.println(md5passIni);
-                DtoUsuario u = s.validarCorreoContrasenha(usuarioIni, md5passIni); //reemplazar por md5passIni
+                //String md5passIni = DigestUtils.md5Hex(passwordIni);
+                //System.out.println(md5passIni);
+                DtoUsuario u = s.validarCorreoContrasenha(usuarioIni, passwordIni); //reemplazar por md5passIni
                 DtoSesion sesion = new DtoSesion();
 
                 if (u.getTipoUsuario() != null) {

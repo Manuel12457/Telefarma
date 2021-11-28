@@ -19,107 +19,95 @@ public class PharmacyAdminServlet extends HttpServlet {
 
         DtoSesion sesionAdmin = (DtoSesion) request.getSession().getAttribute("sesion");
 
-        if (sesionAdmin != null && sesionAdmin.getAdmin() != null) {
+        if (sesionAdmin != null) {
+            if (sesionAdmin.getAdmin() != null) {
 
-            String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
-            String estadoRegistro = request.getParameter("registro") == null ? "" : request.getParameter("registro");
-            //String estadoEdicion = request.getParameter("edicion") == null ? "" : request.getParameter("edicion");
-            int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
-            String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-            PharmacyAdminDao pharmacyAdminDao = new PharmacyAdminDao();
-            BPharmacy f = new BPharmacy();
-            ArrayList<String> distritosSistema = pharmacyAdminDao.listarDistritosEnSistema();
+                String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
+                String estadoRegistro = request.getParameter("registro") == null ? "" : request.getParameter("registro");
+                //String estadoEdicion = request.getParameter("edicion") == null ? "" : request.getParameter("edicion");
+                int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
+                String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
+                PharmacyAdminDao pharmacyAdminDao = new PharmacyAdminDao();
+                BPharmacy f = new BPharmacy();
+                ArrayList<String> distritosSistema = pharmacyAdminDao.listarDistritosEnSistema();
 
-            RequestDispatcher view;
-            switch (accion) {
+                RequestDispatcher view;
+                switch (accion) {
 
-                case "":
+                    case "":
 
-                    int limitedistritos = 2;
+                        int limitedistritos = 2;
 
-                    ArrayList<String> distritos = pharmacyAdminDao.listarDistritosLimite(pagina, busqueda, limitedistritos);
-                    int numDistritos = pharmacyAdminDao.listarDistritosLimite(0, busqueda, 1000).size();
+                        ArrayList<String> distritos = pharmacyAdminDao.listarDistritosLimite(pagina, busqueda, limitedistritos);
+                        int numDistritos = pharmacyAdminDao.listarDistritosLimite(0, busqueda, 1000).size();
 
-                    request.setAttribute("pagActual", pagina);
-                    request.setAttribute("pagTotales", (int) Math.ceil((double) numDistritos / limitedistritos));
-                    request.setAttribute("numDistritos", limitedistritos);
-                    request.setAttribute("listaDistritosAMostrar", distritos);
+                        request.setAttribute("pagActual", pagina);
+                        request.setAttribute("pagTotales", (int) Math.ceil((double) numDistritos / limitedistritos));
+                        request.setAttribute("numDistritos", limitedistritos);
+                        request.setAttribute("listaDistritosAMostrar", distritos);
 
-                    //String resultado = request.getParameter("result") == null ? "" : request.getParameter("result");
-                    //int resultban = 0;
-                    //if (resultado.equals("ban")) {
-                    //    resultban = 1;
-                    //} else if (resultado.equals("noban")) {
-                    //    resultban = 2;
-                    //} else if (resultado.equals("desban")) {
-                    //    resultban = 3;
-                    //}
+                        ArrayList<ArrayList<BPharmacy>> listaListaFarmacias = new ArrayList<ArrayList<BPharmacy>>();
 
-                    //listaErrores.add(Integer.toString(resultban));
-                    //request.getSession().setAttribute("resultban", resultban); //
+                        for (String d : distritos) {
+                            ArrayList<BPharmacy> farmaciasAdmin = pharmacyAdminDao.listarFarmaciasAdminPorDistrito(d, busqueda);
+                            listaListaFarmacias.add(farmaciasAdmin);
+                        }
 
-                    ArrayList<ArrayList<BPharmacy>> listaListaFarmacias = new ArrayList<ArrayList<BPharmacy>>();
+                        request.setAttribute("listaListaFarmacias", listaListaFarmacias);
 
-                    for (String d : distritos) {
-                        ArrayList<BPharmacy> farmaciasAdmin = pharmacyAdminDao.listarFarmaciasAdminPorDistrito(d, busqueda);
-                        listaListaFarmacias.add(farmaciasAdmin);
-                    }
+                        view = request.getRequestDispatcher("/admin/buscadorFarmacias.jsp");
+                        view.forward(request, response);
 
-                    request.setAttribute("listaListaFarmacias", listaListaFarmacias);
+                        break;
+                    case "registrarForm":
 
-                    //listaErrores.add(estadoEdicion);
-                    //request.getSession().setAttribute("estadoRegistro", estadoRegistro); //
-                    //request.getSession().setAttribute("estadoEdicion", estadoEdicion); //
+                        request.getSession().setAttribute("noValidMail", 0);
+                        request.getSession().setAttribute("noValidRUC", 0);
+                        request.getSession().setAttribute("noNumRUC", 0);
+                        request.getSession().setAttribute("noLongRuc", 0);
 
-                    view = request.getRequestDispatcher("/admin/buscadorFarmacias.jsp");
-                    view.forward(request, response);
+                        request.setAttribute("listaDistritosSistema", distritosSistema);
 
-                    break;
-                case "registrarForm":
+                        request.setAttribute("datosIngresados", f);
+                        view = request.getRequestDispatcher("/admin/registroFarmacia.jsp");
+                        view.forward(request, response);
+                        break;
+                    case "editarForm":
+                        String idStr = request.getParameter("id") == null ? "" : request.getParameter("id");
+                        String distrito = request.getParameter("distrito") == null ? "" : request.getParameter("distrito");
+                        if ((idStr != null && !idStr.equals("")) && (distrito != null && !distrito.equals(""))) {
+                            if (pharmacyAdminDao.listarFarmaciasAdminPorDistrito(distrito, pharmacyAdminDao.obtenerFarmaciaPorId(Integer.parseInt(idStr)).getNombreFarmacia()).size() != 0) {
+                                request.setAttribute("farmacia", pharmacyAdminDao.listarFarmaciasAdminPorDistrito(distrito, pharmacyAdminDao.obtenerFarmaciaPorId(Integer.parseInt(idStr)).getNombreFarmacia()).get(0));
+                                request.setAttribute("listaDistritosSistema", distritosSistema);
 
-                    request.getSession().setAttribute("noValidMail", 0);
-                    request.getSession().setAttribute("noValidRUC", 0);
-                    request.getSession().setAttribute("noNumRUC", 0);
-                    request.getSession().setAttribute("noLongRuc", 0);
+                                request.getSession().setAttribute("noValidMail", 0);
+                                request.getSession().setAttribute("noValidRUC", 0);
+                                request.getSession().setAttribute("noNumRUC", 0);
+                                request.getSession().setAttribute("noLongRuc", 0);
 
-                    request.setAttribute("listaDistritosSistema", distritosSistema);
-
-                    request.setAttribute("datosIngresados", f);
-                    view = request.getRequestDispatcher("/admin/registroFarmacia.jsp");
-                    view.forward(request, response);
-                    break;
-                case "editarForm":
-                    String idStr = request.getParameter("id") == null ? "" : request.getParameter("id");
-                    String distrito = request.getParameter("distrito") == null ? "" : request.getParameter("distrito");
-                    if ((idStr != null && !idStr.equals("")) && (distrito != null && !distrito.equals(""))) {
-                        if (pharmacyAdminDao.listarFarmaciasAdminPorDistrito(distrito, pharmacyAdminDao.obtenerFarmaciaPorId(Integer.parseInt(idStr)).getNombreFarmacia()).size() != 0) {
-                            request.setAttribute("farmacia", pharmacyAdminDao.listarFarmaciasAdminPorDistrito(distrito, pharmacyAdminDao.obtenerFarmaciaPorId(Integer.parseInt(idStr)).getNombreFarmacia()).get(0));
-                            request.setAttribute("listaDistritosSistema", distritosSistema);
-
-                            request.getSession().setAttribute("noValidMail", 0);
-                            request.getSession().setAttribute("noValidRUC", 0);
-                            request.getSession().setAttribute("noNumRUC", 0);
-                            request.getSession().setAttribute("noLongRuc", 0);
-
-                            view = request.getRequestDispatcher("/admin/editarFarmacia.jsp");
-                            view.forward(request, response);
+                                view = request.getRequestDispatcher("/admin/editarFarmacia.jsp");
+                                view.forward(request, response);
+                            } else {
+                                response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet?edicion=ne");
+                            }
                         } else {
                             response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet?edicion=ne");
                         }
-                    } else {
-                        response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet?edicion=ne");
-                    }
 
-                    break;
+                        break;
+
+                }
+
+            } else {
+                if (sesionAdmin.getClient() != null) {
+                    response.sendRedirect(request.getContextPath() + "/ClientServlet");
+                } else if (sesionAdmin.getPharmacy() != null) {
+                    response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
+                }
             }
 
         } else {
-            //Pendiente
-            if (sesionAdmin.getClient() != null) {
-                response.sendRedirect(request.getContextPath() + "/ClientServlet");
-            } else if (sesionAdmin.getPharmacy() != null) {
-                response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
-            }
+            response.sendRedirect(request.getContextPath());
         }
 
     }

@@ -64,6 +64,29 @@
                 </div>
                 <%session.removeAttribute("orden");
                     }%>
+                <%
+                    String estadoEditar = (String) session.getAttribute("editar");
+                    if (estadoEditar != null) {
+                        if (!estadoEditar.equals("")) {
+                            switch (estadoEditar) {
+                                case "e":
+                                    alertClass = "alert-success";
+                                    alertMssg = "Usuario editado exitosamente";
+                                    break;
+                                case "ne":
+                                    alertClass = "alert-danger";
+                                    alertMssg = "Hubo un problema con la edicion de su usuario";
+                                    break;
+                            }
+                        }
+
+                %>
+                <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
+                    <%=alertMssg%>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <%session.removeAttribute("editar");
+                }%>
                 <!--Mismo Distrito-->
                 <%
                     boolean otraFarmaciaMostrada = false;

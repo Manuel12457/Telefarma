@@ -1,5 +1,6 @@
 package com.example.telefarma.daos;
 
+import com.example.telefarma.beans.BClient;
 import com.example.telefarma.beans.BProduct;
 
 import java.sql.*;
@@ -101,6 +102,29 @@ public class ClientProductsDao extends BaseDao {
         }
 
         return producto;
+    }
+
+    public String editarCliente(BClient client) {
+
+        System.out.println("editando cliente...");
+        String sql = "update telefarma.client set name = ?, lastName = ?, District_name = ?\n" +
+                "where idClient = ?;";
+
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setString(1, client.getName());
+            pstmt.setString(2, client.getLastName());
+            pstmt.setString(3, client.getDistrito());
+            pstmt.setInt(4, client.getIdClient());
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "ne";
+        }
+        return "e";
+
     }
 
 }

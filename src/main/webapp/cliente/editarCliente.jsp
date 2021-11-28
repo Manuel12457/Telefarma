@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion" class="com.example.telefarma.dtos.DtoSesion"/>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -66,63 +68,27 @@
               <div class="container-fluid">
                 <div class="row px-lg-5 px-0 py-3">
                   <!--Datos a editar-->
-                  <form>
+                  <form form method="POST" action="<%=request.getContextPath()%>/ClientServlet?action=editar">
+                    <input class="form-control mt-3" type="text" name="id" hidden value="<%=sesion.getClient().getIdClient()%>">
                     <div class="row">
                       <div class="col-md-6">
-                        <input class="form-control mt-3" type="text" name="nombre" placeholder="Nombre">
+                        <input class="form-control mt-3" type="text" name="nombre" placeholder="Nombre" value="<%=sesion.getClient().getName()%>" required>
                       </div>
                       <div class="col-md-6">
-                        <input class="form-control mt-3" type="text" name="apellido" placeholder="Apellido">
+                        <input class="form-control mt-3" type="text" name="apellido" placeholder="Apellido" value="<%=sesion.getClient().getLastName()%>" required>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-md-6">
-                        <select class="form-select mt-3" name="Distrito">
-                          <option value="" selected disabled>Distrito</option>
-                          <option value="Ancon">Ancón</option>
-                          <option value="AteVitarte">Ate</option>
-                          <option value="Barranco">Barranco</option>
-                          <option value="Brena">Breña</option>
-                          <option value="Carabayllo">Carabayllo</option>
-                          <option value="Chaclacayo">Chaclacayo</option>
-                          <option value="Chorrillos">Chorrillos</option>
-                          <option value="Cieneguilla">Cieneguilla</option>
-                          <option value="Comas">Comas</option>
-                          <option value="ElAgustino">El Agustino</option>
-                          <option value="Independencia">Independencia</option>
-                          <option value="JesusMaria">Jesús María</option>
-                          <option value="LaMolina">La Molina</option>
-                          <option value="LaVictoria">La Victoria</option>
-                          <option value="CercadoLima">Cercado de Lima</option>
-                          <option value="Lince">Lince</option>
-                          <option value="LosOlivos">Los Olivos</option>
-                          <option value="Chosica">Chosica</option>
-                          <option value="Lurin">Lurín</option>
-                          <option value="Magdalena">Magdalena del Mar</option>
-                          <option value="Miraflores">Miraflores</option>
-                          <option value="Pachacamac">Pachacamac</option>
-                          <option value="Pucusana">Pucusana</option>
-                          <option value="PuebloLibre">Pueblo Libre</option>
-                          <option value="PuentePiedra">Puente Piedra</option>
-                          <option value="PuntaHermosa">Punta Hermosa</option>
-                          <option value="PuntaNegra">Punta Negra</option>
-                          <option value="Rimac">Rímac</option>
-                          <option value="SanBartolo">San Bartolo</option>
-                          <option value="SanBorja">San Borja</option>
-                          <option value="SanIsidro">San Isidro</option>
-                          <option value="SanJuanLurigancho">San Juan de Lurigancho</option>
-                          <option value="SanJuanMiraflores">San Juan de Miraflores</option>
-                          <option value="SanLuis">San Luis</option>
-                          <option value="SanMartinPorres">San Martín de Porres</option>
-                          <option value="SanMiguel">San Miguel</option>
-                          <option value="SantaAnita">Santa Anita</option>
-                          <option value="SantaMaria">Santa María del Mar</option>
-                          <option value="SantaRosa">Santa Rosa</option>
-                          <option value="SantiagoSurco">Santiago de Surco</option>
-                          <option value="Surquillo">Surquillo</option>
-                          <option value="VillaSalvador">Villa el Salvador</option>
-                          <option value="VillaMariaTriunfo">Villa María del Triunfo</option>
-                        </select>
+                        <div class="form-outline">
+                          <label class="form-label" for="farmaDistrict">Distrito</label>
+                          <select class="form-select" name="distrito" id="farmaDistrict" required>
+                            <%for (String distrito : listaDistritosSistema) { %>
+                            <option value="<%=distrito%>" <%=sesion.getClient().getDistrito().equals(distrito) ? "selected" : ""%> ><%=distrito%></option>
+                            <%}%>
+
+                          </select>
+                        </div>
                       </div>
                     </div>
                     <div class="my-4 d-flex justify-content-center">
