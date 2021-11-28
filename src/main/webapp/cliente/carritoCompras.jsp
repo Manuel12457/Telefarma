@@ -52,6 +52,7 @@
                         <div class="col-md-9 col-xl-8">
                             <!--Items de la farmacia 1-->
                             <%
+                                int cont = 0;
                                 ArrayList<DtoPharmacy> listaFarmacias = new ArrayList<DtoPharmacy>(listaCarrito.keySet());
                                 for (int i = 0; i < listaFarmacias.size(); i++) {
                                     DtoPharmacy farmacia = listaFarmacias.get(i);
@@ -99,7 +100,7 @@
                                                 <input value="<%=producto.getIdProducto()%>"
                                                        name="idProducto<%=i%>-<%=j%>" hidden>
                                                 <span class="text-muted"><i class="fas fa-tags"></i> Subtotal:</span>
-                                                <span class="cart-subtotal font-size-lgr ms-sm-2 ms-0 "></span>
+                                                <span class="cart-subtotal-<%=cont%> font-size-lgr ms-sm-2 ms-0 "></span>
                                             </div>
                                             <%
                                                 if (producto.getRequierePrescripcion()) {
@@ -148,13 +149,14 @@
                                             </div>
                                         </div>
                                         <!--Botón borrar-->
-                                        <button class="btn btn-danger btn-sm mt-sm-4 mt-2 w-100" type="button"
+                                        <a class="btn btn-danger btn-sm mt-sm-4 mt-2 w-100" href="<%=request.getContextPath()%>/ClientServlet?action=rmvFromCart&farma=<%=i%>&product=<%=j%>"
                                                 id="remove-<%=producto.getIdProducto()%>">
                                             <i class="far fa-trash-alt"></i>
-                                        </button>
+                                        </a>
                                     </div>
                                 </div>
-                                <%}%>
+                                <%cont++;
+                                    }%>
                             </div>
                             <%}%>
                         </div>
@@ -177,10 +179,11 @@
                                         </thead>
                                         <tbody>
                                             <%
+                                                cont = 0;
                                                 for (DtoPharmacy farmacia : listaFarmacias) {
                                                     for (DtoProductoCarrito producto : listaCarrito.get(farmacia)) {
                                             %>
-                                            <tr id="item-resumen-<%=producto.getIdProducto()%>">
+                                            <tr id="item-resumen-<%=cont%>">
                                                 <td class="cart-quantity-resumen text-center">
                                                 </td>
                                                 <td><%=producto.getNombre()%>
@@ -190,7 +193,7 @@
                                                 <td class="cart-subtotal-resumen">
                                                 </td>
                                             </tr>
-                                            <%
+                                            <%cont++;
                                                     }
                                                 }
                                             %>

@@ -53,6 +53,7 @@ function updateCart() {
     var total = 0
     //Obtenemos los divs que contienen los productos de cada farmacia
     var cartItemContainers = document.getElementsByClassName("cart-items-container")
+    var contador=0;
     //Loop de los listados de productos de las farmacia para obtener sus productos
     for (var i = 0; i < cartItemContainers.length; i++) {
         var cartItemContainer = cartItemContainers[i]
@@ -68,13 +69,19 @@ function updateCart() {
             //Obtenemos los valores de los tags
             price = parseFloat(price.innerText.replace("s/ ", ""))
             quantity = quantity.value
-            //Actualizamos el qunatity en el resumen
-            document.getElementsByClassName("cart-quantity-resumen")[j].innerText = quantity
-            //Calculos
+
+            console.log("precio-cantidad Producto "+contador+" de ubicacion "+i+"-"+j+" : "+price+" "+quantity)
+
             var subtotal = Math.round((price * quantity) * 100) / 100
-            document.getElementsByClassName("cart-subtotal")[j].innerText = "s/ " + subtotal
-            document.getElementsByClassName("cart-subtotal-resumen")[j].innerText = "s/ " + subtotal
+            var fila = document.getElementById("item-resumen-"+contador)
+            fila.cells.item(0).innerHTML = quantity
+            fila.cells.item(3).innerHTML = "S/ " + subtotal
+
+            var subtotalproducto = document.getElementsByClassName("cart-subtotal-"+contador)[0]
+            subtotalproducto.innerHTML = "S/ " + subtotal
+
             total = total + subtotal
+            contador++
         }
     }
     total = Math.round(total * 100) / 100

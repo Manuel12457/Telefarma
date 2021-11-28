@@ -205,6 +205,27 @@ public class ClientServlet extends HttpServlet {
                         view.forward(request, response);
 
                         break;
+
+                    case "rmvFromCart":
+                        HttpSession session = request.getSession();
+                        HashMap<DtoPharmacy, ArrayList<DtoProductoCarrito>> listaCarrito = (HashMap<DtoPharmacy, ArrayList<DtoProductoCarrito>>) session.getAttribute("listaCarrito");
+                        ArrayList<DtoPharmacy> farmacias = new ArrayList<DtoPharmacy>(listaCarrito.keySet());
+
+                        int i = Integer.parseInt(request.getParameter("farma"));
+                        int j = Integer.parseInt(request.getParameter("product"));
+
+                        DtoPharmacy farmacia = farmacias.get(i);
+                        listaCarrito.get(farmacia).remove(j);
+
+                        if(listaCarrito.get(farmacia).size() == 0){
+                            listaCarrito.remove(farmacia);
+                        }
+
+                        session.setAttribute("listaCarrito",listaCarrito);
+                        response.sendRedirect(request.getContextPath() + "/ClientServlet?action=verCarrito");
+
+                        break;
+
                     case "verCarrito":
                         //Vista
                         view = request.getRequestDispatcher("/cliente/carritoCompras.jsp");
