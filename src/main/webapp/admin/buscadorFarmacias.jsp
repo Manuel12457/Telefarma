@@ -5,7 +5,7 @@
              type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BPharmacy>>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="sessionAdmin" scope="session" type="com.example.telefarma.beans.BAdmin"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"/>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -22,7 +22,7 @@
     </head>
     <body>
         <%--Cabecera de admin--%>
-        <%String admin = "Admin " + sessionAdmin.getIdAdmin();%>
+        <%String admin = "Admin " + sesion.getAdmin().getIdAdmin();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="admin"/>
             <jsp:param name="nombre" value="<%=admin%>"/>

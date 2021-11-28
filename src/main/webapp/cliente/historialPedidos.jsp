@@ -5,9 +5,9 @@
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String"/>
-<jsp:useBean id="sessionClient" scope="session" type="com.example.telefarma.beans.BClient" class="com.example.telefarma.beans.BClient"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion" class="com.example.telefarma.dtos.DtoSesion"/>
 <%
-    int idClient = sessionClient.getIdClient(); //hardcodeado
+    int idClient = sesion.getClient().getIdClient(); //hardcodeado
 %>
 
 <!DOCTYPE html>

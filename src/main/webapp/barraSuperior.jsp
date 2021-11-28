@@ -79,7 +79,7 @@
                     <%if (tipoUsuario.equals("cliente")) {%>
                     <div class="mb-3">
                         <div class="p-2">
-                            <a href="usuarioEditar.html" class="text-dark text-decoration-none">
+                            <a href="<%=request.getContextPath()%>/ClientServlet?action=editarForm" class="text-dark text-decoration-none">
                                 <span><i class="fas fa-user-edit"></i></span>
                                 <span>Editar usuario</span>
                             </a>

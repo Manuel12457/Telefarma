@@ -4,7 +4,7 @@
              type="java.util.ArrayList<com.example.telefarma.beans.BProduct>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="sessionClient" scope="session" type="com.example.telefarma.beans.BClient" class="com.example.telefarma.beans.BClient"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion" class="com.example.telefarma.dtos.DtoSesion"/>
 
 <%String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");%>
 
@@ -24,7 +24,7 @@
     </head>
     <body>
         <!--Barra de Navegación Superior-->
-        <%String a = sessionClient.getName() + " " + sessionClient.getLastName();%>
+        <%String a = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=a%>"/>

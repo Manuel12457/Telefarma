@@ -4,10 +4,11 @@
              type="java.util.ArrayList<com.example.telefarma.beans.BProductVisualizacion>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="sessionPharmacy" scope="session" type="com.example.telefarma.beans.BPharmacy"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"/>
 <%
     String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-    String result = request.getParameter("result");
+    String result = (String) session.getAttribute("result");
+            //request.getParameter("result");
 %>
 
 <!DOCTYPE html>
@@ -28,7 +29,7 @@
         <%--Cabecera de admin--%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="farmacia"/>
-            <jsp:param name="nombre" value="<%=sessionPharmacy.getNombreFarmacia()%>"/>
+            <jsp:param name="nombre" value="<%=sesion.getPharmacy().getNombreFarmacia()%>"/>
             <jsp:param name="servletBusqueda" value="PharmacyServlet?action=buscarProducto&"/>
             <jsp:param name="busquedaPlaceholder" value="Busca un producto"/>
         </jsp:include>
@@ -72,7 +73,7 @@
                 <%=mensaje%>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <%
+            <%session.removeAttribute("result");
                 }
             %>
 

@@ -5,8 +5,7 @@
              type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BPharmacy>>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="estadoOrden" scope="request" type="java.lang.String"/>
-<jsp:useBean id="sessionClient" scope="session" type="com.example.telefarma.beans.BClient"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion" class="com.example.telefarma.dtos.DtoSesion"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +24,7 @@
 
     <body>
         <!--Barra de Navegación Superior-->
-        <%String nombreCliente = sessionClient.getName() + " " + sessionClient.getLastName();%>
+        <%String nombreCliente = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
@@ -42,27 +41,33 @@
                 <!--Avisos-->
                 <%
                     String alertClass = ""; String alertMssg = "";
-                    if (!estadoOrden.equals("")) {
-                        switch (estadoOrden) {
-                            case "e":
-                                alertClass = "alert-success";
-                                alertMssg = "La orden se realizó con éxito";
-                                break;
-                            case "ne":
-                                alertClass = "alert-danger";
-                                alertMssg = "Algo salió mal con tu orden";
-                                break;
-                        }
+                    if (session.getAttribute("orden") != null) {
+                        String estadoOrden = (String) session.getAttribute("orden");
+
+                        if (!estadoOrden.equals("")) {
+                            switch (estadoOrden) {
+                                case "e":
+                                    alertClass = "alert-success";
+                                    alertMssg = "La orden se realizó con éxito";
+                                    break;
+                                case "ne":
+                                    alertClass = "alert-danger";
+                                    alertMssg = "Algo salió mal con tu orden";
+                                    break;
+                            }
+                    }
+
                 %>
                 <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
                     <%=alertMssg%>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <%}%>
+                <%session.removeAttribute("orden");
+                    }%>
                 <!--Mismo Distrito-->
                 <%
                     boolean otraFarmaciaMostrada = false;
-                    String distritoCliente = sessionClient.getDistrito();
+                    String distritoCliente = sesion.getClient().getDistrito();
                     for (ArrayList<BPharmacy> listaFarmaciasDistrito : listaFarmacias) {
 
                         if (listaFarmaciasDistrito.size() > 0) {

@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="estadoRegistro" scope="request" type="java.lang.String"/>
 <jsp:useBean id="estadoSesion" scope="request" type="java.lang.String"/>
 
 <!DOCTYPE html>
@@ -38,21 +37,6 @@
                                                     TeleFarma</h1>
                                             </div>
                                             <!--Alertas-->
-                                            <% if (estadoRegistro.equals("e")) { %>
-                                            <div class="alert alert-success alert-dismissible fade show"
-                                                 role="alert">
-                                                Usted se ha registrado exitosamente
-                                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <% } else if (estadoRegistro.equals("ne")) { %>
-                                            <div class="alert alert-danger alert-dismissible fade show"
-                                                 role="alert">
-                                                Hubo un problema con su registro
-                                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <% } %>
                                             <% if (estadoSesion.equals("err")) { %>
                                             <div class="alert alert-success alert-dismissible fade show"
                                                  role="alert">
