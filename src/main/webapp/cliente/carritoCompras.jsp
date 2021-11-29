@@ -132,7 +132,7 @@
                                             <span class="text-muted">Cantidad:</span>
                                             <!--Botones-->
                                             <div class="d-flex justify-content-center">
-                                                <button onclick="this.parentNode.querySelector('input[type=number]').stepDown();"
+                                                <button onclick="this.parentNode.querySelector('input[type=number]').stepDown(); guardarCambios('<%=request.getContextPath()%>')"
                                                         class="btn btn-tele" id="menos" type="button">
                                                     <i class="fas fa-minus fa-xs"></i>
                                                 </button>
@@ -141,7 +141,7 @@
                                                        value="<%=producto.getCantidad()%>" min="1"
                                                        onchange="guardarCambios('<%=request.getContextPath()%>')"
                                                        max="<%=producto.getStock()%>" name="cantidad<%=i%>-<%=j%>"/>
-                                                <button onclick=" this.parentNode.querySelector('input[type=number]').stepUp()"
+                                                <button onclick="this.parentNode.querySelector('input[type=number]').stepUp(); guardarCambios('<%=request.getContextPath()%>')"
                                                         class="btn btn-tele" id="mas" type="button">
                                                     <i class="fas fa-plus fa-xs"></i>
                                                 </button>
