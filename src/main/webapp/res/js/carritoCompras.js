@@ -5,15 +5,17 @@ if (document.readyState === 'loading') {
     ready()
 }
 
-function cambioCantidad(context) {
+function guardarCambios(context) {
+    console.log("AAAAAAAAAAAAAAAAAA")
     var form = document.getElementsByTagName("form")[1]
-    form.action = context + '/ClientServlet?action=test'
+    form.action = context + '/ClientServlet?action=guardarCambios'
     form.submit()
 }
 
 function ready() {
     //Busca cambios del quantity para recalcular totales y cantidades cada 500ms
     setInterval(updateCart, 500);
+    // setInterval(function() {guardarCambios(context)}, 500);
 
     //Obtiene los botones de borrar producto
     var removeProductButtons = document.getElementsByClassName("btn-danger")

@@ -28,7 +28,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
         <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
     </head>
-    <body onload="ready('<%=request.getContextPath()%>')">
+    <body>
         <!--Cabecera Principal cliente-->
         <%String nombreCliente = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
@@ -66,6 +66,7 @@
                                             <input value="<%=farmacia.getIdPharmacy()%>" name="idFarmacia<%=i%>" hidden>
                                             <input type="datetime-local" name="pickUpDate<%=i%>" min="<%=dateNow%>"
                                                    style="max-width: 180px;"
+                                                   onchange="guardarCambios('<%=request.getContextPath()%>')"
                                                 <%String pickUpDate = farmacia.getFechaRecojo() != null ? farmacia.getFechaRecojo() : "";%>
                                                    value="<%=pickUpDate%>"
                                                    required>
@@ -109,8 +110,9 @@
                                             <span class="text-muted">
                                                 Receta:
                                                 <input class="form-control form-control-sm custom-file-control"
-                                                       type="file"
+                                                       type="file" value="<%=producto.getReceta()%>"
                                                        id="conReceta" accept="image/png, image/gif, image/jpeg"
+                                                       <%--Descomentar para probar--%> <%--onchange="guardarCambios('<%=request.getContextPath()%>')"--%>
                                                        name="receta<%=i%>-<%=j%>" required>
                                             </span>
                                             </div>
@@ -134,29 +136,29 @@
                                                         class="btn btn-tele" id="menos" type="button">
                                                     <i class="fas fa-minus fa-xs"></i>
                                                 </button>
-                                                <%--                                                <form method="post" action="<%=request.getContextPath()%>/ClientServlet?action=test" id="form-<%=producto.getIdProducto()%>">--%>
                                                 <input class="cart-quantity form-control border-start-0 border-end-0 text-center"
                                                        type="number" style="width:46px;" id="contador"
                                                        value="<%=producto.getCantidad()%>" min="1"
-                                                       max="<%=producto.getStock()%>"
-                                                       name="cantidad<%=i%>-<%=j%>"
-                                                       onchange="cambioCantidad('<%=request.getContextPath()%>')"/>
+                                                       onchange="guardarCambios('<%=request.getContextPath()%>')"
+                                                       max="<%=producto.getStock()%>" name="cantidad<%=i%>-<%=j%>"/>
                                                 <button onclick=" this.parentNode.querySelector('input[type=number]').stepUp()"
                                                         class="btn btn-tele" id="mas" type="button">
                                                     <i class="fas fa-plus fa-xs"></i>
                                                 </button>
-                                                <%--                                                </form>--%>
                                             </div>
                                         </div>
                                         <!--Botón borrar-->
-                                        <a class="btn btn-danger btn-sm mt-sm-4 mt-2 w-100" href="<%=request.getContextPath()%>/ClientServlet?action=rmvFromCart&farma=<%=i%>&product=<%=j%>"
-                                                id="remove-<%=producto.getIdProducto()%>">
+                                        <a class="btn btn-danger btn-sm mt-sm-4 mt-2 w-100"
+                                           href="<%=request.getContextPath()%>/ClientServlet?action=rmvFromCart&farma=<%=i%>&product=<%=j%>"
+                                           id="remove-<%=producto.getIdProducto()%>">
                                             <i class="far fa-trash-alt"></i>
                                         </a>
                                     </div>
                                 </div>
-                                <%cont++;
-                                    }%>
+                                <%
+                                        cont++;
+                                    }
+                                %>
                             </div>
                             <%}%>
                         </div>
@@ -193,7 +195,8 @@
                                                 <td class="cart-subtotal-resumen">
                                                 </td>
                                             </tr>
-                                            <%cont++;
+                                            <%
+                                                        cont++;
                                                     }
                                                 }
                                             %>
