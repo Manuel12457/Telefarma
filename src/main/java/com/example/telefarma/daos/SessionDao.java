@@ -15,13 +15,13 @@ public class SessionDao extends BaseDao {
         DtoUsuario usuario = new DtoUsuario();
 
         String sql = "select idClient as 'id','client' as 'tipo' from telefarma.client\n" +
-                "where mail = ? and password = MD5(?)\n" +
+                "where mail = ? and password = ?\n" +
                 "union\n" +
                 "select idPharmacy,'pharmacy' from telefarma.pharmacy\n" +
-                "where mail = ? and password = MD5(?)\n" +
+                "where mail = ? and password = ?\n" +
                 "union\n" +
                 "select idAdmin,'admin' from telefarma.administrator\n" +
-                "where mail = ? and password = MD5(?);";
+                "where mail = ? and password = ?;";
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
@@ -175,13 +175,14 @@ public class SessionDao extends BaseDao {
     }
 
     public boolean tokenRepetido(String token) {
-        String sql = "select count(*) from (select rstPassToken from client where rstPassToken = " + token +
-                " union select rstPassToken from pharmacy where rstPassToken = " + token + ") tabla;";
+        String sql = "select count(*) from (select rstPassToken from client where rstPassToken = '" + token + "'" +
+                " union select rstPassToken from pharmacy where rstPassToken = '" + token + "') tabla;";
 
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql);) {
 
+            rs.next();
             if (rs.getInt(1) > 1) {
                 return true;
             }
