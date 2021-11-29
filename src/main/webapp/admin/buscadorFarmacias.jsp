@@ -199,7 +199,7 @@
         </main>
 
         <!--Botón flotante "+" para agregar farmacia-->
-        <a href="<%=request.getContextPath()%>/PharmacyAdminServlet?action=registrarForm" class="btn-float">
+        <a href="<%=request.getContextPath()%>/PharmacyAdminServlet?action=registrarForm" class="btn-float" title="Registre una farmacia">
             <i class="fas fa-plus my-float"></i>
         </a>
 
