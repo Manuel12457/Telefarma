@@ -147,10 +147,25 @@
                                             %>
                                             <tr id="dt-<%=count%>" class="collapse cell-1 row-child">
                                                 <td colspan="7">
+                                                    <%
+                                                    if(orden.getTimeDiff()>0){
+                                                    %>
+                                                    <form method="post" action="<%=request.getContextPath()%>/ClientServlet?action=cancelarPedido&idOrder=<%=orden.getIdOrder()%>">
+                                                        <button type="submit"
+                                                                class="btn btn-danger">
+                                                            Cancelar pedido
+                                                        </button>
+                                                    </form>
+                                                    <%
+                                                    }else{
+                                                    %>
                                                     <button type="button"
-                                                            class="btn btn-danger <%=orden.getTimeDiff()>0 ? "" : "disabled"%>">
+                                                            class="btn btn-danger disabled" style="pointer-events: auto;" title="No se puede cancelar este pedido">
                                                         Cancelar pedido
                                                     </button>
+                                                    <%
+                                                    }
+                                                    %>
                                                 </td>
                                             </tr>
                                             <%

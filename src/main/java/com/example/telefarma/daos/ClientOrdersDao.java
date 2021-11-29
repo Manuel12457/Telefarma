@@ -97,4 +97,22 @@ public class ClientOrdersDao extends BaseDao {
             e.printStackTrace();
         }
     }
+
+    public void cancelarPedido(String idOrder, int idClient) {
+
+        String sql = "update orders set status='Cancelado' " +
+                "where idOrder=? and idClient=? ;";
+
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setString(1, idOrder);
+            pstmt.setInt(2, idClient);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

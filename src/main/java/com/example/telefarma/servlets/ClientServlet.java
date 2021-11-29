@@ -50,6 +50,7 @@ public class ClientServlet extends HttpServlet {
                 int limiteFarmacias;
                 int pagTotales;
                 int limiteProductos, idProduct;
+                int idClient;
 
                 switch (action) {
 
@@ -93,7 +94,7 @@ public class ClientServlet extends HttpServlet {
                         //Busqueda de ordenes del cliente
                         busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
                         request.setAttribute("busqueda", busqueda);
-                        int idClient = client.getIdClient();
+                        idClient = client.getIdClient();
 //                        int idClient = request.getParameter("idClient") == null ? 1 : Integer.parseInt(request.getParameter("idClient")); //hardcodeado
                         ArrayList<BOrders> listaOrdenes = clientOrdersDao.listarOrdenes(busqueda, pagina, limite, idClient);
 
@@ -144,12 +145,12 @@ public class ClientServlet extends HttpServlet {
                         request.getSession().setAttribute("sessionClient", client);
                         pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
                         busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-                        int idCliente = request.getParameter("id") == null ? 1 : Integer.parseInt(request.getParameter("id"));
-
+                        //int idCliente = request.getParameter("id") == null ? 1 : Integer.parseInt(request.getParameter("id"));
+                        idClient = client.getIdClient();
                         limiteProductos = 16;
 
                         request.setAttribute("busqueda", busqueda);
-                        request.setAttribute("listaProductosBusqueda", clientProductsDao.listarProductosBusqueda(pagina, busqueda, limiteProductos, idCliente));
+                        request.setAttribute("listaProductosBusqueda", clientProductsDao.listarProductosBusqueda(pagina, busqueda, limiteProductos, idClient));
                         request.setAttribute("pagActual", pagina);
 
                         pagTotales = (int) Math.ceil((double) clientProductsDao.cantidadProductos(busqueda) / limiteProductos);
@@ -262,7 +263,6 @@ public class ClientServlet extends HttpServlet {
         HttpSession session = request.getSession();
         DtoSesion sesionCliente = (DtoSesion) request.getSession().getAttribute("sesion");
         BClient client = sesionCliente.getClient();
-
         request.setCharacterEncoding("UTF-8");
         int idClient = client.getIdClient();
         String busqueda;
@@ -471,6 +471,16 @@ public class ClientServlet extends HttpServlet {
                 request.getSession().setAttribute("sesion", sesion);
                 request.getSession().setAttribute("editar", exitoEditar);
                 response.sendRedirect(request.getContextPath() + "/ClientServlet");
+                break;
+
+            case "cancelarPedido":
+                try{
+                    String idOrder = request.getParameter("idOrder");
+                    ClientOrdersDao clientOrdersDao = new ClientOrdersDao();
+                    clientOrdersDao.cancelarPedido(idOrder,idClient);
+                }catch (Exception e){
+                }
+                response.sendRedirect(request.getContextPath()+"/ClientServlet?action=historial");
                 break;
 
             default:
