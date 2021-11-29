@@ -23,7 +23,8 @@
                             <div class="row g-0">
                                 <!--Foto login-->
                                 <div class="col-6 d-none d-md-block">
-                                    <img src="${pageContext.request.contextPath}/res/img/login-photo.jpg" class="img-fluid"
+                                    <img src="${pageContext.request.contextPath}/res/img/login-photo.jpg"
+                                         class="img-fluid"
                                          alt="telefarma-login"
                                          style="border-radius: 1rem 0 0 1rem;">
                                 </div>
@@ -36,28 +37,29 @@
                                                 <h1 class="logo-header" style="font-size: 48px;">
                                                     TeleFarma</h1>
                                             </div>
-                                            <!--Alertas-->
-                                            <% if (estadoSesion.equals("err")) { %>
-                                            <div class="alert alert-success alert-dismissible fade show"
-                                                 role="alert">
-                                                Hubo un problema con su inicio de sesion
-                                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <% }%>
                                             <!--Correo-->
                                             <div class="form-outline mb-4">
                                                 <input class="form-control form-control-lg" type="email" name="email"
                                                        placeholder="Correo">
                                             </div>
                                             <!--Password-->
-                                            <div class="form-outline mb-4">
+                                            <div class="form-outline mb-2">
                                                 <input class="form-control form-control-lg" type="password"
                                                        name="password"
                                                        placeholder="Contraseña">
                                             </div>
+                                            <!--Error ingresar-->
+                                            <% if (request.getSession().getAttribute("errorLogin") != null) { %>
+                                            <div class="mt-3">
+                                                <span class="text-danger"><%=request.getSession().getAttribute("errorLogin")%>
+                                                </span>
+                                            </div>
+                                            <%
+                                                }
+                                                request.getSession().removeAttribute("errorLogin");
+                                            %>
                                             <!--Botón ingresar-->
-                                            <div class="pt-1 mb-3">
+                                            <div class="pt-1 mt-2 mb-3">
                                                 <button class="btn btn-tele btn-block mb-3" type="submit"
                                                         style="background: var(--bs-orange); border-color: var(--bs-orange)">
                                                     <strong>Ingresar</strong>

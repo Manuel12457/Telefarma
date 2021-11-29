@@ -1,4 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    String mensaje = request.getParameter("mensaje");
+%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -26,9 +29,8 @@
                     <div class="card-body">
                         <div class="container" style="width: 70%">
                             <div class="row my-4 text-center">
-                                <h4>Se ha cambiado la contraseña con éxito =)</h4>
-                                <a class="text-center" href="<%=request.getContextPath()%>/">Volver al Inicio de
-                                    Sesión</a>
+                                <h4><%=mensaje%></h4>
+                                <a class="text-center" href="<%=request.getContextPath()%>/">Volver al Inicio de Sesión</a>
                             </div>
                         </div>
                     </div>

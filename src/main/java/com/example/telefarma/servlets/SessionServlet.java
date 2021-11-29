@@ -24,16 +24,21 @@ public class SessionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String accion = request.getParameter("action") == null ? "pantallaInicio" : request.getParameter("action");
-        String estadoRegistro = request.getParameter("registro") == null ? "" : request.getParameter("registro");
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+
+        String action = request.getParameter("action") == null ? "pantallaInicio" : request.getParameter("action");
         String estadoSesion = request.getParameter("estadoSesion") == null ? "" : request.getParameter("estadoSesion");
         DtoSesion sesionActiva = (DtoSesion) request.getSession().getAttribute("sesion");
+
         //Dando hacia atras se puede retornar al inicio de sesion. Falta ver eso
-        if (accion.equals("logout")) {
+        if (action.equals("logout")) {
+
             request.getSession().invalidate();
-            response.sendRedirect(request.getContextPath()+"/");
+            response.sendRedirect(request.getContextPath() + "/");
+
         } else if (sesionActiva != null && sesionActiva.getI() != 0) {
-            System.out.println("exito");
+
             if (sesionActiva.getClient() != null) {
                 response.sendRedirect(request.getContextPath() + "/ClientServlet");
             } else if (sesionActiva.getPharmacy() != null) {
@@ -41,25 +46,25 @@ public class SessionServlet extends HttpServlet {
             } else if (sesionActiva.getAdmin() != null) {
                 response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet");
             }
+
         } else {
 
             PharmacyAdminDao pharmacyAdminDao = new PharmacyAdminDao();
             RequestDispatcher view;
 
-            switch (accion) {
-
+            switch (action) {
                 case "pantallaInicio":
-
                     request.setAttribute("estadoSesion", estadoSesion);
                     view = request.getRequestDispatcher("/ingreso/inicioSesion.jsp");
                     view.forward(request, response);
-
                     break;
+
                 case "mail":
                     request.setAttribute("err", "e");
                     view = request.getRequestDispatcher("/ingreso/correoParaCambioContrasenha.jsp");
                     view.forward(request, response);
                     break;
+
                 case "registrarForm":
                     ArrayList<String> distritosSistema = pharmacyAdminDao.listarDistritosEnSistema();
                     request.setAttribute("cliente", new BClient());
@@ -72,6 +77,7 @@ public class SessionServlet extends HttpServlet {
                     view = request.getRequestDispatcher("/ingreso/registrarUsuario.jsp");
                     view.forward(request, response);
                     break;
+
                 case "cambiarContrasenha":
                     String token = request.getParameter("token");
                     String rol = request.getParameter("rol");
@@ -83,22 +89,21 @@ public class SessionServlet extends HttpServlet {
                         view = request.getRequestDispatcher("/ingreso/cambioContrasenha.jsp");
                         view.forward(request, response);
                     } else {
-                        view = request.getRequestDispatcher("/ingreso/tokenInvalido.jsp");
+                        request.setAttribute("mensaje", "El token ingresado es invalido");
+                        view = request.getRequestDispatcher("/ingreso/resultadoIngreso.jsp");
                         view.forward(request, response);
                     }
-                    break;
-                case "logout":
-                    request.getSession().invalidate();
-                    response.sendRedirect(request.getContextPath());
                     break;
             }
 
         }
-
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
 
         String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
         String dominio = "http://localhost:8080";
@@ -133,12 +138,14 @@ public class SessionServlet extends HttpServlet {
                 }
 
                 if (contrasenhasCoinciden && dniValido && mailValido && dniNumero && dniLongitud) {
+
                     /*Registra el usuario*/
                     String md5pass = DigestUtils.md5Hex(contrasenha);
                     client.setPassword(md5pass);
                     String err = s.registrarUsuario(client);
                     view = request.getRequestDispatcher("/ingreso/registroExitoso.jsp");
                     view.forward(request, response);
+
                 } else {
 
                     request.setAttribute("errContrasenha", contrasenhasCoinciden ? 0 : 1);
@@ -154,14 +161,12 @@ public class SessionServlet extends HttpServlet {
                     view.forward(request, response);
 
                 }
-
                 break;
+
             case "correoParaContrasenha":
                 String mail = request.getParameter("email") == null ? "" : request.getParameter("email");
                 HashMap<Integer, String> hm = s.validarCorreo(mail);
 
-                System.out.println(mail);
-                System.out.println(s.validarCorreo(mail));
                 if (!hm.isEmpty()) {
 
                     String token = UUID.randomUUID().toString().replace("-", "Z");
@@ -182,14 +187,13 @@ public class SessionServlet extends HttpServlet {
 
                     MailServlet.sendMail(mail, "Cambio de contraseña", tokenMail);
 
-                    view = request.getRequestDispatcher("/ingreso/correoCambioContrasenhaEnviado.jsp");
-                    view.forward(request, response);
+                    request.setAttribute("mensaje", "Se ha enviado un correo a la dirección de correo indicada");
+                    view = request.getRequestDispatcher("/ingreso/resultadoIngreso.jsp");
                 } else {
                     request.setAttribute("err", "ne");
                     view = request.getRequestDispatcher("/ingreso/correoParaCambioContrasenha.jsp");
-                    view.forward(request, response);
                 }
-
+                view.forward(request, response);
                 break;
 
             case "cambiarContrasenha":
@@ -197,61 +201,69 @@ public class SessionServlet extends HttpServlet {
                 String token = request.getParameter("token");
                 String password = request.getParameter("password");
                 String md5pass = DigestUtils.md5Hex(password);
-                s.cambiarPassword(token, rol, md5pass); //reemplazar por md5pass
+                s.cambiarPassword(token, rol, md5pass);
                 s.borrarToken(token, rol);
 
-                view = request.getRequestDispatcher("/ingreso/cambioContrasenhaExitoso.jsp");
+                request.setAttribute("mensaje", "Se ha cambiado la contraseña con éxito =)");
+                view = request.getRequestDispatcher("/ingreso/resultadoIngreso.jsp");
                 view.forward(request, response);
                 break;
+
             case "ini":
 
                 String usuarioIni = request.getParameter("email") == null ? "" : request.getParameter("email");
                 String passwordIni = request.getParameter("password") == null ? "" : request.getParameter("password");
-                //String md5passIni = DigestUtils.md5Hex(passwordIni);
-                //System.out.println(md5passIni);
-                DtoUsuario u = s.validarCorreoContrasenha(usuarioIni, passwordIni); //reemplazar por md5passIni
+                String md5passIni = DigestUtils.md5Hex(passwordIni);
+                DtoUsuario u = s.validarCorreoContrasenha(usuarioIni, md5passIni);
                 DtoSesion sesion = new DtoSesion();
 
                 if (u.getTipoUsuario() != null) {
-                    if (u.getTipoUsuario().equals("client")) {
-                        HttpSession sessionCliente = request.getSession();
+                    switch (u.getTipoUsuario()) {
+                        case "client":
+                            HttpSession sessionCliente = request.getSession();
 
-                        sesion.setClient(s.usuarioClient(u.getIdUsuario()));
-                        sesion.setI(1);
+                            sesion.setClient(s.usuarioClient(u.getIdUsuario()));
+                            sesion.setI(1);
 
-                        sessionCliente.setAttribute("sesion", sesion);
-                        sessionCliente.setMaxInactiveInterval(10 * 60);
+                            sessionCliente.setAttribute("sesion", sesion);
+                            sessionCliente.setMaxInactiveInterval(10 * 60);
 
-                        sessionCliente.setAttribute("listaCarrito", new HashMap<DtoPharmacy, DtoProductoCarrito>());
+                            //Se crea el carrito una vez creada la sesión
+                            sessionCliente.setAttribute("listaCarrito", new HashMap<DtoPharmacy, DtoProductoCarrito>());
 
+                            response.sendRedirect(request.getContextPath() + "/ClientServlet");
+                            break;
 
-                        response.sendRedirect(request.getContextPath() + "/ClientServlet");
-                    } else if (u.getTipoUsuario().equals("pharmacy")) {
-                        HttpSession sessionFarmacia = request.getSession();
+                        case "pharmacy":
+                            HttpSession sessionFarmacia = request.getSession();
 
-                        sesion.setPharmacy(s.usuarioFarmacia(u.getIdUsuario()));
-                        sesion.setI(1);
+                            sesion.setPharmacy(s.usuarioFarmacia(u.getIdUsuario()));
+                            sesion.setI(1);
 
-                        sessionFarmacia.setAttribute("sesion", sesion);
-                        sessionFarmacia.setMaxInactiveInterval(10 * 60);
-                        response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
-                    } else if (u.getTipoUsuario().equals("admin")) {
-                        HttpSession sessionAdmin = request.getSession();
+                            sessionFarmacia.setAttribute("sesion", sesion);
+                            sessionFarmacia.setMaxInactiveInterval(10 * 60);
+                            response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
+                            break;
 
-                        sesion.setAdmin(s.usuarioAdmin(u.getIdUsuario()));
-                        sesion.setI(1);
+                        case "admin":
+                            HttpSession sessionAdmin = request.getSession();
 
-                        sessionAdmin.setAttribute("sesion", sesion);
-                        sessionAdmin.setMaxInactiveInterval(10 * 60);
-                        response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet");
+                            sesion.setAdmin(s.usuarioAdmin(u.getIdUsuario()));
+                            sesion.setI(1);
+
+                            sessionAdmin.setAttribute("sesion", sesion);
+                            sessionAdmin.setMaxInactiveInterval(10 * 60);
+                            response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet");
+                            break;
                     }
 
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/?estadoSesion=err");
+                    HttpSession session = request.getSession();
+                    session.setAttribute("errorLogin", "Correo o constraseña incorrecto");
+                    response.sendRedirect(request.getContextPath() + "/");
                 }
 
                 break;
-
         }
 
     }

@@ -16,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,8 @@ public class ClientServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+
         DtoSesion sesionCliente = (DtoSesion) request.getSession().getAttribute("sesion");
 
         if (sesionCliente != null) {
@@ -145,7 +148,6 @@ public class ClientServlet extends HttpServlet {
                         request.getSession().setAttribute("sessionClient", client);
                         pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
                         busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-                        //int idCliente = request.getParameter("id") == null ? 1 : Integer.parseInt(request.getParameter("id"));
                         idClient = client.getIdClient();
                         limiteProductos = 16;
 
@@ -260,10 +262,12 @@ public class ClientServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+
         HttpSession session = request.getSession();
         DtoSesion sesionCliente = (DtoSesion) request.getSession().getAttribute("sesion");
         BClient client = sesionCliente.getClient();
-        request.setCharacterEncoding("UTF-8");
         int idClient = client.getIdClient();
         String busqueda;
         ClientProductsDao clientProductsDao = new ClientProductsDao();
