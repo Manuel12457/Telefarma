@@ -33,12 +33,15 @@
     <!--Footer-->
     <div class="content border-top">
         <div class="user">
+            <div class="col">
+
+            </div>
             <div class="user-details ">
                 <!--Foto-->
                 <img src="${pageContext.request.contextPath}/res/img/images.png" alt="fotoUsuario">
                 <!--Rol-->
                 <div class="name-job">
-                    <div class="name"><%=nombre%></div>
+                    <div class="name" style="white-space: break-spaces; width: 80%;"><%=nombre%></div>
                     <div class="job">Usuario</div>
                 </div>
             </div>

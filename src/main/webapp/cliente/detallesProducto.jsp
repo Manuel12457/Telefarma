@@ -31,7 +31,8 @@
             <div class="card-header my-5"></div>
             <!--Detalles producto-->
             <div class="container">
-                <div class="row">
+                <div class="row border"
+                     style="border-radius: 0.45rem; align-items: center;">
                     <!--Imagen del producto-->
                     <div class="col-md-5">
                         <div class="row text-center">
@@ -40,7 +41,7 @@
                         </div>
                     </div>
                     <!--Info del producto-->
-                    <div class="col-md-7">
+                    <div class="col-md-7 mt-4">
                         <!--Nombre-->
                         <h3><%=producto.getNombre()%>
                         </h3>
@@ -56,7 +57,12 @@
                                     <!--Farmacia-->
                                     <tr>
                                         <th class="ps-0 w-25" scope="row">Farmacia</th>
-                                        <td><%=producto.getNombreFarmacia()%>
+                                        <td>
+                                            <a href="<%=request.getContextPath()%>/ClientServlet?action=farmaciaYProductos&idPharmacy=<%=producto.getIdFarmacia()%>"
+                                            style="text-decoration: none; color: inherit">
+                                                <%=producto.getNombreFarmacia()%>
+                                            </a>
+
                                         </td>
                                     </tr>
                                     <!--Stock-->

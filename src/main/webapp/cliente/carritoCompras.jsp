@@ -60,7 +60,12 @@
                             <div class="cart-items-container">
                                 <!--Nombre cabecera-->
                                 <h3 class="cart-header px-4 py-3">
-                                    <span><%=farmacia.getNombreFarmacia()%></span>
+                                    <span>
+                                        <a href="<%=request.getContextPath()%>/ClientServlet?action=farmaciaYProductos&idPharmacy=<%=farmacia.getIdPharmacy()%>"
+                                        style="color: inherit; text-decoration: none">
+                                            <%=farmacia.getNombreFarmacia()%>
+                                        </a>
+                                    </span>
                                     <div>
                                         <h6 class="mb-0">Fecha de Recojo:&nbsp;&nbsp;
                                             <input value="<%=farmacia.getIdPharmacy()%>" name="idFarmacia<%=i%>" hidden>
@@ -90,7 +95,11 @@
                                         <!--Info del producto-->
                                         <div class="pt-1 pt-md-3 ps-sm-3 ps-0 text-sm-start text-center">
                                             <!--Nombre-->
-                                            <h5 class="mb-sm-3 mb-1"><%=producto.getNombre()%>
+                                            <h5 class="mb-sm-3 mb-1">
+                                                <a href="<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProducto()%>"
+                                                   style="color: inherit; text-decoration: none">
+                                                    <%=producto.getNombre()%>
+                                                </a>
                                             </h5>
                                             <!--Precios-->
                                             <div>
