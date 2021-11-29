@@ -171,26 +171,30 @@
                                 <!--Tabla resumen-->
                                 <div class="table-responsive">
                                     <table class="table table-striped text-center mb-0">
+                                        <%
+                                            cont = 0;
+                                            for (DtoPharmacy farmacia : listaFarmacias) {
+                                        %>
                                         <thead>
+                                            <tr>
+                                                <th colspan="4" style="background-color: rgba(246,141,33,0.84); color:white;">
+                                                    <%=farmacia.getNombreFarmacia()%>
+                                                </th>
+                                            </tr>
                                             <tr>
                                                 <th scope="col">#</th>
                                                 <th scope="col">Producto</th>
-                                                <th scope="col">Farmacia</th>
                                                 <th scope="col">Subtotal</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <%
-                                                cont = 0;
-                                                for (DtoPharmacy farmacia : listaFarmacias) {
                                                     for (DtoProductoCarrito producto : listaCarrito.get(farmacia)) {
                                             %>
                                             <tr id="item-resumen-<%=cont%>">
                                                 <td class="cart-quantity-resumen text-center">
                                                 </td>
                                                 <td><%=producto.getNombre()%>
-                                                </td>
-                                                <td><%=producto.getNombreFarmacia()%>
                                                 </td>
                                                 <td class="cart-subtotal-resumen">
                                                 </td>

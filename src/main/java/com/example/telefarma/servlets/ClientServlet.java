@@ -272,7 +272,6 @@ public class ClientServlet extends HttpServlet {
         switch (request.getParameter("action")) {
 
             case "guardarCambios":
-
                 int countI = 0;
                 while (request.getParameter("idFarmacia" + countI) != null) {
                     int idFarmacia = Integer.parseInt(request.getParameter("idFarmacia" + countI));
@@ -304,22 +303,13 @@ public class ClientServlet extends HttpServlet {
                         HashMap<DtoPharmacy, ArrayList<DtoProductoCarrito>> listaCarrito = (HashMap<DtoPharmacy, ArrayList<DtoProductoCarrito>>) session.getAttribute("listaCarrito");
                         ArrayList<DtoPharmacy> listaFarmacias = new ArrayList<>(listaCarrito.keySet());
 
+                        //Guardar cantidad
                         for (DtoPharmacy farmacia : listaFarmacias) {
                             if (farmacia.getIdPharmacy() == idFarmacia) {
                                 ArrayList<DtoProductoCarrito> listaProductos = listaCarrito.get(farmacia);
                                 for (DtoProductoCarrito producto : listaProductos) {
                                     if (producto.getIdProducto() == idProducto) {
-                                        //Guardar cantidad
                                         producto.setCantidad(cantidad);
-
-                                        //Guardar receta
-                                        Part recetaPart = request.getPart("receta" + countI + "-" + j);
-                                        if (recetaPart.getSize() > 0) {
-                                            InputStream recetaStream = recetaPart.getInputStream();
-                                            producto.setReceta(recetaStream);
-                                        }
-
-                                        //Guardar cambios
                                         listaCarrito.put(farmacia, listaProductos);
                                         session.setAttribute("listaCarrito", listaCarrito);
                                         break;
