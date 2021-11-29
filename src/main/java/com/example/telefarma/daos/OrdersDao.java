@@ -10,7 +10,7 @@ public class OrdersDao extends BaseDao{
     public String generarOrden(int idClient, String pickUpDate) {
 
         String sql = "insert into orders (idClient, status, pickupDate, orderDate)\n" +
-                "values ("+idClient+",'Pendiente','"+pickUpDate+"',now());";
+                "values ("+idClient+",'Pendiente','"+pickUpDate+"',now(6));";
 
         String obtenerKey = "select idOrder from orders\n" +
                 "where idClient = "+idClient+"\n" +
