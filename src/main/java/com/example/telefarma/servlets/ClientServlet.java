@@ -54,6 +54,16 @@ public class ClientServlet extends HttpServlet {
                 int pagTotales;
                 int limiteProductos, idProduct;
                 int idClient;
+                int tamanoCarrito=0;
+                HttpSession session = request.getSession();
+                HashMap<DtoPharmacy, ArrayList<DtoProductoCarrito>> listaCarrito = (HashMap<DtoPharmacy, ArrayList<DtoProductoCarrito>>) session.getAttribute("listaCarrito");
+                ArrayList<DtoPharmacy> farmacias = new ArrayList<>(listaCarrito.keySet());
+                if(farmacias.size()>0){
+                    for (DtoPharmacy f : farmacias ){
+                        tamanoCarrito+=listaCarrito.get(f).size();
+                    }
+                }
+                request.setAttribute("tamanoCarrito",tamanoCarrito);
 
                 switch (action) {
 
@@ -212,9 +222,6 @@ public class ClientServlet extends HttpServlet {
                         break;
 
                     case "rmvFromCart":
-                        HttpSession session = request.getSession();
-                        HashMap<DtoPharmacy, ArrayList<DtoProductoCarrito>> listaCarrito = (HashMap<DtoPharmacy, ArrayList<DtoProductoCarrito>>) session.getAttribute("listaCarrito");
-                        ArrayList<DtoPharmacy> farmacias = new ArrayList<>(listaCarrito.keySet());
 
                         int i = Integer.parseInt(request.getParameter("farma"));
                         int j = Integer.parseInt(request.getParameter("product"));

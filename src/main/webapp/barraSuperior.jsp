@@ -5,6 +5,7 @@
     String servletBusqueda = request.getParameter("servletBusqueda");
     String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
     String busquedaPlaceholder = request.getParameter("busquedaPlaceholder");
+    String tamanoCarrito = request.getParameter("tamanoCarrito");
 %>
 
 
@@ -36,7 +37,11 @@
             <%if (tipoUsuario.equals("cliente")) {%>
             <a class="btn btn-tele-inverso" role="button" href="<%=request.getContextPath()%>/ClientServlet?action=verCarrito">
                 <div style="font-size: 0.60rem"> <!--para cambios más precisos del tamaño-->
-                    <i class="fas fa-cart-plus fa-3x"></i>
+                    <i class="fas fa-shopping-cart fa-3x"></i>
+                    <span class="badge-cart"
+                    style="-moz-border-radius: 9px; border-radius: 9px; font-size: 14px; font-weight: bolder; border-left: outset; background: rgb(235 90 58); color: #fff; padding: 0 5px; vertical-align: top; margin-left: -10px;">
+                        <%=tamanoCarrito%>
+                    </span>
                 </div>
             </a>
             <%}%>

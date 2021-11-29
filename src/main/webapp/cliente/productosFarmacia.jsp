@@ -8,7 +8,7 @@
 <jsp:useBean id="idPharmacy" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String" class="java.lang.String"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion" class="com.example.telefarma.dtos.DtoSesion"/>
-
+<jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -37,6 +37,7 @@
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
             <jsp:param name="servletBusqueda" value="<%=servletBusqueda%>"/>
             <jsp:param name="busquedaPlaceholder" value="<%=busquedaPlaceholder%>"/>
+            <jsp:param name="tamanoCarrito" value="<%=tamanoCarrito%>"/>
         </jsp:include>
 
         <!--Contenido-->

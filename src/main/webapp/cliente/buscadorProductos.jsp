@@ -5,7 +5,7 @@
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion" class="com.example.telefarma.dtos.DtoSesion"/>
-
+<jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
 <%String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");%>
 
 <!DOCTYPE html>
@@ -30,6 +30,7 @@
             <jsp:param name="nombre" value="<%=a%>"/>
             <jsp:param name="servletBusqueda" value="ClientServlet?action=buscarProduct"/>
             <jsp:param name="busquedaPlaceholder" value="Busca un producto"/>
+            <jsp:param name="tamanoCarrito" value="<%=tamanoCarrito%>"/>
         </jsp:include>
 
         <!--Contenido-->
