@@ -37,6 +37,9 @@ public class ClientServlet extends HttpServlet {
 
         if (sesionCliente != null) {
             BClient client = sesionCliente.getClient();
+            System.out.println(client.getName());
+            System.out.println(client.getLastName());
+            System.out.println(client.getDistrito());
 
             if (sesionCliente.getClient() != null) {
 
@@ -479,7 +482,7 @@ public class ClientServlet extends HttpServlet {
                 BClient clientS = sesionCliente.getClient();
                 clientS.setName(clientE.getName());
                 clientS.setLastName(clientE.getLastName());
-                clientS.setDistrito(clientS.getDistrito());
+                clientS.setDistrito(clientE.getDistrito());
 
                 DtoSesion sesion = new DtoSesion();
                 sesion.setClient(clientS);
