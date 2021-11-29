@@ -216,6 +216,7 @@ public class ClientServlet extends HttpServlet {
                         request.setAttribute("producto", productoCarrito);
 
                         //Vista
+
                         view = request.getRequestDispatcher("/cliente/carritoCompras.jsp");
                         view.forward(request, response);
 
@@ -381,6 +382,8 @@ public class ClientServlet extends HttpServlet {
                     }
                 }
 
+                String productoYaEnCarrito = "1";
+
                 if (farmaciaEncontrada) {
                     ArrayList<DtoProductoCarrito> listaProductos = listaCarrito.get(farmaciaRef);
                     boolean encontrado = false;
@@ -400,8 +403,10 @@ public class ClientServlet extends HttpServlet {
                 } else {
                     ArrayList<DtoProductoCarrito> listaProductos = new ArrayList<>(Arrays.asList(dtoProductoCarrito));
                     listaCarrito.put(dtoPharmacy, listaProductos);
+                    productoYaEnCarrito = "0";
                 }
 
+                request.getSession().setAttribute("productoEnCarrito", productoYaEnCarrito);
                 session.setAttribute("listaCarrito", listaCarrito);
                 response.sendRedirect(request.getContextPath() + "/ClientServlet?action=detallesProducto&idProduct=" + idProduct);
 

@@ -52,6 +52,11 @@
                     <div class="row">
                         <!--Productos en carrito-->
                         <div class="col-md-9 col-xl-8">
+                            <%if (listaCarrito.size() == 0) {%>
+                            <h5 class="mb-sm-3 mb-1">
+                                Aún no ha agregado ningún producto a su carrito
+                            </h5>
+                            <%}%>
                             <!--Items de la farmacia 1-->
                             <%
                                 int cont = 0;
@@ -224,7 +229,7 @@
                                     <span class="cart-total"></span>
                                 </div>
                                 <!--Boton pedir-->
-                                <button class="btn btn-tele btn-block" type="submit">
+                                <button class="btn btn-tele btn-block" type="submit" <%=listaCarrito.size() == 0 ? "disabled" : ""%>>
                                     Realizar pedido
                                 </button>
                             </div>

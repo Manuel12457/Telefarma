@@ -114,6 +114,32 @@
                                                 <button type="submit" class="btn btn-tele btn-md mr-1 mb-2">
                                                     <i class="fas fa-shopping-cart"></i> Añadir al carrito
                                                 </button>
+
+                                                    <%
+                                                    String alertClass = null;
+                                                    String alertMssg = null;
+                                                    String estadoRegistro = (String) session.getAttribute("productoEnCarrito");
+                                                    if (estadoRegistro != null) {
+                                                        if (!estadoRegistro.equals("")) {
+                                                            switch (estadoRegistro) {
+                                                                case "0":
+                                                                    alertClass = "alert-success";
+                                                                    alertMssg = "Producto agregado a su carrito!";
+                                                                    break;
+                                                                case "1":
+                                                                    alertClass = "alert-danger";
+                                                                    alertMssg = "Este producto ya se encuentra en su carrito";
+                                                                    break;
+                                                            }
+                                                        }
+
+                                                    %>
+                                                <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
+                                                    <%=alertMssg%>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                </div>
+                                                <%session.removeAttribute("productoEnCarrito");
+                                                } %>
                                             </td>
                                         </form>
                                     </tr>
