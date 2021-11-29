@@ -26,7 +26,7 @@
     </head>
     <body class="user-menu">
 
-    <%String nombreCliente = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
+    <%String nombreCliente = sesion.getClient().getName();%>
     <jsp:include page="../barraLateral.jsp">
         <jsp:param name="nombre" value="<%=nombreCliente%>"/>
     </jsp:include>

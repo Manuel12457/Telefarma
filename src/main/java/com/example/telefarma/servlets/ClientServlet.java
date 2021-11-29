@@ -105,7 +105,7 @@ public class ClientServlet extends HttpServlet {
                         request.getSession().setAttribute("sessionClient", client);
                         //Pagina a mostrar
                         pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
-                        int limite = 12;
+                        int limite = 9;
 
                         //Busqueda de ordenes del cliente
                         busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
