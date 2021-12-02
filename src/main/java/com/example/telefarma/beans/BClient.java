@@ -8,7 +8,17 @@ public class BClient {
     private String dni;
     private String password;
     private String mail;
-    private String distrito;
+    private BDistrict district;
+
+    public BClient(int idClient, String name, String lastName) {
+        this.idClient = idClient;
+        this.name = name;
+        this.lastName = lastName;
+    }
+
+    public BClient() {
+
+    }
 
     public String getName() {
         return name;
@@ -50,19 +60,19 @@ public class BClient {
         this.mail = mail;
     }
 
-    public String getDistrito() {
-        return distrito;
-    }
-
-    public void setDistrito(String distrito) {
-        this.distrito = distrito;
-    }
-
     public int getIdClient() {
         return idClient;
     }
 
     public void setIdClient(int idClient) {
         this.idClient = idClient;
+    }
+
+    public BDistrict getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(BDistrict district) {
+        this.district = district;
     }
 }

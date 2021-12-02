@@ -17,18 +17,9 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - Carrito de compras</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css"
-              type="text/css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css" type="text/css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-        <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
-    </head>
+    <jsp:include page="/includes/head.jsp">
+        <jsp:param name="title" value="Telefarma - Carrito de compras"/>
+    </jsp:include>
     <body>
         <!--Cabecera Principal cliente-->
         <%String nombreCliente = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
@@ -70,7 +61,7 @@
                                     <span>
                                         <a href="<%=request.getContextPath()%>/ClientServlet?action=farmaciaYProductos&idPharmacy=<%=farmacia.getIdPharmacy()%>"
                                         style="color: inherit; text-decoration: none">
-                                            <%=farmacia.getNombreFarmacia()%>
+                                            <%=farmacia.getName()%>
                                         </a>
                                     </span>
                                     <div>
@@ -96,25 +87,25 @@
                                     <div class="d-sm-flex">
                                         <!--Imagen del producto-->
                                         <div class="cart-item-thumb mx-auto">
-                                            <img src="<%=request.getContextPath()%>/Image?idProduct=<%=producto.getIdProducto()%>"
+                                            <img src="<%=request.getContextPath()%>/Image?idProduct=<%=producto.getIdProduct()%>"
                                                  class="img-carrito">
                                         </div>
                                         <!--Info del producto-->
                                         <div class="pt-1 pt-md-3 ps-sm-3 ps-0 text-sm-start text-center">
                                             <!--Nombre-->
                                             <h5 class="mb-sm-3 mb-1">
-                                                <a href="<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProducto()%>"
+                                                <a href="<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProduct()%>"
                                                    style="color: inherit; text-decoration: none">
-                                                    <%=producto.getNombre()%>
+                                                    <%=producto.getName()%>
                                                 </a>
                                             </h5>
                                             <!--Precios-->
                                             <div>
                                                 <span class="text-muted"><i class="fas fa-tag"></i> Precio:&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                                <span class="cart-price font-size-lgr ms-sm-2 ms-0 ">s/ <%=producto.getPrecio()%></span>
+                                                <span class="cart-price font-size-lgr ms-sm-2 ms-0 ">s/ <%=producto.getPrice()%></span>
                                             </div>
                                             <div>
-                                                <input value="<%=producto.getIdProducto()%>"
+                                                <input value="<%=producto.getIdProduct()%>"
                                                        name="idProducto<%=i%>-<%=j%>" hidden>
                                                 <span class="text-muted"><i class="fas fa-tags"></i> Subtotal:</span>
                                                 <span class="cart-subtotal-<%=cont%> font-size-lgr ms-sm-2 ms-0 "></span>
@@ -166,7 +157,7 @@
                                         <!--Botón borrar-->
                                         <a class="btn btn-danger btn-sm mt-sm-4 mt-2 w-100"
                                            href="<%=request.getContextPath()%>/ClientServlet?action=rmvFromCart&farma=<%=i%>&product=<%=j%>"
-                                           id="remove-<%=producto.getIdProducto()%>">
+                                           id="remove-<%=producto.getIdProduct()%>">
                                             <i class="far fa-trash-alt"></i>
                                         </a>
                                     </div>
@@ -194,7 +185,7 @@
                                         <thead>
                                             <tr>
                                                 <th colspan="4" style="background-color: rgba(246,141,33,0.84); color:white;">
-                                                    <%=farmacia.getNombreFarmacia()%>
+                                                    <%=farmacia.getName()%>
                                                 </th>
                                             </tr>
                                             <tr>
@@ -210,7 +201,7 @@
                                             <tr id="item-resumen-<%=cont%>">
                                                 <td class="cart-quantity-resumen text-center">
                                                 </td>
-                                                <td><%=producto.getNombre()%>
+                                                <td><%=producto.getName()%>
                                                 </td>
                                                 <td class="cart-subtotal-resumen">
                                                 </td>

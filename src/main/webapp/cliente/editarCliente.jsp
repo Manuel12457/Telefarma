@@ -2,19 +2,13 @@
 <jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"
              class="com.example.telefarma.dtos.DtoSesion"/>
+
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - Editar Usuario</title>
-        <link rel="stylesheet" href="<%=request.getContextPath()%>/res/bootstrap/css/bootstrap.min.css">
-        <link rel="stylesheet" href="<%=request.getContextPath()%>/res/css/estilos.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-        <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
-    </head>
+    <jsp:include page="/includes/head.jsp">
+        <jsp:param name="title" value="Telefarma - Editar Usuario"/>
+    </jsp:include>
+
     <body class="user-menu">
 
         <%String nombreCliente = sesion.getClient().getName();%>
@@ -61,7 +55,7 @@
                                                     <select class="form-select" name="distrito" id="farmaDistrict"
                                                             required>
                                                         <% for (String distrito : listaDistritosSistema) { %>
-                                                        <option value="<%=distrito%>" <%=sesion.getClient().getDistrito().equals(distrito) ? "selected" : ""%> ><%=distrito%>
+                                                        <option value="<%=distrito%>" <%=sesion.getClient().getDistrict().getName().equals(distrito) ? "selected" : ""%> ><%=distrito%>
                                                         </option>
                                                         <% } %>
                                                     </select>

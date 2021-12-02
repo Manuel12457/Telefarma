@@ -19,7 +19,6 @@ input, select {
     border: 1px solid #ced4da !important;
 }
 
-
 /*Tele radius*/
 
 .form-check-input:checked {
@@ -622,4 +621,36 @@ input[type=number] {
     max-width: 100%;
     height: 420px;
     object-fit: scale-down;
+}
+
+/*Login*/
+
+.a-login {
+    font-size: 14px;
+    color: #393f81;
+}
+
+.login-bg {
+    background-image: url('../img/freestocks-0-HAIyTj7Xw-unsplash.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
+}
+
+.responsive-login-form {
+    width: 50%;
+}
+
+@media (max-width: 768px) {
+    .responsive-login-form {
+        width: 100%!important;
+    }
+}
+
+.responsive-form {
+    width: 60%;
+}
+
+@media screen and (max-width: 992px) {
+    .responsive-form { width:100%; }
 }

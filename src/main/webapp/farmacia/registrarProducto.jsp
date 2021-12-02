@@ -4,18 +4,10 @@
 <html lang="en">
     <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
-    <meta charset=utf-8/>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - Registrar Producto</title>
-        <link rel="stylesheet" href="<%=request.getContextPath()%>/res/bootstrap/css/bootstrap.min.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="<%=request.getContextPath()%>/res/css/estilos.css">
-        <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
-    </head>
+    <jsp:include page="/includes/head.jsp">
+        <jsp:param name="title" value="Telefarma - Registrar Producto"/>
+    </jsp:include>
+
     <body>
         <section class="vh-100 ">
             <div class="container py-4 h-100">

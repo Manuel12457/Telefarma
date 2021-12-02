@@ -5,31 +5,23 @@
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String"/>
-<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion" class="com.example.telefarma.dtos.DtoSesion"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"
+             class="com.example.telefarma.dtos.DtoSesion"/>
 <%
     int idClient = sesion.getClient().getIdClient();
+    String nombreCliente = sesion.getClient().getName();
 %>
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - Historial de Compras</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css"
-              type="text/css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css" type="text/css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-        <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
-    </head>
-    <body class="user-menu">
-
-    <%String nombreCliente = sesion.getClient().getName();%>
-    <jsp:include page="../barraLateral.jsp">
-        <jsp:param name="nombre" value="<%=nombreCliente%>"/>
+    <jsp:include page="/includes/head.jsp">
+        <jsp:param name="title" value="Telefarma - Historial de Compras"/>
     </jsp:include>
+
+    <body class="user-menu">
+        <jsp:include page="../barraLateral.jsp">
+            <jsp:param name="nombre" value="<%=nombreCliente%>"/>
+        </jsp:include>
         <!--Card Historial de Compras-->
         <div class="container-transition">
             <div class="container-sidebar">
@@ -126,7 +118,7 @@
                                                 for (BOrderDetails details : orden.getListaDetails()) {
                                             %>
                                             <tr id="dt-<%=count%>" class="collapse cell-1 row-child-rows">
-                                                <td colspan="1"><%=details.getUnidades()%>
+                                                <td colspan="1"><%=details.getQuantity()%>
                                                 </td>
                                                 <td colspan="2"><%=details.getProducto()%>
                                                 </td>
@@ -135,9 +127,10 @@
                                                 <td colspan="1">s/ <%=String.format("%.2f", details.getPrecioTotal())%>
                                                 </td>
                                                 <td colspan="1">
-                                                    <% if (details.getRequierePrescripcion()) { %>
+                                                    <% if (details.getRequiereReceta()) { %>
                                                     <a class="text-white" data-bs-toggle="modal" role="button"
-                                                       data-bs-target="#dt-receta-<%=details.getOrder()%><%=details.getIdProduct()%>">Ver receta</a>
+                                                       data-bs-target="#dt-receta-<%=details.getIdOrder()%><%=details.getIdProduct()%>">Ver
+                                                        receta</a>
                                                     <% } else { %> - <% } %> <!--Sin receta-->
                                                 </td>
                                             </tr>
@@ -148,23 +141,26 @@
                                             <tr id="dt-<%=count%>" class="collapse cell-1 row-child">
                                                 <td colspan="7">
                                                     <%
-                                                    if(orden.getTimeDiff()>0){
+                                                        if (orden.getTimeDiff() > 0) {
                                                     %>
-                                                    <form method="post" action="<%=request.getContextPath()%>/ClientServlet?action=cancelarPedido&idOrder=<%=orden.getIdOrder()%>">
+                                                    <form method="post"
+                                                          action="<%=request.getContextPath()%>/ClientServlet?action=cancelarPedido&idOrder=<%=orden.getIdOrder()%>">
                                                         <button type="submit"
                                                                 class="btn btn-danger">
                                                             Cancelar pedido
                                                         </button>
                                                     </form>
                                                     <%
-                                                    }else{
+                                                    } else {
                                                     %>
                                                     <button type="button"
-                                                            class="btn btn-danger disabled" style="pointer-events: auto;" title="No se puede cancelar este pedido">
+                                                            class="btn btn-danger disabled"
+                                                            style="pointer-events: auto;"
+                                                            title="No se puede cancelar este pedido">
                                                         Cancelar pedido
                                                     </button>
                                                     <%
-                                                    }
+                                                        }
                                                     %>
                                                 </td>
                                             </tr>
@@ -190,12 +186,12 @@
         <%--Los modals se crean afuera para que estén fuera del background--%>
         <%
             for (BOrders orden : listaOrdenes) {
-                for (BOrderDetails details : orden.getListaDetails()){
-                    if (details.getRequierePrescripcion()){
+                for (BOrderDetails details : orden.getListaDetails()) {
+                    if (details.getRequiereReceta()) {
         %>
         <!--Modal Receta-->
         <div class="modal fade"
-             id="dt-receta-<%=details.getOrder()%><%=details.getIdProduct()%>"
+             id="dt-receta-<%=details.getIdOrder()%><%=details.getIdProduct()%>"
              tabindex="-1"
              aria-labelledby="recetaModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -208,7 +204,7 @@
                                 aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <img src="<%=request.getContextPath()%>/Image?idProduct=<%=details.getIdProduct()%>&idOrder=<%=details.getOrder()%>"
+                        <img src="<%=request.getContextPath()%>/Image?idProduct=<%=details.getIdProduct()%>&idOrder=<%=details.getIdOrder()%>"
                              style="max-height: 450px; max-width: 450px">
                     </div>
                 </div>

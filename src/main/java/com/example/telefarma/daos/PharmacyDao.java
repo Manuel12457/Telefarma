@@ -2,248 +2,280 @@ package com.example.telefarma.daos;
 
 import com.example.telefarma.beans.*;
 
-import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 
 public class PharmacyDao extends BaseDao {
 
-    public int cantidadProductos(String busqueda, int idFarmacia) {
-        int cantidad = 0;
+    public int cantidadDistritosConFarmacia() {
 
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("select count(*), p.name from product p " +
-                     "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy) " +
-                     "where lower(p.name) like '%" + busqueda + "%'and f.idPharmacy=" + idFarmacia + " ;")) {
+             ResultSet rs = stmt.executeQuery("select count(*) from (select District_name from pharmacy\n" +
+                     "where isBanned = 0\n" +
+                     "group by District_name) distFarm;")) {
 
             if (rs.next()) {
-                cantidad = rs.getInt(1);
+                return rs.getInt(1);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return cantidad;
+        return 0;
     }
 
-    public ArrayList<BProductVisualizacion> listaProductosFarmacia(int pagina, String busqueda, int idFarmacia, int limite) {
+    public ArrayList<String> listarDistritosLimite(int paginaDistritoCliente, int limite, int idClient) {
 
-        ArrayList<BProductVisualizacion> listaProductos = new ArrayList<>();
+        ArrayList<String> listaDistritosPagina = new ArrayList<>();
 
-        String sql = "select p.idProduct, p.name, p.description, p.stock, p.price, p.requiresPrescription from telefarma.product p\n" +
-                "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
-                "where lower(p.name) like '%" + busqueda + "%' and f.idPharmacy=" + idFarmacia + "\n" +
-                "limit " + limite * pagina + "," + limite + ";";
+        //Distritos ordenados por su cant. de farmacias (1ero distrito del cliente) + limit
+        String sqlObtenerDistritos = "select d.name from district d\n" +
+                "inner join (select District_name, \n" +
+                "count(idPharmacy) as `cantFarmacias`\n" +
+                "from pharmacy\n" +
+                "where isBanned = 0\n" +
+                "group by District_name) phCant\n" +
+                "on (d.name = phCant.District_name)\n" +
+                "order by (d.name = (select d.name from district d\n" +
+                "inner join client c\n" +
+                "                    on (d.name = c.District_name)\n" +
+                "                    where c.idClient = " + idClient + ")) desc,\n" +
+                "cantFarmacias desc\n" +
+                "limit " + paginaDistritoCliente * limite + "," + limite + ";";
 
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             ResultSet rs = stmt.executeQuery(sqlObtenerDistritos)) {
 
             while (rs.next()) {
-                BProductVisualizacion producto = new BProductVisualizacion();
-                producto.setIdProducto(rs.getInt(1));
-                producto.setNombre(rs.getString(2));
-                producto.setDescripcion(rs.getString(3));
-                producto.setStock(rs.getInt(4));
-                producto.setPrecio(rs.getDouble(5));
-                producto.setRequierePrescripcion(Byte.compare(rs.getByte(6), (byte) 0) != 0);
-                listaProductos.add(producto);
+                listaDistritosPagina.add(rs.getString(1));
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return listaProductos;
+        return listaDistritosPagina;
     }
 
-    public void agregarposibleEliminar(BProductVisualizacion producto) {
+    public int cantidadFarmaciasPorDistrito(String distrito, String busqueda) {
 
         try (Connection conn = this.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("select p.idProduct, o.idOrder from product p\n" +
-                     "inner join orderdetails od on (p.idProduct = od.idProduct)\n" +
-                     "inner join orders o on (od.idOrder = o.idOrder)\n" +
-                     "where p.idProduct = ?;");) {
+             PreparedStatement pstmt = conn.prepareStatement("select count(*) from (select * from pharmacy\n" +
+                     "where isBanned = 0 and District_name = '" + distrito + "'\n and " +
+                     "name like ?) cantFarma;");) {
 
-            pstmt.setInt(1, producto.getIdProducto());
+            pstmt.setString(1, "%" + busqueda + "%");
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                producto.setPosibleEliminar(!rs.next());
+
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return 0;
     }
 
-    public ArrayList<BOrders> listarOrdenes(int pagina, String busqueda, int limite, int id) {
+    public ArrayList<BPharmacy> listarFarmaciasPorDistrito(int pagina, String distrito, String busqueda, int limite) {
 
-        ArrayList<BOrders> listaOrdenes = new ArrayList<>();
+        ArrayList<BPharmacy> listaFarmaciasPorDistrito = new ArrayList<>();
+
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("select name, address, District_name, idPharmacy from pharmacy\n" +
+                     "where isBanned = 0 and District_name = '" + distrito + "'\n and " +
+                     "name like ?\n" +
+                     "limit " + limite * pagina + "," + limite + ";");) {
+
+            pstmt.setString(1, "%" + busqueda + "%");
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                while (rs.next()) {
+                    BPharmacy bFarmaciasCliente = new BPharmacy();
+                    bFarmaciasCliente.setName(rs.getString(1));
+                    bFarmaciasCliente.setAddress(rs.getString(2));
+                    bFarmaciasCliente.setDistrict(new BDistrict(rs.getString(3)));
+                    bFarmaciasCliente.setIdPharmacy(rs.getInt(4));
+                    listaFarmaciasPorDistrito.add(bFarmaciasCliente);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listaFarmaciasPorDistrito;
+    }
+
+    public ArrayList<BPharmacy> listarFarmaciasPorDistritoLimite(String distrito, int limite) {
+
+        ArrayList<BPharmacy> listaFarmaciasClientePorDistrito = new ArrayList<>();
+
+        //Farmacias por distrito + limit
+        String sqlObtenerFarmacias = "select name, address, District_name, idPharmacy from pharmacy\n" +
+                "where isBanned = 0 and District_name = '" + distrito + "'\n" +
+                "limit " + limite + ";";
 
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("select o.idOrder,o.status,concat(c.name,' ',c.lastName)," +
-                     "o.orderDate,o.pickUpDate,sum(p.price*od.quantity) as 'total'\n" +
-                     "from orders o \n" +
-                     "inner join orderdetails od on (od.idOrder=o.idOrder) \n" +
-                     "inner join product p on (p.idProduct=od.idProduct) \n" +
-                     "inner join client c on (o.idClient=c.idClient) \n" +
-                     "where p.idPharmacy=" + id + " and o.idOrder like '%" + busqueda + "%' \n" +
-                     "group by o.idOrder \n" +
-                     "order by o.orderDate desc \n" +
-                     "limit " + pagina * limite + "," + limite + ";")) {
+             ResultSet rs = stmt.executeQuery(sqlObtenerFarmacias)) {
 
             while (rs.next()) {
-                BOrders pharmacyOrders = new BOrders();
-                pharmacyOrders.setIdOrder(rs.getString(1));
-                pharmacyOrders.setEstado(rs.getString(2));
-                pharmacyOrders.setNombreCliente(rs.getString(3));
-                String dtOrden = rs.getString(4);
-                pharmacyOrders.setFechaOrden(dtOrden.substring(0, 10) + " - " + dtOrden.substring(11, 16));
-                String dtRecojo = rs.getString(5);
-                pharmacyOrders.setFechaRecojo(dtRecojo.substring(0, 10) + " - " + dtRecojo.substring(11, 16));
-                pharmacyOrders.setTotal(rs.getDouble(6));
-                listaOrdenes.add(pharmacyOrders);
+                BPharmacy bFarmaciasCliente = new BPharmacy();
+                bFarmaciasCliente.setName(rs.getString(1));
+                bFarmaciasCliente.setAddress(rs.getString(2));
+                bFarmaciasCliente.setDistrict(new BDistrict(rs.getString(3)));
+                bFarmaciasCliente.setIdPharmacy(rs.getInt(4));
+                listaFarmaciasClientePorDistrito.add(bFarmaciasCliente);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return listaOrdenes;
+        return listaFarmaciasClientePorDistrito;
     }
 
-    public void agregarOrderDetails(BOrders orden) {
-
-        ArrayList<BOrderDetails> listaDetails = new ArrayList<>();
-
-        String sql = "select o.idOrder,od.quantity,p.name,p.price,p.price*od.quantity as 'totalProducto',p.idProduct,p.requiresPrescription \n" +
-                "from telefarma.orders o \n" +
-                "inner join orderdetails od on (od.idOrder=o.idOrder) \n" +
-                "inner join product p on (p.idProduct=od.idProduct) \n" +
-                "where o.idOrder='" + orden.getIdOrder() + "';";
-
-        try (Connection conn = this.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
-            while (rs.next()) {
-                BOrderDetails orderDetails = new BOrderDetails();
-                orderDetails.setOrder(rs.getString(1));
-                orderDetails.setUnidades(rs.getInt(2));
-                orderDetails.setProducto(rs.getString(3));
-                orderDetails.setPrecioUnit(rs.getDouble(4));
-                orderDetails.setPrecioTotal(rs.getDouble(5));
-                orderDetails.setIdProduct(rs.getInt(6));
-                orderDetails.setRequierePrescripcion(rs.getBoolean(7));
-                listaDetails.add(orderDetails);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        orden.setListaDetails(listaDetails);
-    }
-
-    public void agregarDayDiff(BOrders orden) {
-
-        String sql = "select pickUpDate,timestampdiff(SQL_TSI_DAY,pickUpDate,now()) \n" +
-                "from telefarma.orders o \n" +
-                "where o.idOrder='" + orden.getIdOrder() + "' ;";
-
-        try (Connection conn = this.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
-            while (rs.next()) {
-                orden.setDayDiff(rs.getInt(2));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void cambiarEstadoPedido(String nuevoEstado, String idOrder) {
-
-        String sql = "update orders set status=? \n" +
-                "where idOrder=?;";
+    public boolean existeRUC(String ruc) {
+        String sql = "select idPharmacy,RUC from pharmacy where RUC = ?;";
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
-            pstmt.setString(1, nuevoEstado);
-            pstmt.setString(2, idOrder);
-            pstmt.executeUpdate();
+            pstmt.setString(1, ruc);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) return true;
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+        return false;
     }
 
-    public boolean registrarProducto(BProduct producto) { //retorna falso si surge una excepcion
+    public ArrayList<String> listarDistritosLimite(int paginaDistritoAdmin, String busqueda, int limite) {
 
-        String sql = "insert into telefarma.product (idPharmacy,name,description,stock,price,requiresPrescription)\n" +
-                "values (?,?,?,?,?,?)";
+        ArrayList<String> listaDistritosPagina = new ArrayList<>();
+
+        /*OBTENGO TODOS LOS DISTRITOS CON FARMACIAS QUE COINCIDAN CON LA BUSQUEDA*/
+        String sqlObtenerDistritos = "select f.District_name from telefarma.pharmacy f \n" +
+                "where lower(f.name) like '%" + busqueda + "%'\n" +
+                "group by District_name \n" +
+                "order by count(*) desc \n" +
+                "limit " + paginaDistritoAdmin * limite + "," + limite + ";";
+
+        try (Connection conn = this.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sqlObtenerDistritos)) {
+
+            while (rs.next()) {
+                listaDistritosPagina.add(rs.getString(1));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listaDistritosPagina;
+
+    }
+
+    public BPharmacy obtenerFarmaciaPorId(int id) {
+        BPharmacy farmacia = new BPharmacy();
+
+        String sql = "select * from telefarma.pharmacy\n" +
+                "where idPharmacy = ?;";
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
-            pstmt.setInt(1, producto.getIdFarmacia());
-            pstmt.setString(2, producto.getNombre());
-            pstmt.setString(3, producto.getDescripcion());
-            pstmt.setInt(4, producto.getStock());
-            pstmt.setDouble(5, producto.getPrecio());
-            pstmt.setByte(6, producto.getRequierePrescripcion() ? (byte) 1 : (byte) 0);
+            pstmt.setInt(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    farmacia.setRUC(rs.getString(2));
+                    farmacia.setName(rs.getString(3));
+                    farmacia.setMail(rs.getString(4));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return farmacia;
+    }
+
+    public ArrayList<BPharmacy> listarFarmaciasAdminPorDistrito(String distrito, String busqueda) {
+
+        ArrayList<BPharmacy> listaFarmaciasAdminPorDistrito = new ArrayList<>();
+
+        /*OBTENGO LAS FARMACIAS DE LOS DISTRITOS QUE SE MOSTRARAN POR PAGINA*/
+        String sqlObtenerFarmacias = "select name, address, mail, RUC, District_name, isBanned, idPharmacy from telefarma.pharmacy\n" +
+                "where lower(name) like '%" + busqueda + "%' and District_name = '" + distrito + "';";
+
+        try (Connection conn = this.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sqlObtenerFarmacias)) {
+
+            while (rs.next()) {
+                BPharmacy bPharmacy = new BPharmacy();
+                bPharmacy.setName(rs.getString(1));
+                bPharmacy.setAddress(rs.getString(2));
+                bPharmacy.setMail(rs.getString(3));
+                bPharmacy.setRUC(rs.getString(4));
+                bPharmacy.setDistrict(new BDistrict(rs.getString(5)));
+                bPharmacy.setIsBanned(rs.getByte(6));
+                bPharmacy.setIdPharmacy(rs.getInt(7));
+                listaFarmaciasAdminPorDistrito.add(bPharmacy);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listaFarmaciasAdminPorDistrito;
+    }
+
+    public boolean registrarFarmacia(String ruc, String nombre, String correo, String direccion, String distrito) {
+        String sql = "insert into telefarma.pharmacy (RUC,name,mail,address,District_name) values(?,?,?,?,?);";
+
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setString(1, ruc);
+            pstmt.setString(2, nombre);
+            pstmt.setString(3, correo);
+            pstmt.setString(4, direccion);
+            pstmt.setString(5, distrito);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
-
         return true;
     }
 
-    public int retornarUltimaIdProducto(int idFarmacia) {
-        int idProducto = 0; //Requiere inicializacion
-
-        ArrayList<BOrderDetails> listaDetails = new ArrayList<>();
-
-        String sql = "select idProduct from product where idPharmacy=" + idFarmacia + " \n" +
-                "order by idProduct desc \n" +
-                "limit 1;";
-
-        try (Connection conn = this.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
-            while (rs.next()) {
-                idProducto = rs.getInt(1);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return idProducto;
-    }
-
-    public boolean anadirImagenProducto(int idProducto, InputStream imagenProducto) {
-
-        String sql = "update product " +
-                "set photo = ? " +
-                "where idProduct=?";
+    public boolean editarFarmacia(String ruc, String nombre, String correo, String direccion, String distrito, int idPharmacy) {
+        String sql = "update pharmacy set RUC = ?,name = ?,mail = ?,address = ?,District_name = ? where idPharmacy = ?;";
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
-            pstmt.setBinaryStream(1, imagenProducto);
-            pstmt.setInt(2, idProducto);
+            pstmt.setString(1, ruc);
+            pstmt.setString(2, nombre);
+            pstmt.setString(3, correo);
+            pstmt.setString(4, direccion);
+            pstmt.setString(5, distrito);
+            pstmt.setInt(6, idPharmacy);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -251,88 +283,61 @@ public class PharmacyDao extends BaseDao {
             return false;
         }
         return true;
+
     }
 
-    public boolean productoPerteneceFarmacia(int idProducto, int idFarmacia) {
+    public void banearFarmacia(int id, String razon) {
+        String sql = "update pharmacy set isBanned=1, banReason='" + razon + "'\n" +
+                "where idPharmacy=" + id + ";";
 
-        int count = 0;
+        try (Connection conn = this.getConnection();
+             Statement stmt = conn.createStatement();) {
+
+            stmt.executeUpdate(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void desBanearFarmacia(int id) {
+
+        String sql = "update pharmacy set isBanned=0, banReason=null\n" +
+                "where idPharmacy=" + id + ";";
+
+        try (Connection conn = this.getConnection();
+             Statement stmt = conn.createStatement();) {
+
+            stmt.executeUpdate(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public BPharmacy datosFarmacia(int idFarmacia) {
+
+        BPharmacy pharmacy = new BPharmacy();
 
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("select count(*) from product " +
-                     "where idProduct=" + idProducto + " and idPharmacy=" + idFarmacia + ";")) {
+             ResultSet rs = stmt.executeQuery("select name,District_name,address from pharmacy\n" +
+                     "where idPharmacy=" + idFarmacia + ";")) {
 
             if (rs.next()) {
-                count = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return count == 1;
-    }
-
-    public BProduct obtenerProducto(int idProducto) {
-
-        BProduct producto = new BProduct();
-        producto.setIdProducto(idProducto);
-        String sql = "select name, description, stock, price, requiresPrescription from telefarma.product " +
-                "where idProduct=" + idProducto + ";";
-
-        try (Connection conn = this.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
-            while (rs.next()) {
-                producto.setNombre(rs.getString(1));
-                producto.setDescripcion(rs.getString(2));
-                producto.setStock(rs.getInt(3));
-                producto.setPrecio(rs.getDouble(4));
-                producto.setRequierePrescripcion(Byte.compare(rs.getByte(5), (byte) 0) != 0);
+                pharmacy.setIdPharmacy(idFarmacia);
+                pharmacy.setName(rs.getString(1));
+                pharmacy.setDistrict(new BDistrict(rs.getString(2)));
+                pharmacy.setAddress(rs.getString(3));
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return producto;
-    }
-
-    public boolean editarProducto(BProduct producto) {
-        String sql = "update telefarma.product set name=?,description=?,stock=?,price=?,requiresPrescription=? " +
-                "where idProduct=?";
-
-        try (Connection conn = this.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);) {
-
-            pstmt.setString(1, producto.getNombre());
-            pstmt.setString(2, producto.getDescripcion());
-            pstmt.setInt(3, producto.getStock());
-            pstmt.setDouble(4, producto.getPrecio());
-            pstmt.setByte(5, producto.getRequierePrescripcion() ? (byte) 1 : (byte) 0);
-            pstmt.setDouble(6, producto.getIdProducto());
-            pstmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    public void eliminarProducto(int idProducto) {
-        String sql = "delete from telefarma.product where (idProduct=?);";
-
-        try (Connection conn = this.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);) {
-
-            pstmt.setInt(1, idProducto);
-            pstmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        return pharmacy;
     }
 
 }

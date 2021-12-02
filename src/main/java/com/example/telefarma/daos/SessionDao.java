@@ -2,6 +2,7 @@ package com.example.telefarma.daos;
 
 import com.example.telefarma.beans.BAdmin;
 import com.example.telefarma.beans.BClient;
+import com.example.telefarma.beans.BDistrict;
 import com.example.telefarma.beans.BPharmacy;
 import com.example.telefarma.dtos.DtoUsuario;
 
@@ -10,89 +11,54 @@ import java.util.HashMap;
 
 public class SessionDao extends BaseDao {
 
-    public DtoUsuario validarCorreoContrasenha(String mail, String contrasenha) {
-
-        DtoUsuario usuario = new DtoUsuario();
-
-        String sql = "select idClient as 'id','client' as 'tipo' from telefarma.client\n" +
-                "where mail = ? and password = ?\n" +
-                "union\n" +
-                "select idPharmacy,'pharmacy' from telefarma.pharmacy\n" +
-                "where mail = ? and password = ?\n" +
-                "union\n" +
-                "select idAdmin,'admin' from telefarma.administrator\n" +
-                "where mail = ? and password = ?;";
-
-        try (Connection conn = this.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);) {
-
-            pstmt.setString(1,mail);
-            pstmt.setString(2,contrasenha);
-            pstmt.setString(3,mail);
-            pstmt.setString(4,contrasenha);
-            pstmt.setString(5,mail);
-            pstmt.setString(6,contrasenha);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if(rs.next()) {
-
-                    String id = rs.getString(1);
-                    String tipo = rs.getString(2);
-                    usuario.setIdUsuario(Integer.parseInt(id));
-                    usuario.setTipoUsuario(tipo);
-                }
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return usuario;
-
-    }
-
     public boolean dniExiste(String dni) {
-        String sql = "select * from telefarma.client where DNI = ?;";
+        String sql = "select * from client where DNI = ?;";
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
             pstmt.setString(1, dni);
             try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return false;
-                }
+                if (rs.next()) return true;
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return true;
 
+        return false;
     }
 
-    public boolean mailExiste(String mail) {
-
-        String sql = "select * from telefarma.client where mail = ?;";
+    public boolean correoExiste(String correo) {
+        String sql = "select idClient as 'id',mail,'client' as 'tipo' from client\n" +
+                "where mail = ?\n" +
+                "union\n" +
+                "select idPharmacy,mail,'pharmacy' from pharmacy\n" +
+                "where mail = ?\n" +
+                "union\n" +
+                "select idAdmin,mail,'admin' from administrator\n" +
+                "where mail = ?;";
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
-            pstmt.setString(1, mail);
+            pstmt.setString(1,correo);
+            pstmt.setString(2,correo);
+            pstmt.setString(3,correo);
+
             try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return false;
-                }
+                if (rs.next()) return true;
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return true;
 
+        return false;
     }
 
     public String registrarUsuario(BClient client) {
-        String sql = "insert into telefarma.client (name,lastName,DNI,password,mail,District_name)\n" +
+        String sql = "insert into client (name,lastName,DNI,password,mail,District_name)\n" +
                 "values (?,?,?,?,?,?);";
 
         try (Connection conn = this.getConnection();
@@ -103,19 +69,34 @@ public class SessionDao extends BaseDao {
             pstmt.setString(3, client.getDni());
             pstmt.setString(4, client.getPassword());
             pstmt.setString(5, client.getMail());
-            pstmt.setString(6, client.getDistrito());
+            pstmt.setString(6, client.getDistrict().getName());
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
             return "ne";
         }
-        return "e";
 
+        return "e";
+    }
+
+    public void cambiarPassword(String token, String rol, String password) {
+
+        String sql1 = "update " + rol + " set password = '" + password + "' where rstPassToken = '" + token + "';";
+        String sql2 = "update " + rol + " set rstPassToken = null where rstPassToken = '" + token + "';";
+
+        try (Connection conn = this.getConnection();
+             Statement stmt = conn.createStatement();) {
+
+            stmt.executeUpdate(sql1);
+            stmt.executeUpdate(sql2);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public HashMap<Integer, String> validarCorreo(String correo) {
-
         HashMap<Integer, String> hm = new HashMap<>();
 
         String sql = "select idClient as 'id','client' as 'tipo' from telefarma.client\n" +
@@ -131,17 +112,15 @@ public class SessionDao extends BaseDao {
             pstmt.setString(2, correo);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) { //El correo ingresado existe
-                    hm.put(rs.getInt(1), rs.getString(2));
-                }
+                if (rs.next()) hm.put(rs.getInt(1), rs.getString(2));
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
 
         }
-        return hm;
 
+        return hm;
     }
 
     public void loadToken(String token, String rol, int id) {
@@ -165,12 +144,12 @@ public class SessionDao extends BaseDao {
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql);) {
 
-
             return rs.next();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return false;
     }
 
@@ -193,23 +172,6 @@ public class SessionDao extends BaseDao {
         return false;
     }
 
-
-    public void cambiarPassword(String token, String rol, String password) {
-
-        String sql1 = "update " + rol + " set password = '" + password + "' where rstPassToken = '" + token + "';";
-        String sql2 = "update " + rol + " set rstPassToken = null where rstPassToken = '" + token + "';";
-
-        try (Connection conn = this.getConnection();
-             Statement stmt = conn.createStatement();) {
-
-            stmt.executeUpdate(sql1);
-            stmt.executeUpdate(sql2);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void borrarToken(String token, String rol) {
 
         String sql1 = "update " + rol + " set rstPassToken = null where rstPassToken = '" + token + "';";
@@ -222,6 +184,44 @@ public class SessionDao extends BaseDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public DtoUsuario validarCorreoContrasenha(String mail, String contrasenha) {
+        DtoUsuario usuario = new DtoUsuario();
+
+        String sql = "select idClient as 'id','client' as 'tipo' from client\n" +
+                "where mail = ? and password = ?\n" +
+                "union\n" +
+                "select idPharmacy,'pharmacy' from pharmacy\n" +
+                "where mail = ? and password = ?\n" +
+                "union\n" +
+                "select idAdmin,'admin' from administrator\n" +
+                "where mail = ? and password = ?;";
+
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+            pstmt.setString(1,mail);
+            pstmt.setString(2,contrasenha);
+            pstmt.setString(3,mail);
+            pstmt.setString(4,contrasenha);
+            pstmt.setString(5,mail);
+            pstmt.setString(6,contrasenha);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if(rs.next()) {
+                    String id = rs.getString(1);
+                    String tipo = rs.getString(2);
+                    usuario.setIdUsuario(Integer.parseInt(id));
+                    usuario.setTipoUsuario(tipo);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return usuario;
     }
 
     public BAdmin usuarioAdmin(int id) {
@@ -264,7 +264,7 @@ public class SessionDao extends BaseDao {
                     client.setDni(rs.getString(4));
                     client.setPassword(rs.getString(5));
                     client.setMail(rs.getString(6));
-                    client.setDistrito(rs.getString(7));
+                    client.setDistrict(new BDistrict(rs.getString(7)));
                 }
             }
 
@@ -286,14 +286,14 @@ public class SessionDao extends BaseDao {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while(rs.next()) {
                     farmacia.setIdPharmacy(rs.getInt(1));
-                    farmacia.setRUCFarmacia(rs.getString(2));
-                    farmacia.setNombreFarmacia(rs.getString(3));
-                    farmacia.setEmailFarmacia(rs.getString(4));
+                    farmacia.setRUC(rs.getString(2));
+                    farmacia.setName(rs.getString(3));
+                    farmacia.setMail(rs.getString(4));
                     farmacia.setPassword(rs.getString(5));
-                    farmacia.setDireccionFarmacia(rs.getString(6));
+                    farmacia.setAddress(rs.getString(6));
                     farmacia.setIsBanned(rs.getByte(7));
                     farmacia.setBanReason(rs.getString(8));
-                    farmacia.setDistritoFarmacia(rs.getString(9));
+                    farmacia.setDistrict(new BDistrict(rs.getString(9)));
                 }
             }
 

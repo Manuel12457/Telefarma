@@ -1,28 +1,31 @@
 package com.example.telefarma.beans;
 
 public class BOrderDetails {
-    private String order;
-    private int unidades;
+
+    private int idProduct;
+    private String idOrder;
+    private int quantity;
+    // faltaría prescription ? no, no? XD
+    // DTO? :
     private String producto;
     private double precioUnit;
     private double precioTotal;
-    private int idProduct;
-    private boolean requierePrescripcion;
+    private boolean requiereReceta;
 
-    public String getOrder() {
-        return order;
+    public String getIdOrder() {
+        return idOrder;
     }
 
-    public void setOrder(String order) {
-        this.order = order;
+    public void setIdOrder(String idOrder) {
+        this.idOrder = idOrder;
     }
 
-    public int getUnidades() {
-        return unidades;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setUnidades(int unidades) {
-        this.unidades = unidades;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public String getProducto() {
@@ -57,11 +60,11 @@ public class BOrderDetails {
         this.idProduct = idProduct;
     }
 
-    public boolean getRequierePrescripcion() {
-        return requierePrescripcion;
+    public boolean getRequiereReceta() {
+        return requiereReceta;
     }
 
-    public void setRequierePrescripcion(boolean requierePrescripcion) {
-        this.requierePrescripcion = requierePrescripcion;
+    public void setRequiereReceta(boolean requiereReceta) {
+        this.requiereReceta = requiereReceta;
     }
 }

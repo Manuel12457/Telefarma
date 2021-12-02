@@ -3,18 +3,11 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - Inicio sesión</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/style.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    </head>
-    <body>
+    <jsp:include page="/includes/head.jsp">
+        <jsp:param name="title" value="Telefarma - Inicio Sesión"/>
+    </jsp:include>
+
+    <body class="login-bg">
         <section class="vh-100">
             <div class="container py-2 h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
@@ -66,11 +59,13 @@
                                                 </button>
                                             </div>
                                             <!--Contraseña olvidada-->
-                                            <a href="<%=request.getContextPath()%>/?action=mail">¿Olvidó
+                                            <a class="a-login" href="<%=request.getContextPath()%>/?action=mail">¿Olvidó
                                                 su contraseña?</a>
                                             <!--Registrarse-->
-                                            <p class="mb-5 pb-lg-2" style="color: #393f81;">¿Eres nuevo aquí? <a
-                                                    href="<%=request.getContextPath()%>/?action=registrarForm">Regístrate</a>
+                                            <p class="mb-5 pb-lg-2" style="color: #393f81;">¿Eres nuevo aquí?
+                                                <a class="a-login"
+                                                   href="<%=request.getContextPath()%>/?action=registrarForm">
+                                                    Regístrate</a>
                                             </p>
                                         </form>
                                     </div>

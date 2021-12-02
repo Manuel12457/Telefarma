@@ -2,19 +2,12 @@
 
 <!DOCTYPE html>
 <html lang="en">
+    <jsp:include page="/includes/head.jsp">
+        <jsp:param name="title" value="Telefarma - Registro exitoso"/>
+    </jsp:include>
+    <meta http-equiv="Refresh" content="5;url=<%=request.getContextPath()%>/">
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - Cambio de constraseña</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Andika&amp;display=swap">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/style.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css">
-        <meta http-equiv="Refresh" content="5;url=<%=request.getContextPath()%>/">
-    </head>
-
-    <body>
+    <body class="login-bg">
         <section
                 class="d-flex flex-grow-1 flex-shrink-1 p-4 justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center align-items-xl-center vh-100"
                 style="min-height: auto;">
@@ -27,7 +20,7 @@
                         <div class="container" style="width: 70%">
                             <div class="row my-4 text-center">
                                 <h4>Usted se ha registrado con éxito</h4>
-                                <a class="text-center" href="<%=request.getContextPath()%>/">Volver al Inicio de
+                                <a class="text-center a-login" href="<%=request.getContextPath()%>/">Volver al Inicio de
                                     Sesión</a>
                             </div>
                         </div>

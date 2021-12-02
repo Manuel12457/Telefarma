@@ -8,22 +8,15 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - Gestión de Pedidos</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-        <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
-    </head>
+    <jsp:include page="/includes/head.jsp">
+        <jsp:param name="title" value="Telefarma - Gestión de Pedidos"/>
+    </jsp:include>
+
     <body>
         <%--Cabecera de farmacia--%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="farmacia"/>
-            <jsp:param name="nombre" value="<%=sesion.getPharmacy().getNombreFarmacia()%>"/>
+            <jsp:param name="nombre" value="<%=sesion.getPharmacy().getName()%>"/>
             <jsp:param name="servletBusqueda" value="PharmacyServlet?action=buscarPedido&"/>
             <jsp:param name="busquedaPlaceholder" value="Busca un pedido"/>
         </jsp:include>
@@ -92,7 +85,7 @@
                                         }
                                     %>
                                     <td><span class="<%=btnClass%>"><%=estado%></span></td>
-                                    <td><%=orden.getNombreCliente()%>
+                                    <td><%=orden.getClient().getName() + " " + orden.getClient().getLastName()%>
                                     </td>
                                     <td><%=orden.getFechaRecojo()%>
                                     </td>
@@ -136,7 +129,7 @@
                                         countOrderProduct++;
                                 %>
                                 <tr id="dt-<%=countOrder%>" class="collapse cell-1 row-child-rows">
-                                    <td colspan="1"><%=details.getUnidades()%>
+                                    <td colspan="1"><%=details.getQuantity()%>
                                     </td>
                                     <td colspan="3"><%=details.getProducto()%>
                                     </td>
@@ -145,7 +138,7 @@
                                     <td colspan="1">s/ <%=String.format("%.2f", details.getPrecioTotal())%>
                                     </td>
                                     <td colspan="2">
-                                    <% if (details.getRequierePrescripcion()) { %>
+                                        <% if (details.getRequiereReceta()) { %>
                                         <a class="text-white" data-bs-toggle="modal" role="button"
                                            data-bs-target="#dt-receta-<%=countOrderProduct%>">Ver receta</a>
                                         <!--Modal Receta-->
@@ -159,13 +152,13 @@
                                                                 data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <img src="<%=request.getContextPath()%>/Image?idProduct=<%=details.getIdProduct()%>&idOrder=<%=details.getOrder()%>"
+                                                        <img src="<%=request.getContextPath()%>/Image?idProduct=<%=details.getIdProduct()%>&idOrder=<%=details.getIdOrder()%>"
                                                              style="max-height: 450px; max-width: 450px">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    <% } else { %> - <% } %> <!--Sin receta-->
+                                        <% } else { %> - <% } %> <!--Sin receta-->
                                     </td>
                                 </tr>
                                 <%

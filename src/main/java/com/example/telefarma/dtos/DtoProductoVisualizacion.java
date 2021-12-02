@@ -1,6 +1,8 @@
-package com.example.telefarma.beans;
+package com.example.telefarma.dtos;
 
-public class BProductVisualizacion extends BProduct {
+import com.example.telefarma.beans.BProduct;
+
+public class DtoProductoVisualizacion extends BProduct {
     private boolean posibleEliminar;
 
     public boolean getPosibleEliminar() {
@@ -10,4 +12,5 @@ public class BProductVisualizacion extends BProduct {
     public void setPosibleEliminar(boolean posibleEliminar) {
         this.posibleEliminar = posibleEliminar;
     }
+
 }

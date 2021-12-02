@@ -8,27 +8,18 @@
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String" class="java.lang.String"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion" class="com.example.telefarma.dtos.DtoSesion"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
+<%
+    String servletBusqueda = "ClientServlet?action=buscarFarmaciaDeDistrito&district=" + district + "&";
+    String busquedaPlaceholder = "Busca una farmacia en " + district;
+%>
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - <%=district%>
-        </title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css"
-              type="text/css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css" type="text/css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-        <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
-    </head>
+    <jsp:include page="/includes/head.jsp">
+        <jsp:param name="title" value="Telefarma - <%=district%>"/>
+    </jsp:include>
+
     <body>
-        <%
-            String servletBusqueda = "ClientServlet?action=buscarFarmaciaDeDistrito&district=" + district + "&";
-            String busquedaPlaceholder = "Busca una farmacia en " + district;
-        %>
         <!--Barra de Navegación Superior-->
         <%String nombreCliente = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
@@ -64,12 +55,12 @@
                             <div class="col">
                                 <div onclick="location.href='<%= request.getContextPath()%>/ClientServlet?action=farmaciaYProductos&idPharmacy=<%= farmacia.getIdPharmacy() %>'"
                                      class="card card-farmacia f<%= imageCount %>">
-                                    <h2><%= farmacia.getNombreFarmacia() %>
+                                    <h2><%= farmacia.getName() %>
                                     </h2>
                                     <ul>
                                         <li>
                                             <i class="fas fa-map-marker-alt fa-xs"></i>
-                                            <small>&nbsp;&nbsp;<%= farmacia.getDireccionFarmacia() %>
+                                            <small>&nbsp;&nbsp;<%= farmacia.getAddress() %>
                                             </small>
                                         </li>
                                     </ul>

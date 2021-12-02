@@ -4,24 +4,17 @@
              type="java.util.ArrayList<com.example.telefarma.beans.BProduct>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion" class="com.example.telefarma.dtos.DtoSesion"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"
+             class="com.example.telefarma.dtos.DtoSesion"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
 <%String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");%>
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - Buscar Producto X</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css"
-              type="text/css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css" type="text/css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-        <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
-    </head>
+    <jsp:include page="/includes/head.jsp">
+        <jsp:param name="title" value="Telefarma - Buscar Producto"/>
+    </jsp:include>
+
     <body>
         <!--Barra de Navegación Superior-->
         <%String a = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
@@ -51,27 +44,28 @@
                             <%--Loop de productos--%>
                             <% for (BProduct producto : listaProductosBusqueda) { %>
                             <div class="col">
-                                <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProducto()%>'"
+                                <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProduct()%>'"
                                      class="card card-producto">
                                     <div class="card-header">
-                                        <h6><%= producto.getNombre() %>
+                                        <h6><%= producto.getName() %>
                                         </h6>
                                     </div>
                                     <div class="card-body d-flex flex-column">
-                                        <img src="${pageContext.request.contextPath}/Image?idProduct=<%= producto.getIdProducto() %>"
+                                        <img src="${pageContext.request.contextPath}/Image?idProduct=<%= producto.getIdProduct() %>"
                                              class="card-img-top mb-1"
                                              aria-label="Producto">
                                         <div class="mt-auto">
                                             <div class="d-flex justify-content-around">
-                                                <h6 class="text-dark">Farmacia: <%= producto.getNombreFarmacia() %>
+                                                <h6 class="text-dark">Farmacia: <%= producto.getPharmacy().getName() %>
                                                 </h6>
                                             </div>
                                             <div class="d-flex justify-content-around">
-                                                <h6 class="text-dark">Distrito: <%= producto.getDistritoFarmacia() %>
+                                                <h6 class="text-dark">
+                                                    Distrito: <%= producto.getPharmacy().getDistrict().getName() %>
                                                 </h6>
                                             </div>
                                             <div class="d-flex justify-content-around">
-                                                <h5 class="text-dark">S/ <%= producto.getPrecio() %>
+                                                <h5 class="text-dark">S/ <%= producto.getPrice() %>
                                                 </h5>
                                                 <h5 class="text-dark">Stock: <%= producto.getStock() %>
                                                 </h5>

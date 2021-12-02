@@ -5,23 +5,15 @@
              type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BPharmacy>>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion" class="com.example.telefarma.dtos.DtoSesion"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"
+             class="com.example.telefarma.dtos.DtoSesion"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - Buscar Producto X</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css"
-              type="text/css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css" type="text/css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-        <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
-    </head>
+    <jsp:include page="/includes/head.jsp">
+        <jsp:param name="title" value="Telefarma - Buscar Producto"/>
+    </jsp:include>
 
     <body>
         <!--Barra de Navegación Superior-->
@@ -42,7 +34,8 @@
             <div class="container">
                 <!--Avisos-->
                 <%
-                    String alertClass = ""; String alertMssg = "";
+                    String alertClass = "";
+                    String alertMssg = "";
                     if (session.getAttribute("orden") != null) {
                         String estadoOrden = (String) session.getAttribute("orden");
 
@@ -57,15 +50,17 @@
                                     alertMssg = "Algo salió mal con tu orden";
                                     break;
                             }
-                    }
+                        }
 
                 %>
                 <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
                     <%=alertMssg%>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <%session.removeAttribute("orden");
-                    }%>
+                <%
+                        session.removeAttribute("orden");
+                    }
+                %>
                 <%
                     String estadoEditar = (String) session.getAttribute("editar");
                     if (estadoEditar != null) {
@@ -87,16 +82,18 @@
                     <%=alertMssg%>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <%session.removeAttribute("editar");
-                }%>
+                <%
+                        session.removeAttribute("editar");
+                    }
+                %>
                 <!--Mismo Distrito-->
                 <%
                     boolean otraFarmaciaMostrada = false;
-                    String distritoCliente = sesion.getClient().getDistrito();
+                    String distritoCliente = sesion.getClient().getDistrict().getName();
                     for (ArrayList<BPharmacy> listaFarmaciasDistrito : listaFarmacias) {
 
                         if (listaFarmaciasDistrito.size() > 0) {
-                            if (listaFarmaciasDistrito.get(0).getDistritoFarmacia().equals(distritoCliente)) {
+                            if (listaFarmaciasDistrito.get(0).getDistrict().getName().equals(distritoCliente)) {
                 %>
                 <div class="row">
                     <h3><i class="fas fa-thumbtack fa-xs"></i>&nbsp;Farmacias cercanas a usted</h3>
@@ -115,7 +112,7 @@
                 <div class="row">
                     <div class="container px-5 py-2" id="custom-cards-san-juan">
                         <!--Nombre distrito-->
-                        <h4 class="dist-name"><%= listaFarmaciasDistrito.get(0).getDistritoFarmacia() %>
+                        <h4 class="dist-name"><%= listaFarmaciasDistrito.get(0).getDistrict().getName() %>
                         </h4>
                         <!--Farmacias-->
                         <div class="row row-cols-1 row-cols-lg-3 g-4 py-3">
@@ -128,12 +125,12 @@
                             <div class="col">
                                 <div onclick="location.href='<%= request.getContextPath()%>/ClientServlet?action=farmaciaYProductos&idPharmacy=<%= farmacia.getIdPharmacy() %>'"
                                      class="card card-farmacia f<%= imageCount %>">
-                                    <h2><%= farmacia.getNombreFarmacia() %>
+                                    <h2><%= farmacia.getName() %>
                                     </h2>
                                     <ul>
                                         <li>
                                             <i class="fas fa-map-marker-alt fa-xs"></i>
-                                            <small>&nbsp;&nbsp;<%= farmacia.getDireccionFarmacia() %>
+                                            <small>&nbsp;&nbsp;<%= farmacia.getAddress() %>
                                             </small>
                                         </li>
                                     </ul>
@@ -145,8 +142,8 @@
                         </div>
                         <!--Boton ver más-->
                         <div class="d-flex justify-content-end">
-                            <a href="<%=request.getContextPath()%>/ClientServlet?action=farmaciasDeDistrito&district=<%=listaFarmaciasDistrito.get(0).getDistritoFarmacia()%>"
-                               class="btn btn-tele" role="button" >Ver más</a>
+                            <a href="<%=request.getContextPath()%>/ClientServlet?action=farmaciasDeDistrito&district=<%=listaFarmaciasDistrito.get(0).getDistrict().getName()%>"
+                               class="btn btn-tele" role="button">Ver más</a>
                         </div>
                     </div>
                 </div>

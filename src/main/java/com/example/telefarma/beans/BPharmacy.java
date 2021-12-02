@@ -1,71 +1,82 @@
 package com.example.telefarma.beans;
 
 public class BPharmacy {
-    private String nombreFarmacia = "";
-    private String direccionFarmacia = "";
-    private String emailFarmacia = "";
-    private String RUCFarmacia = "";
-    private String distritoFarmacia = "";
-    private byte isBanned;
     private int idPharmacy;
+    private String RUC;
+    private String name;
+    private String mail;
     private String password;
+    private String address;
+    private byte isBanned;
+    private String banReason;
+    private BDistrict district;
 
     public BPharmacy(String nombreFarmacia, String direccionFarmacia, String emailFarmacia, String RUCFarmacia, String distritoFarmacia, byte isBanned, int idPharmacy, String password, String banReason) {
-        this.nombreFarmacia = nombreFarmacia;
-        this.direccionFarmacia = direccionFarmacia;
-        this.emailFarmacia = emailFarmacia;
-        this.RUCFarmacia = RUCFarmacia;
-        this.distritoFarmacia = distritoFarmacia;
+        this.name = nombreFarmacia;
+        this.address = direccionFarmacia;
+        this.mail = emailFarmacia;
+        this.RUC = RUCFarmacia;
+        this.setDistrict(new BDistrict(distritoFarmacia));
         this.isBanned = isBanned;
         this.idPharmacy = idPharmacy;
         this.password = password;
         this.banReason = banReason;
     }
 
+    public BPharmacy(int idPharmacy, String name, BDistrict district) {
+        this.idPharmacy = idPharmacy;
+        this.name = name;
+        this.district = district;
+    }
+
+    public BPharmacy(int idPharmacy, String name) {
+        this.idPharmacy = idPharmacy;
+        this.name = name;
+    }
+
+    public BPharmacy(int idPharmacy) {
+        this.idPharmacy = idPharmacy;
+    }
+
+    public BPharmacy(String name, BDistrict district) {
+        this.name = name;
+        this.district = district;
+    }
+
     public BPharmacy() {
 
     }
 
-    private String banReason;
-
-    public String getNombreFarmacia() {
-        return nombreFarmacia;
+    public String getName() {
+        return name;
     }
 
-    public void setNombreFarmacia(String nombreFarmacia) {
-        this.nombreFarmacia = nombreFarmacia;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getDireccionFarmacia() {
-        return direccionFarmacia;
+    public String getAddress() {
+        return address;
     }
 
-    public void setDireccionFarmacia(String direccionFarmacia) {
-        this.direccionFarmacia = direccionFarmacia;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getEmailFarmacia() {
-        return emailFarmacia;
+    public String getMail() {
+        return mail;
     }
 
-    public void setEmailFarmacia(String emailFarmacia) {
-        this.emailFarmacia = emailFarmacia;
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 
-    public String getRUCFarmacia() {
-        return RUCFarmacia;
+    public String getRUC() {
+        return RUC;
     }
 
-    public void setRUCFarmacia(String RUCFarmacia) {
-        this.RUCFarmacia = RUCFarmacia;
-    }
-
-    public String getDistritoFarmacia() {
-        return distritoFarmacia;
-    }
-
-    public void setDistritoFarmacia(String distritoFarmacia) {
-        this.distritoFarmacia = distritoFarmacia;
+    public void setRUC(String RUC) {
+        this.RUC = RUC;
     }
 
     public byte getIsBanned() {
@@ -98,5 +109,13 @@ public class BPharmacy {
 
     public void setBanReason(String banReason) {
         this.banReason = banReason;
+    }
+
+    public BDistrict getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(BDistrict district) {
+        this.district = district;
     }
 }

@@ -4,17 +4,11 @@
 
 <!DOCTYPE html>
 <html lang="en">
+    <jsp:include page="/includes/head.jsp">
+        <jsp:param name="title" value="Telefarma - Cambiar contraseña"/>
+    </jsp:include>
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - Cambiar contraseña</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/style.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css">
-    </head>
-
-    <body>
+    <body class="login-bg">
         <section
                 class="d-flex flex-grow-1 flex-shrink-1 p-4 justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center align-items-xl-center vh-100"
                 style="min-height: 700px;">
@@ -45,7 +39,6 @@
                                         </button>
                                     </div>
                                 </form>
-                                <!--<a class="text-center" href="${pageContext.request.contextPath}/?action=pantallaInicio">Volver al Inicio de Sesión</a>-->
                             </div>
                         </div>
                     </div>

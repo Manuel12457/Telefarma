@@ -1,22 +1,15 @@
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
 <jsp:useBean id="datosIngresados" scope="request" type="com.example.telefarma.beans.BPharmacy"/>
 
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - Registrar Farmacia</title>
-        <link rel="stylesheet" href="<%=request.getContextPath()%>/res/bootstrap/css/bootstrap.min.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="<%=request.getContextPath()%>/res/css/estilos.css">
-        <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
-    </head>
-    <body>
+    <jsp:include page="/includes/head.jsp">
+        <jsp:param name="title" value="Telefarma - Registrar Farmacia"/>
+    </jsp:include>
 
+    <body>
         <section class="vh-100 ">
             <div class="container py-4 h-100">
                 <div class="row justify-content-center align-items-center h-100">
@@ -28,7 +21,7 @@
                             <div class="card-body p-4 p-md-5">
                                 <!--Form registro farmacia-->
                                 <form method="POST"
-                                      action="<%=request.getContextPath()%>/PharmacyAdminServlet?action=registrar">
+                                      action="<%=request.getContextPath()%>/AdminServlet?action=registrar">
                                     <div class="row mb-3">
                                         <!--Nombre-->
                                         <div class="col-md-6">
@@ -36,7 +29,7 @@
                                                 <label class="form-label" for="farmaName">Nombre</label>
                                                 <input type="text" name="nombre" id="farmaName" class="form-control"
                                                        placeholder="Ingrese nombre de la farmacia"
-                                                       value="<%=datosIngresados.getNombreFarmacia()%>"
+                                                       value="<%=datosIngresados.getName() != null ? datosIngresados.getName() : ""%>"
                                                        required="required" maxlength="50"/>
                                             </div>
                                         </div>
@@ -46,7 +39,7 @@
                                                 <label class="form-label" for="farmaMail">Correo</label>
                                                 <input type="email" name="correo" id="farmaMail" class="form-control"
                                                        placeholder="Ingrese el mail de la farmacia"
-                                                       value="<%=datosIngresados.getEmailFarmacia()%>"
+                                                       value="<%=datosIngresados.getMail() != null ? datosIngresados.getMail() : ""%>"
                                                        required="required" maxlength="70"/>
                                             </div>
                                         </div>
@@ -59,7 +52,7 @@
                                                 <input type="text" name="direccion" id="farmaDireccion"
                                                        class="form-control"
                                                        placeholder="Ingrese la dirección de la farmacia"
-                                                       value="<%=datosIngresados.getDireccionFarmacia()%>"
+                                                       value="<%=datosIngresados.getAddress() != null ? datosIngresados.getAddress() : ""%>"
                                                        required="required" maxlength="100"/>
                                             </div>
                                         </div>
@@ -69,28 +62,25 @@
                                                 <label class="form-label" for="farmaDistrict">Distrito</label>
                                                 <select class="form-select" name="distrito" id="farmaDistrict" required>
                                                     <%
-                                                        boolean distritoIngresado = false;
-                                                        if (datosIngresados.getDistritoFarmacia() != null && !datosIngresados.getDistritoFarmacia().equals("")) {
-                                                            distritoIngresado = true;
-                                                        }
+                                                        boolean distritoIngresado = datosIngresados.getDistrict() != null && !datosIngresados.getDistrict().getName().equals("");
+                                                        if (distritoIngresado) {
                                                     %>
-                                                    <%if (distritoIngresado) { %>
-                                                    <option selected><%=datosIngresados.getDistritoFarmacia()%>
+                                                    <option selected><%=datosIngresados.getDistrict().getName()%>
                                                     </option>
                                                     <option value="">Ingrese el distrito de la farmacia</option>
-                                                    <%} else { %>
+                                                    <%  } else { %>
                                                     <option value="" selected>Ingrese el distrito de la farmacia
                                                     </option>
-                                                    <%}%>
-                                                    <%
+                                                    <%  }
                                                         for (String distrito : listaDistritosSistema) {
                                                             if (distritoIngresado) {
-                                                                if (!distrito.equals(datosIngresados.getDistritoFarmacia())) {%>
+                                                                if (!distrito.equals(datosIngresados.getDistrict().getName())) {
+                                                    %>
                                                     <option value="<%=distrito%>"><%=distrito%>
                                                     </option>
                                                     <%
-                                                        }
-                                                    } else {
+                                                                }
+                                                            } else {
                                                     %>
                                                     <option value="<%=distrito%>"><%=distrito%>
                                                     </option>
@@ -107,10 +97,10 @@
                                         <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaRUC">RUC</label>
-                                                <input type="text" name="ruc" id="farmaRUC" class="form-control"
-                                                       placeholder="Ingrese el RUC de la farmacia"
-                                                       value="<%=datosIngresados.getRUCFarmacia()%>" required="required"
-                                                       maxlength="11"/>
+                                                <input type="number" name="ruc" id="farmaRUC" class="form-control"
+                                                       placeholder="Ingrese el RUC de la farmacia" maxlength="11"
+                                                       value="<%=datosIngresados.getRUC() != null ? datosIngresados.getRUC() : ""%>"
+                                                       minlength="11" required/>
                                                 <div id="passwordHelpBlock" class="form-text">
                                                     El RUC únicamente debe contener 11 números
                                                 </div>
@@ -122,50 +112,20 @@
                                         <input class="btn btn-tele" type="submit" id="" value="Registrar farmacia"/>
                                     </div>
                                     <br>
-                                    <!--Alertas-->
+                                    <%--Alertas--%>
                                     <%
-                                            int noValidMail = (Integer) session.getAttribute("noValidMail");
-                                            if (noValidMail == 1) {%>
-
+                                        if (request.getSession().getAttribute("errorList") != null) {
+                                            for (String msg : (ArrayList<String>) request.getSession().getAttribute("errorList")) {
+                                    %>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        El correo que ha ingresado ya esta en uso
+                                        <%=msg%>
                                         <button type="button" class="btn-close" data-bs-dismiss="alert"
                                                 aria-label="Close"></button>
                                     </div>
-                                    <%session.removeAttribute("noValidMail");
+                                    <%
                                             }
-                                            int noValidRUC = (Integer) session.getAttribute("noValidRUC");
-                                            if (noValidRUC == 1) {
-                                    %>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        El RUC que ha ingresado ya esta en uso
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <%session.removeAttribute("noValidRUC");
-                                        } else {
-                                            int noNumRUC = (Integer) session.getAttribute("noNumRUC");
-                                            if (noNumRUC == 1) {
-                                    %>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        El RUC debe contener únicamente números
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <%session.removeAttribute("noNumRUC");
-                                        } else {
-                                            int noLongRUC = (Integer) session.getAttribute("noLongRuc");
-                                            if (noLongRUC == 1) {
-                                    %>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        El RUC debe contener 11 números
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <%session.removeAttribute("noLongRuc");
-                                            }
-                                    }
-                                    }
+                                            request.getSession().removeAttribute("errorList");
+                                        }
                                     %>
                                 </form>
                             </div>

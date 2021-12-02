@@ -4,17 +4,14 @@ import java.util.ArrayList;
 
 public class BOrders {
     private String idOrder;
-    private String farmaciaAsociada;
-    private String nombreCliente;
+    private BClient client;
+    private String estado;
     private String fechaRecojo;
     private String fechaOrden;
+    //Esto sería DTO? :
     private double total;
-    private String estado;
+    private String farmaciaAsociada;
     private int timeDiff;
-
-    public String getNombreCliente() {return nombreCliente;}
-
-    public void setNombreCliente(String nombreCliente) {this.nombreCliente = nombreCliente;}
 
     public int getDayDiff() {
         return dayDiff;
@@ -90,5 +87,13 @@ public class BOrders {
 
     public void setListaDetails(ArrayList<BOrderDetails> listaDetails) {
         this.listaDetails = listaDetails;
+    }
+
+    public BClient getClient() {
+        return client;
+    }
+
+    public void setClient(BClient client) {
+        this.client = client;
     }
 }

@@ -1,13 +1,12 @@
 package com.example.telefarma.servlets;
 
-import com.example.telefarma.beans.BAdmin;
 import com.example.telefarma.beans.BClient;
-import com.example.telefarma.beans.BPharmacy;
+import com.example.telefarma.beans.BDistrict;
+import com.example.telefarma.daos.DistrictDao;
 import com.example.telefarma.dtos.DtoPharmacy;
 import com.example.telefarma.dtos.DtoProductoCarrito;
 import com.example.telefarma.dtos.DtoSesion;
 import com.example.telefarma.dtos.DtoUsuario;
-import com.example.telefarma.daos.PharmacyAdminDao;
 import com.example.telefarma.daos.SessionDao;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -44,14 +43,12 @@ public class SessionServlet extends HttpServlet {
             } else if (sesionActiva.getPharmacy() != null) {
                 response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
             } else if (sesionActiva.getAdmin() != null) {
-                response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet");
+                response.sendRedirect(request.getContextPath() + "/AdminServlet");
             }
 
         } else {
 
-            PharmacyAdminDao pharmacyAdminDao = new PharmacyAdminDao();
             RequestDispatcher view;
-
             switch (action) {
                 case "pantallaInicio":
                     request.setAttribute("estadoSesion", estadoSesion);
@@ -66,7 +63,9 @@ public class SessionServlet extends HttpServlet {
                     break;
 
                 case "registrarForm":
-                    ArrayList<String> distritosSistema = pharmacyAdminDao.listarDistritosEnSistema();
+                    DistrictDao districtDao = new DistrictDao();
+
+                    ArrayList<String> distritosSistema = districtDao.listarDistritosEnSistema();
                     request.setAttribute("cliente", new BClient());
                     request.setAttribute("listaDistritosSistema", distritosSistema);
                     request.setAttribute("errContrasenha", 0);
@@ -107,26 +106,24 @@ public class SessionServlet extends HttpServlet {
 
         String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
         String dominio = "http://localhost:8080";
-        PharmacyAdminDao pharmacyAdminDao = new PharmacyAdminDao();
         SessionDao s = new SessionDao();
-        RequestDispatcher view;
 
+        RequestDispatcher view;
         switch (accion) {
 
             case "registrar":
                 BClient client = new BClient();
                 client.setName(request.getParameter("nombre"));
                 client.setLastName(request.getParameter("apellido"));
-                client.setDistrito(request.getParameter("distrito"));
+                client.setDistrict(new BDistrict(request.getParameter("distrito")));
                 client.setDni(request.getParameter("dni"));
                 client.setMail(request.getParameter("email"));
                 String contrasenha = request.getParameter("password");
                 String contrasenhaC = request.getParameter("passwordC");
 
-
                 boolean contrasenhasCoinciden = contrasenha.equals(contrasenhaC);
-                boolean dniValido = s.dniExiste(client.getDni());
-                boolean mailValido = s.mailExiste(client.getMail());
+                boolean dniRepetido = s.dniExiste(client.getDni());
+                boolean mailRepetido = s.correoExiste(client.getMail());
                 boolean dniLongitud = client.getDni().length() == 8;
 
                 boolean dniNumero = false;
@@ -134,33 +131,33 @@ public class SessionServlet extends HttpServlet {
                     int rucNum = Integer.parseInt(client.getDni());
                     dniNumero = true;
                 } catch (NumberFormatException e) {
-
+                    e.printStackTrace();
                 }
 
-                if (contrasenhasCoinciden && dniValido && mailValido && dniNumero && dniLongitud) {
+                if (contrasenhasCoinciden && !dniRepetido && !mailRepetido && dniNumero && dniLongitud) {
 
-                    /*Registra el usuario*/
                     String md5pass = DigestUtils.md5Hex(contrasenha);
                     client.setPassword(md5pass);
                     String err = s.registrarUsuario(client);
                     view = request.getRequestDispatcher("/ingreso/registroExitoso.jsp");
-                    view.forward(request, response);
 
                 } else {
 
                     request.setAttribute("errContrasenha", contrasenhasCoinciden ? 0 : 1);
-                    request.setAttribute("errDNI", dniValido ? 0 : 1);
-                    request.setAttribute("errMail", mailValido ? 0 : 1);
+                    request.setAttribute("errDNI", !dniRepetido ? 0 : 1);
+                    request.setAttribute("errMail", !mailRepetido ? 0 : 1);
                     request.setAttribute("errDNINum", dniNumero ? 0 : 1);
                     request.setAttribute("errDNILong", dniLongitud ? 0 : 1);
 
-                    ArrayList<String> distritosSistema = pharmacyAdminDao.listarDistritosEnSistema();
+                    DistrictDao districtDao = new DistrictDao();
+
+                    ArrayList<String> distritosSistema = districtDao.listarDistritosEnSistema();
                     request.setAttribute("cliente", client);
                     request.setAttribute("listaDistritosSistema", distritosSistema);
                     view = request.getRequestDispatcher("/ingreso/registrarUsuario.jsp");
-                    view.forward(request, response);
 
                 }
+                view.forward(request, response);
                 break;
 
             case "correoParaContrasenha":
@@ -168,7 +165,6 @@ public class SessionServlet extends HttpServlet {
                 HashMap<Integer, String> hm = s.validarCorreo(mail);
 
                 if (!hm.isEmpty()) {
-
                     String token = UUID.randomUUID().toString().replace("-", "Z");
                     while (s.tokenRepetido(token)) {
                         token = UUID.randomUUID().toString().replace("-", "Z");
@@ -183,8 +179,8 @@ public class SessionServlet extends HttpServlet {
                     s.loadToken(token, rol, idUser);
 
                     String tokenMail = "Ingrese al siguiente enlace para cambiar la contraseña: \n" + dominio +
-                            request.getContextPath() + "/?action=cambiarContrasenha&rol=" + rol + "&token=" + token;
-
+                            request.getContextPath() + "/?action=cambiarContrasenha&rol=" + rol + "&token=" + token +
+                            "\n\n<i>Si no fuiste tú, ignora este mensaje.</i>";
                     MailServlet.sendMail(mail, "Cambio de contraseña", tokenMail);
 
                     request.setAttribute("mensaje", "Se ha enviado un correo a la dirección de correo indicada");
@@ -193,6 +189,7 @@ public class SessionServlet extends HttpServlet {
                     request.setAttribute("err", "ne");
                     view = request.getRequestDispatcher("/ingreso/correoParaCambioContrasenha.jsp");
                 }
+
                 view.forward(request, response);
                 break;
 
@@ -253,7 +250,7 @@ public class SessionServlet extends HttpServlet {
 
                             sessionAdmin.setAttribute("sesion", sesion);
                             sessionAdmin.setMaxInactiveInterval(10 * 60);
-                            response.sendRedirect(request.getContextPath() + "/PharmacyAdminServlet");
+                            response.sendRedirect(request.getContextPath() + "/AdminServlet");
                             break;
                     }
 

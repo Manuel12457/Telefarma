@@ -2,63 +2,53 @@ package com.example.telefarma.beans;
 
 public class BProduct {
 
-    private int idProducto;
-    private String nombre;
-    private String descripcion;
+    private int idProduct;
+    private BPharmacy pharmacy;
+    private String name;
+    private String description;
     private int stock;
-    private double precio;
-    private boolean requierePrescripcion;
-    private int idFarmacia;
-    private String nombreFarmacia;
-    private String distritoFarmacia;
+    private double price;
+    private boolean requiresPrescription;
 
-    public BProduct(int idProducto, String nombre, String descripcion, int stock, double precio, boolean requierePrescripcion, int idFarmacia, String nombreFarmacia, String distritoFarmacia) {
-        this.idProducto = idProducto;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
+    public BProduct(int idProducto, String name, String description, int stock, double price, boolean requiresPrescription, BPharmacy pharmacy) {
+        this.idProduct = idProducto;
+        this.name = name;
+        this.description = description;
         this.stock = stock;
-        this.precio = precio;
-        this.requierePrescripcion = requierePrescripcion;
-        this.idFarmacia = idFarmacia;
-        this.nombreFarmacia = nombreFarmacia;
-        this.distritoFarmacia = distritoFarmacia;
+        this.price = price;
+        this.requiresPrescription = requiresPrescription;
+        this.pharmacy = pharmacy;
     }
 
     public BProduct() {
     }
 
-    public boolean isRequierePrescripcion() {return requierePrescripcion;}
-
-    public String getDistritoFarmacia() {return distritoFarmacia;}
-
-    public void setDistritoFarmacia(String distritoFarmacia) {this.distritoFarmacia = distritoFarmacia;}
-
-    public String getNombreFarmacia() {return nombreFarmacia;}
-
-    public void setNombreFarmacia(String nombreFarmacia) {this.nombreFarmacia = nombreFarmacia;}
-
-    public int getIdProducto() {
-        return idProducto;
+    public boolean isRequiresPrescription() {
+        return requiresPrescription;
     }
 
-    public void setIdProducto(int idProducto) {
-        this.idProducto = idProducto;
+    public int getIdProduct() {
+        return idProduct;
     }
 
-    public String getNombre() {
-        return nombre;
+    public void setIdProduct(int idProduct) {
+        this.idProduct = idProduct;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public String getName() {
+        return name;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getStock() {
@@ -69,25 +59,27 @@ public class BProduct {
         this.stock = stock;
     }
 
-    public double getPrecio() {
-        return precio;
+    public double getPrice() {
+        return price;
     }
 
-    public void setPrecio(double precio) {
-        this.precio = precio;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public boolean getRequierePrescripcion() {
-        return requierePrescripcion;
+        return requiresPrescription;
     }
 
-    public void setRequierePrescripcion(boolean requierePrescripcion) {this.requierePrescripcion = requierePrescripcion;}
-
-    public int getIdFarmacia() {
-        return idFarmacia;
+    public void setRequiresPrescription(boolean requiresPrescription) {
+        this.requiresPrescription = requiresPrescription;
     }
 
-    public void setIdFarmacia(int idFarmacia) {
-        this.idFarmacia = idFarmacia;
+    public BPharmacy getPharmacy() {
+        return pharmacy;
+    }
+
+    public void setPharmacy(BPharmacy pharmacy) {
+        this.pharmacy = pharmacy;
     }
 }

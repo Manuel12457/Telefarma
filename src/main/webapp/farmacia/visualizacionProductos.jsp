@@ -1,35 +1,26 @@
-<%@ page import="com.example.telefarma.beans.BProductVisualizacion" %>
+<%@ page import="com.example.telefarma.dtos.DtoProductoVisualizacion" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaProductosBusqueda" scope="request"
-             type="java.util.ArrayList<com.example.telefarma.beans.BProductVisualizacion>"/>
+             type="java.util.ArrayList<com.example.telefarma.dtos.DtoProductoVisualizacion>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"/>
 <%
     String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
     String result = (String) session.getAttribute("result");
-            //request.getParameter("result");
 %>
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - Visualización de Productos</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-        <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
-    </head>
-    <body>
+    <jsp:include page="/includes/head.jsp">
+        <jsp:param name="title" value="Telefarma - Visualización de Productos"/>
+    </jsp:include>
 
+    <body>
         <%--Cabecera de admin--%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="farmacia"/>
-            <jsp:param name="nombre" value="<%=sesion.getPharmacy().getNombreFarmacia()%>"/>
+            <jsp:param name="nombre" value="<%=sesion.getPharmacy().getName()%>"/>
             <jsp:param name="servletBusqueda" value="PharmacyServlet?action=buscarProducto&"/>
             <jsp:param name="busquedaPlaceholder" value="Busca un producto"/>
         </jsp:include>
@@ -73,7 +64,8 @@
                 <%=mensaje%>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <%session.removeAttribute("result");
+            <%
+                    session.removeAttribute("result");
                 }
             %>
 
@@ -93,20 +85,21 @@
             <div class="container">
                 <!--Loop de productos-->
                 <%
-                    for (BProductVisualizacion producto : listaProductosBusqueda) {
+                    for (DtoProductoVisualizacion producto : listaProductosBusqueda) {
                 %>
                 <div class="row col-12 justify-content-center align-items-start">
                     <!--Nombre del producto e imagen referencial-->
                     <div class="col-md-2 text-center mt-2">
-                        <h5><%=producto.getNombre()%>
+                        <h5><%=producto.getName()%>
                         </h5>
-                        <img class="w-100" src="${pageContext.request.contextPath}/Image?idProduct=<%= producto.getIdProducto() %>"
+                        <img class="w-100"
+                             src="${pageContext.request.contextPath}/Image?idProduct=<%= producto.getIdProduct() %>"
                              style="max-height: 250px; max-width: 250px">
                     </div>
                     <!--Precio y Stock-->
                     <div class="col-md-1 text-center mt-5 d-none d-md-block">
                         <h6>Precio</h6>
-                        <p style="font-size: larger">s/ <%=String.format("%.2f", producto.getPrecio())%>
+                        <p style="font-size: larger">s/ <%=String.format("%.2f", producto.getPrice())%>
                         </p>
                         <h6>Stock</h6>
                         <p style="font-size: larger"><%=producto.getStock()%>
@@ -116,26 +109,27 @@
                         <h6 style="display: inline">
                             Precio:
                             <p style="display: inline;font-size: large; font-weight: normal;">
-                                &nbsp;s/ <%=String.format("%.2f", producto.getPrecio())%>
+                                &nbsp;s/ <%=String.format("%.2f", producto.getPrice())%>
                             </p>
                         </h6>
                         <h6 style="display: inline">
                             Stock:
-                            <p style="display: inline;font-size: large; font-weight: normal;">&nbsp;<%=producto.getStock()%>
+                            <p style="display: inline;font-size: large; font-weight: normal;">
+                                &nbsp;<%=producto.getStock()%>
                             </p>
                         </h6>
                     </div>
                     <!--Descripción del producto-->
                     <div class="col-md-6 mt-5 d-none d-md-block">
                         <h6>Descripción</h6>
-                        <p><%=producto.getDescripcion()%>
+                        <p><%=producto.getDescription()%>
                         </p>
                         <h6 class="mt-1">¿Requiere Receta? <b><%=producto.getRequierePrescripcion() ? "Sí" : "No"%>
                         </b></h6>
                     </div>
                     <div class="d-flex flex-column mt-1 d-md-none px-5">
                         <h6>Descripción</h6>
-                        <p><%=producto.getDescripcion()%>
+                        <p><%=producto.getDescription()%>
                         </p>
                         <h6 class="mt-1">¿Requiere Receta? <b><%=producto.getRequierePrescripcion() ? "Sí" : "No"%>
                         </b></h6>
@@ -151,24 +145,24 @@
                     %>
                     <!--Botones de editar y eliminar-->
                     <div class="col-sm-1 mt-5 d-none d-md-block text-center">
-                        <a href="<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProducto()%>">
+                        <a href="<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProduct()%>">
                             <i class="far fa-edit fa-lg btn-tele p-2 rounded"></i>
                         </a>
                         <hr class="my-1" style="background-color: white">
                         <button class="btn btn-danger fa-lg px-2" type="button"
                                 data-bs-toggle="modal" data-bs-target="#<%=modalTarget%>"
-                                data-bs-whatever="<%=producto.getIdProducto()%>">
+                                data-bs-whatever="<%=producto.getIdProduct()%>">
                             <i class="fas fa-times-circle"></i>
                         </button>
                     </div>
                     <div class="d-flex justify-content-center my-2 d-md-none">
-                        <a href="<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProducto()%>">
+                        <a href="<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProduct()%>">
                             <i class="far fa-edit fa-lg btn-tele p-2 rounded"></i>
                         </a>
                         <div class="mx-3"></div>
                         <button class="btn btn-danger fa-lg px-2" type="button"
                                 data-bs-toggle="modal" data-bs-target="#<%=modalTarget%>"
-                                data-bs-whatever="<%=producto.getIdProducto()%>">
+                                data-bs-whatever="<%=producto.getIdProduct()%>">
                             <i class="fas fa-times-circle"></i>
                         </button>
                     </div>
@@ -235,7 +229,8 @@
         </main>
 
         <!--Botón flotante "+" para agregar farmacia-->
-        <a href="<%=request.getContextPath()%>/PharmacyServlet?action=registrarProducto" class="btn-float" title="Registre un producto">
+        <a href="<%=request.getContextPath()%>/PharmacyServlet?action=registrarProducto" class="btn-float"
+           title="Registre un producto">
             <i class="fas fa-plus my-float"></i>
         </a>
 

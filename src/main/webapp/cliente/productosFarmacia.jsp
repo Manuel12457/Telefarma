@@ -7,29 +7,22 @@
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="idPharmacy" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String" class="java.lang.String"/>
-<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion" class="com.example.telefarma.dtos.DtoSesion"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"
+             class="com.example.telefarma.dtos.DtoSesion"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
+<%
+    String servletBusqueda = "ClientServlet?action=buscarProductosDeFarmacia&idPharmacy=" + idPharmacy + "&";
+    String busquedaPlaceholder = "Busca un producto en " + infoFarmacia.getName();
+    String title = "Telefarma - " + infoFarmacia.getName();
+%>
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - <%=infoFarmacia.getNombreFarmacia()%>
-        </title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css"
-              type="text/css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css" type="text/css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-        <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
-    </head>
+    <jsp:include page="/includes/head.jsp">
+        <jsp:param name="title" value="<%=title%>"/>
+    </jsp:include>
+
     <body>
-        <%
-            String servletBusqueda = "ClientServlet?action=buscarProductosDeFarmacia&idPharmacy=" + idPharmacy + "&";
-            String busquedaPlaceholder = "Busca un producto en " + infoFarmacia.getNombreFarmacia();
-        %>
         <!--Barra de Navegación Superior-->
         <%String nombreCliente = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
@@ -50,17 +43,17 @@
                 <div class="container text-center">
                     <!--Nombre-->
                     <div class="row">
-                        <h1><%= infoFarmacia.getNombreFarmacia() %>
+                        <h1><%= infoFarmacia.getName() %>
                         </h1>
                     </div>
                     <!--Distrito-->
                     <div class="row">
-                        <h5><%= infoFarmacia.getDistritoFarmacia() %>
+                        <h5><%= infoFarmacia.getDistrict().getName() %>
                         </h5>
                     </div>
                     <!--Dirección-->
                     <div class="row mb-3">
-                        <h6><i class="fas fa-map-marker-alt fa-xs"></i>&nbsp;&nbsp;<%= infoFarmacia.getDireccionFarmacia() %>
+                        <h6><i class="fas fa-map-marker-alt fa-xs"></i>&nbsp;&nbsp;<%= infoFarmacia.getAddress() %>
                         </h6>
                     </div>
                     <!--Titulo-->
@@ -80,19 +73,19 @@
                         <%--Loop de productos--%>
                         <% for (BProduct producto : productosDeLaFarmacia) { %>
                         <div class="col">
-                            <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProducto()%>'"
+                            <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProduct()%>'"
                                  class="card card-producto">
                                 <div class="card-header">
-                                    <h6><%= producto.getNombre() %>
+                                    <h6><%= producto.getName() %>
                                     </h6>
                                 </div>
                                 <div class="card-body d-flex flex-column">
-                                    <img src="${pageContext.request.contextPath}/Image?idProduct=<%= producto.getIdProducto() %>"
+                                    <img src="${pageContext.request.contextPath}/Image?idProduct=<%= producto.getIdProduct() %>"
                                          class="card-img-top mb-1"
                                          aria-label="Producto">
                                     <div class="mt-auto">
                                         <div class="d-flex justify-content-around">
-                                            <h5 class="text-dark">S/ <%= producto.getPrecio() %>
+                                            <h5 class="text-dark">S/ <%= producto.getPrice() %>
                                             </h5>
                                             <h5 class="text-dark">Stock: <%= producto.getStock() %>
                                             </h5>

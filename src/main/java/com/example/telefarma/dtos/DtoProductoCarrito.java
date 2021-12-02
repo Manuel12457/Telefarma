@@ -1,5 +1,7 @@
 package com.example.telefarma.dtos;
 
+import com.example.telefarma.beans.BDistrict;
+import com.example.telefarma.beans.BPharmacy;
 import com.example.telefarma.beans.BProduct;
 
 import java.io.InputStream;
@@ -10,16 +12,17 @@ public class DtoProductoCarrito extends BProduct {
     private InputStream receta;
 
     public DtoProductoCarrito(int cantidad, BProduct product) {
-        this.setCantidad(cantidad);
-        this.setIdProducto(product.getIdProducto());
-        this.setNombre(product.getNombre());
-        this.setDescripcion(product.getDescripcion());
+        this.setIdProduct(product.getIdProduct());
+        BPharmacy bPharmacy = new BPharmacy();
+        bPharmacy.setIdPharmacy(product.getPharmacy().getIdPharmacy());
+        bPharmacy.setName(product.getPharmacy().getName());
+        this.setPharmacy(bPharmacy);
+        this.setName(product.getName());
+        this.setDescription(product.getDescription());
         this.setStock(product.getStock());
-        this.setPrecio(product.getPrecio());
-        this.setRequierePrescripcion(product.getRequierePrescripcion());
-        this.setIdFarmacia(product.getIdFarmacia());
-        this.setNombreFarmacia(product.getNombreFarmacia());
-        this.setDistritoFarmacia(product.getDistritoFarmacia());
+        this.setPrice(product.getPrice());
+        this.setRequiresPrescription(product.getRequierePrescripcion());
+        this.setCantidad(cantidad);
     }
 
     public DtoProductoCarrito(int cantidad, InputStream receta) {

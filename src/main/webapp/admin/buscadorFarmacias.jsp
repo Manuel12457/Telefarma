@@ -6,27 +6,20 @@
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"/>
+
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>Telefarma - Administrador</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/estilos.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-        <script src="https://kit.fontawesome.com/5733880de3.js" crossorigin="anonymous"></script>
+    <jsp:include page="/includes/head.jsp">
+        <jsp:param name="title" value="Telefarma - Administrador"/>
+    </jsp:include>
 
-    </head>
     <body>
         <%--Cabecera de admin--%>
         <%String admin = "Admin " + sesion.getAdmin().getIdAdmin();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="admin"/>
             <jsp:param name="nombre" value="<%=admin%>"/>
-            <jsp:param name="servletBusqueda" value="PharmacyAdminServlet?action=buscar"/>
+            <jsp:param name="servletBusqueda" value="AdminServlet?action=buscar"/>
             <jsp:param name="busquedaPlaceholder" value="Busca una farmacia"/>
         </jsp:include>
 
@@ -35,90 +28,29 @@
             <div class="card-header my-5"></div>
             <!--Farmacias-->
             <div class="container">
-                <div class="row">
-                    <!--Alertas-->
-                    <%
-                        String alertClass = null;
-                        String alertMssg = null;
-                        String estadoRegistro = (String) session.getAttribute("registro");
-                        if (estadoRegistro != null) {
-                            if (!estadoRegistro.equals("")) {
-                                switch (estadoRegistro) {
-                                    case "e":
-                                        alertClass = "alert-success";
-                                        alertMssg = "Farmacia registrada exitosamente";
-                                        break;
-                                    case "ne":
-                                        alertClass = "alert-danger";
-                                        alertMssg = "Hubo un problema con el registro de la farmacia";
-                                        break;
-                                }
-                        }
-
-                    %>
-                    <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
-                        <%=alertMssg%>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <%session.removeAttribute("registro");
-                        }
-                        String estadoEdicion = (String) session.getAttribute("edicion");
-                        if (estadoEdicion != null) {
-                            if (!estadoEdicion.equals("")) {
-                                switch (estadoEdicion) {
-                                    case "e":
-                                        alertClass = "alert-success";
-                                        alertMssg = "Farmacia editada exitosamente";
-                                        break;
-                                    case "ne":
-                                        alertClass = "alert-danger";
-                                        alertMssg = "Hubo un problema con la edición de la farmacia";
-                                        break;
-                                }
-                        }
-                    %>
-                    <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
-                        <%=alertMssg%>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <%session.removeAttribute("edicion");
-                        }
-                        if (session.getAttribute("baneo") != null) {
-                        Integer resultban = (Integer) session.getAttribute("baneo");
-                        if (resultban != 0) {
-                            switch (resultban) {
-                                case 1:
-                                    alertClass = "alert-success";
-                                    alertMssg = "La farmacia fue baneada con éxito";
-                                    break;
-                                case 2:
-                                    alertClass = "alert-danger";
-                                    alertMssg = "La farmacia tiene al menos un pedido pendiente. Intentalo de nuevo más tarde";
-                                    break;
-                                case 3:
-                                    alertClass = "alert-success";
-                                    alertMssg = "La farmacia seleccionada fue desbaneada";
-                                    break;
-                            }
-                    %>
-                    <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
-                        <%=alertMssg%>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <%
-                        }
-                    }
-                        session.removeAttribute("baneo");%>
-
-                    <h3 class="text-dark">Farmacias registradas</h3>
+                <!--Alertas-->
+                <%
+                    if (request.getSession().getAttribute("actionResult") != null) {
+                        String alertClass = (boolean) request.getSession().getAttribute("actionResultBoolean") ? "alert-success" : "alert-danger";
+                %>
+                <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
+                    <%=request.getSession().getAttribute("actionResult")%>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 <%
-                    for (ArrayList<BPharmacy> listaFarmaciasDistrito : listaListaFarmacias) {
+                    }
+                    request.getSession().removeAttribute("actionResult");
+                    request.getSession().removeAttribute("actionResultBoolean");
                 %>
+                <div class="row">
+                    <h3 class="text-dark">Farmacias registradas</h3>
+                </div>
+                <!--Loop de farmacias-->
+                <% for (ArrayList<BPharmacy> listaFarmaciasDistrito : listaListaFarmacias) { %>
                 <div class="row">
                     <div class="container px-5 py-2" id="custom-cards-san-miguel">
                         <h4 class="pb-2 border-bottom"
-                            style="color: #f57f00"><%= listaFarmaciasDistrito.get(0).getDistritoFarmacia() %>
+                            style="color: #f57f00"><%= listaFarmaciasDistrito.get(0).getDistrict().getName() %>
                         </h4>
                         <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-3">
                             <!--Loop de farmacias por distrito-->
@@ -137,14 +69,14 @@
                                         <!--Botón editar-->
                                         <div class="d-flex justify-content-end ">
                                             <a role="button"
-                                               href="<%=request.getContextPath()%>/PharmacyAdminServlet?action=editarForm&distrito=<%=farmacia.getDistritoFarmacia()%>&id=<%=farmacia.getIdPharmacy()%>"
+                                               href="<%=request.getContextPath()%>/AdminServlet?action=editarForm&distrito=<%=farmacia.getDistrict().getName()%>&id=<%=farmacia.getIdPharmacy()%>"
                                                class="btn btn-tele pe-2 pt-1"><i
                                                     class="fas fa-edit"></i></i>
                                             </a>
                                         </div>
                                         <!--Nombre-->
                                         <h2 class="mt-2 mb-3 fw-bold"
-                                            style="text-shadow: .5px .5px #2b2b2b;"><%= farmacia.getNombreFarmacia() %>
+                                            style="text-shadow: .5px .5px #2b2b2b;"><%= farmacia.getName() %>
                                         </h2>
                                     </div>
                                     <div class="card-body">
@@ -153,19 +85,19 @@
                                                 <!--Direccion-->
                                                 <h6><i class="fas fa-map-marker-alt fa-xs"></i>&nbsp;Dirección:</h6>
                                                 <li class="d-flex align-items-center ps-4">
-                                                    <h6><%= farmacia.getDireccionFarmacia() %>
+                                                    <h6><%= farmacia.getAddress() %>
                                                     </h6>
                                                 </li>
                                                 <!--Email-->
                                                 <h6><i class="fas fa-envelope fa-xs"></i>&nbsp;E-mail:</h6>
                                                 <li class="d-flex align-items-center ps-4">
-                                                    <h6><%= farmacia.getEmailFarmacia() %>
+                                                    <h6><%= farmacia.getMail() %>
                                                     </h6>
                                                 </li>
                                                 <!--RUC-->
                                                 <h6><i class="fas fa-hashtag fa-xs "></i>&nbsp;RUC:</h6>
                                                 <li class="d-flex align-items-center ps-4">
-                                                    <h6><%= farmacia.getRUCFarmacia() %>
+                                                    <h6><%= farmacia.getRUC() %>
                                                     </h6>
                                                 </li>
                                             </ul>
@@ -199,7 +131,8 @@
         </main>
 
         <!--Botón flotante "+" para agregar farmacia-->
-        <a href="<%=request.getContextPath()%>/PharmacyAdminServlet?action=registrarForm" class="btn-float" title="Registre una farmacia">
+        <a href="<%=request.getContextPath()%>/AdminServlet?action=registrarForm" class="btn-float"
+           title="Registre una farmacia">
             <i class="fas fa-plus my-float"></i>
         </a>
 
@@ -246,7 +179,8 @@
                                     Escriba el motivo del bloqueo de la farmacia:
                                 </label>
 
-                                <textarea type="tel" id="bloqueoFarmacia" name="razon" class="form-control" maxlength="250"></textarea>
+                                <textarea type="tel" id="bloqueoFarmacia" name="razon" class="form-control"
+                                          maxlength="250"></textarea>
                                 <div id="passwordHelpBlock" class="form-text">
                                     La razón de bloqueo no puede exceder de los 250 caracteres
                                 </div>
@@ -276,7 +210,7 @@
                 // Se ubica la seccion form del modal
                 var modalForm = exampleModal.querySelector('form')
                 // Se le indica al form el id de la farmacia
-                modalForm.action = "<%=request.getContextPath()%>/PharmacyAdminServlet?action=banear&id=" + idFarmacia
+                modalForm.action = "<%=request.getContextPath()%>/AdminServlet?action=banear&id=" + idFarmacia
                 console.log(modalForm.action)
             })
 
@@ -290,7 +224,7 @@
                 // Se ubica la seccion form del modal
                 var modalForm1 = exampleModal1.querySelector('form')
                 // Se le indica al form el id de la farmacia
-                modalForm1.action = "<%=request.getContextPath()%>/PharmacyAdminServlet?action=desbanear&id=" + idFarmacia1
+                modalForm1.action = "<%=request.getContextPath()%>/AdminServlet?action=desbanear&id=" + idFarmacia1
                 console.log(modalForm1.action)
             })
         </script>
@@ -298,7 +232,7 @@
         <!--Paginación-->
         <%
             String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-            String servlet = "/PharmacyAdminServlet?busqueda=" + busqueda + "&";
+            String servlet = "/AdminServlet?busqueda=" + busqueda + "&";
         %>
         <jsp:include page="../paginacion.jsp">
             <jsp:param name="pagActual" value="<%=pagActual%>"/>

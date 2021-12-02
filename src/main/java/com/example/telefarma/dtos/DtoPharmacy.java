@@ -7,19 +7,19 @@ public class DtoPharmacy extends BPharmacy {
     private String fechaRecojo;
 
     public DtoPharmacy(BPharmacy pharmacy) {
-        this.setNombreFarmacia(pharmacy.getNombreFarmacia());
-        this.setDireccionFarmacia(pharmacy.getDireccionFarmacia());
-        this.setEmailFarmacia(pharmacy.getEmailFarmacia());
-        this.setRUCFarmacia(pharmacy.getRUCFarmacia());
-        this.setDistritoFarmacia(pharmacy.getDistritoFarmacia());
+        this.setName(pharmacy.getName());
+        this.setAddress(pharmacy.getAddress());
+        this.setMail(pharmacy.getMail());
+        this.setRUC(pharmacy.getRUC());
+        this.setDistrict(pharmacy.getDistrict());
         this.setIsBanned(pharmacy.getIsBanned());
         this.setIdPharmacy(pharmacy.getIdPharmacy());
         this.setPassword(pharmacy.getPassword());
         this.setBanReason(pharmacy.getBanReason());
     }
 
-    public DtoPharmacy(String nombreFarmacia, String direccionFarmacia, String emailFarmacia, String RUCFarmacia, String distritoFarmacia, byte isBanned, int idPharmacy, String password, String banReason, String fechaRecojo) {
-        super(nombreFarmacia, direccionFarmacia, emailFarmacia, RUCFarmacia, distritoFarmacia, isBanned, idPharmacy, password, banReason);
+    public DtoPharmacy(String name, String address, String mail, String RUC, String district, byte isBanned, int idPharmacy, String password, String banReason, String fechaRecojo) {
+        super(name, address, mail, RUC, district, isBanned, idPharmacy, password, banReason);
         this.fechaRecojo = fechaRecojo;
     }
 
