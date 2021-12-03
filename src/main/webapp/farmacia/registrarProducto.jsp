@@ -100,5 +100,6 @@
 
         <%--JS--%>
         <script src="<%=request.getContextPath()%>/res/bootstrap/js/bootstrap.min.js"></script>
+        <script src="<%=request.getContextPath()%>/res/js/main.js"></script>
     </body>
 </html>
