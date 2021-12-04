@@ -1,5 +1,4 @@
 <%@ page import="java.util.ArrayList" %>
-<%@ page buffer="2000kb" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
 <jsp:useBean id="farmacia" scope="request" type="com.example.telefarma.beans.BPharmacy"/>

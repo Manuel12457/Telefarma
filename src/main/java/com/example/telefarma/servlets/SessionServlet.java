@@ -5,7 +5,6 @@ import com.example.telefarma.beans.BDistrict;
 import com.example.telefarma.daos.DistrictDao;
 import com.example.telefarma.dtos.DtoPharmacy;
 import com.example.telefarma.dtos.DtoProductoCarrito;
-import com.example.telefarma.dtos.DtoSesion;
 import com.example.telefarma.dtos.DtoUsuario;
 import com.example.telefarma.daos.SessionDao;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -20,38 +19,34 @@ import java.util.UUID;
 
 @WebServlet(name = "SessionServlet", value = "")
 public class SessionServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         response.setCharacterEncoding("UTF-8");
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action") == null ? "pantallaInicio" : request.getParameter("action");
-        String estadoSesion = request.getParameter("estadoSesion") == null ? "" : request.getParameter("estadoSesion");
-        DtoSesion sesionActiva = (DtoSesion) request.getSession().getAttribute("sesion");
+        HttpSession session = request.getSession();
 
-        //Dando hacia atras se puede retornar al inicio de sesion. Falta ver eso
         if (action.equals("logout")) {
-
             request.getSession().invalidate();
-            response.sendRedirect(request.getContextPath() + "/");
-
-        } else if (sesionActiva != null && sesionActiva.getI() != 0) {
-
-            if (sesionActiva.getClient() != null) {
-                response.sendRedirect(request.getContextPath() + "/ClientServlet");
-            } else if (sesionActiva.getPharmacy() != null) {
-                response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
-            } else if (sesionActiva.getAdmin() != null) {
-                response.sendRedirect(request.getContextPath() + "/AdminServlet");
+            response.sendRedirect(request.getContextPath());
+        } else if (session.getAttribute("sesion") != null) {
+            switch ((String) session.getAttribute("rol")) {
+                case "client":
+                    response.sendRedirect(request.getContextPath() + "/ClientServlet");
+                    break;
+                case "pharmacy":
+                    response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
+                    break;
+                case "admin":
+                    response.sendRedirect(request.getContextPath() + "/AdminServlet");
+                    break;
             }
-
         } else {
-
             RequestDispatcher view;
             switch (action) {
                 case "pantallaInicio":
-                    request.setAttribute("estadoSesion", estadoSesion);
                     view = request.getRequestDispatcher("/ingreso/inicioSesion.jsp");
                     view.forward(request, response);
                     break;
@@ -64,7 +59,6 @@ public class SessionServlet extends HttpServlet {
 
                 case "registrarForm":
                     DistrictDao districtDao = new DistrictDao();
-
                     ArrayList<String> distritosSistema = districtDao.listarDistritosEnSistema();
                     request.setAttribute("cliente", new BClient());
                     request.setAttribute("listaDistritosSistema", distritosSistema);
@@ -86,21 +80,18 @@ public class SessionServlet extends HttpServlet {
                         request.setAttribute("token", token);
                         request.setAttribute("rol", rol);
                         view = request.getRequestDispatcher("/ingreso/cambioContrasenha.jsp");
-                        view.forward(request, response);
                     } else {
                         request.setAttribute("mensaje", "El token ingresado es invalido");
                         view = request.getRequestDispatcher("/ingreso/resultadoIngreso.jsp");
-                        view.forward(request, response);
                     }
+                    view.forward(request, response);
                     break;
             }
-
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         response.setCharacterEncoding("UTF-8");
         request.setCharacterEncoding("UTF-8");
 
@@ -142,7 +133,6 @@ public class SessionServlet extends HttpServlet {
                     view = request.getRequestDispatcher("/ingreso/registroExitoso.jsp");
 
                 } else {
-
                     request.setAttribute("errContrasenha", contrasenhasCoinciden ? 0 : 1);
                     request.setAttribute("errDNI", !dniRepetido ? 0 : 1);
                     request.setAttribute("errMail", !mailRepetido ? 0 : 1);
@@ -207,59 +197,38 @@ public class SessionServlet extends HttpServlet {
                 break;
 
             case "ini":
-
-                String usuarioIni = request.getParameter("email") == null ? "" : request.getParameter("email");
-                String passwordIni = request.getParameter("password") == null ? "" : request.getParameter("password");
-                String md5passIni = DigestUtils.md5Hex(passwordIni);
+                String usuarioIni = request.getParameter("email");
+                String md5passIni = DigestUtils.md5Hex(request.getParameter("password"));
                 DtoUsuario u = s.validarCorreoContrasenha(usuarioIni, md5passIni);
-                DtoSesion sesion = new DtoSesion();
 
                 if (u.getTipoUsuario() != null) {
+                    HttpSession session = request.getSession();
+                    session.setMaxInactiveInterval(10 * 60);
                     switch (u.getTipoUsuario()) {
                         case "client":
-                            HttpSession sessionCliente = request.getSession();
-
-                            sesion.setClient(s.usuarioClient(u.getIdUsuario()));
-                            sesion.setI(1);
-
-                            sessionCliente.setAttribute("sesion", sesion);
-                            sessionCliente.setMaxInactiveInterval(10 * 60);
-
-                            //Se crea el carrito una vez creada la sesión
-                            sessionCliente.setAttribute("listaCarrito", new HashMap<DtoPharmacy, DtoProductoCarrito>());
-
+                            session.setAttribute("sesion", s.usuarioClient(u.getIdUsuario()));
+                            session.setAttribute("rol", "client");
+                            session.setAttribute("listaCarrito", new HashMap<DtoPharmacy, DtoProductoCarrito>());
                             response.sendRedirect(request.getContextPath() + "/ClientServlet");
                             break;
 
                         case "pharmacy":
-                            HttpSession sessionFarmacia = request.getSession();
-
-                            sesion.setPharmacy(s.usuarioFarmacia(u.getIdUsuario()));
-                            sesion.setI(1);
-
-                            sessionFarmacia.setAttribute("sesion", sesion);
-                            sessionFarmacia.setMaxInactiveInterval(10 * 60);
+                            session.setAttribute("sesion", s.usuarioFarmacia(u.getIdUsuario()));
+                            session.setAttribute("rol", "pharmacy");
                             response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
                             break;
 
                         case "admin":
-                            HttpSession sessionAdmin = request.getSession();
-
-                            sesion.setAdmin(s.usuarioAdmin(u.getIdUsuario()));
-                            sesion.setI(1);
-
-                            sessionAdmin.setAttribute("sesion", sesion);
-                            sessionAdmin.setMaxInactiveInterval(10 * 60);
+                            session.setAttribute("sesion", s.usuarioAdmin(u.getIdUsuario()));
+                            session.setAttribute("rol", "admin");
                             response.sendRedirect(request.getContextPath() + "/AdminServlet");
                             break;
                     }
-
                 } else {
                     HttpSession session = request.getSession();
                     session.setAttribute("errorLogin", "Correo o constraseña incorrecto");
                     response.sendRedirect(request.getContextPath() + "/");
                 }
-
                 break;
         }
 

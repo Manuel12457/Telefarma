@@ -4,7 +4,7 @@
 <jsp:useBean id="listaOrdenes" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BOrders>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BPharmacy"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +16,7 @@
         <%--Cabecera de farmacia--%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="farmacia"/>
-            <jsp:param name="nombre" value="<%=sesion.getPharmacy().getName()%>"/>
+            <jsp:param name="nombre" value="<%=sesion.getName()%>"/>
             <jsp:param name="servletBusqueda" value="PharmacyServlet?action=buscarPedido&"/>
             <jsp:param name="busquedaPlaceholder" value="Busca un pedido"/>
         </jsp:include>

@@ -6,8 +6,7 @@
 <%@ page import="com.example.telefarma.dtos.DtoProductoCarrito" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"
-             class="com.example.telefarma.dtos.DtoSesion"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <jsp:useBean id="listaCarrito" scope="session"
              type="java.util.HashMap<com.example.telefarma.dtos.DtoPharmacy, java.util.ArrayList<com.example.telefarma.dtos.DtoProductoCarrito>>"/>
 <%
@@ -22,7 +21,7 @@
     </jsp:include>
     <body>
         <!--Cabecera Principal cliente-->
-        <%String nombreCliente = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
+        <%String nombreCliente = sesion.getName() + " " + sesion.getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>

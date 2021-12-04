@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
-<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"
-             class="com.example.telefarma.dtos.DtoSesion"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +10,7 @@
 
     <body class="user-menu">
 
-        <%String nombreCliente = sesion.getClient().getName();%>
+        <%String nombreCliente = sesion.getName();%>
         <jsp:include page="../barraLateral.jsp">
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
         </jsp:include>
@@ -33,19 +32,19 @@
                                     <form method="POST"
                                           action="<%=request.getContextPath()%>/ClientServlet?action=editar">
                                         <input class="form-control mt-3" type="text" name="id" hidden
-                                               value="<%=sesion.getClient().getIdClient()%>">
+                                               value="<%=sesion.getIdClient()%>">
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <label class="form-label mt-3" for="nombre">Nombre</label>
                                                 <input class="form-control " type="text" name="nombre" id="nombre"
-                                                       placeholder="Nombre" value="<%=sesion.getClient().getName()%>"
+                                                       placeholder="Nombre" value="<%=sesion.getName()%>"
                                                        required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label mt-3" for="apellido">Apellido</label>
                                                 <input class="form-control" type="text" name="apellido"
                                                        placeholder="Apellido" id="apellido"
-                                                       value="<%=sesion.getClient().getLastName()%>" required>
+                                                       value="<%=sesion.getLastName()%>" required>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -55,7 +54,7 @@
                                                     <select class="form-select" name="distrito" id="farmaDistrict"
                                                             required>
                                                         <% for (String distrito : listaDistritosSistema) { %>
-                                                        <option value="<%=distrito%>" <%=sesion.getClient().getDistrict().getName().equals(distrito) ? "selected" : ""%> ><%=distrito%>
+                                                        <option value="<%=distrito%>" <%=sesion.getDistrict().getName().equals(distrito) ? "selected" : ""%> ><%=distrito%>
                                                         </option>
                                                         <% } %>
                                                     </select>

@@ -4,9 +4,9 @@
              type="java.util.ArrayList<com.example.telefarma.dtos.DtoProductoVisualizacion>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BPharmacy"/>
+<jsp:useBean id="busqueda" scope="request" type="java.lang.String"/>
 <%
-    String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
     String result = (String) session.getAttribute("result");
 %>
 
@@ -20,7 +20,7 @@
         <%--Cabecera de admin--%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="farmacia"/>
-            <jsp:param name="nombre" value="<%=sesion.getPharmacy().getName()%>"/>
+            <jsp:param name="nombre" value="<%=sesion.getName()%>"/>
             <jsp:param name="servletBusqueda" value="PharmacyServlet?action=buscarProducto&"/>
             <jsp:param name="busquedaPlaceholder" value="Busca un producto"/>
         </jsp:include>

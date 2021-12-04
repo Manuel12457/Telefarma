@@ -1,8 +1,7 @@
 <%@ page import="com.example.telefarma.servlets.ClientServlet" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BProduct"/>
-<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"
-             class="com.example.telefarma.dtos.DtoSesion"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
 
 <!DOCTYPE html>
@@ -12,7 +11,7 @@
     </jsp:include>
 
     <body>
-        <%String nombreCliente = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
+        <%String nombreCliente = sesion.getName() + " " + sesion.getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>

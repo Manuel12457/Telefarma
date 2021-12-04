@@ -210,10 +210,8 @@ public class SessionDao extends BaseDao {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if(rs.next()) {
-                    String id = rs.getString(1);
-                    String tipo = rs.getString(2);
-                    usuario.setIdUsuario(Integer.parseInt(id));
-                    usuario.setTipoUsuario(tipo);
+                    usuario.setIdUsuario(Integer.parseInt(rs.getString(1)));
+                    usuario.setTipoUsuario(rs.getString(2));
                 }
             }
 

@@ -5,11 +5,10 @@
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String"/>
-<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"
-             class="com.example.telefarma.dtos.DtoSesion"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <%
-    int idClient = sesion.getClient().getIdClient();
-    String nombreCliente = sesion.getClient().getName();
+    int idClient = sesion.getIdClient();
+    String nombreCliente = sesion.getName();
 %>
 
 <!DOCTYPE html>

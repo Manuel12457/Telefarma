@@ -1,9 +1,9 @@
 package com.example.telefarma.servlets;
 
+import com.example.telefarma.beans.BAdmin;
 import com.example.telefarma.beans.BDistrict;
 import com.example.telefarma.beans.BPharmacy;
 import com.example.telefarma.daos.*;
-import com.example.telefarma.dtos.DtoSesion;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -18,81 +18,70 @@ public class AdminServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        DtoSesion sesionAdmin = (DtoSesion) request.getSession().getAttribute("sesion");
+        HttpSession session = request.getSession();
 
-        if (sesionAdmin != null) {
-            if (sesionAdmin.getAdmin() != null) {
+        if (session.getAttribute("rol").equals("admin")) {
 
-                String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
-                int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
-                String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
-                PharmacyDao pharmacyDao = new PharmacyDao();
-                BPharmacy f = new BPharmacy();
-                DistrictDao districtDao = new DistrictDao();
-                ArrayList<String> distritosSistema = districtDao.listarDistritosEnSistema();
+//            BAdmin admin = (BAdmin) session.getAttribute("sesion");
 
-                RequestDispatcher view;
-                switch (accion) {
+            String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
+            int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
+            String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
 
-                    case "":
+            PharmacyDao pharmacyDao = new PharmacyDao();
+            BPharmacy f = new BPharmacy();
+            DistrictDao districtDao = new DistrictDao();
 
-                        int limitedistritos = 2;
+            ArrayList<String> distritosSistema = districtDao.listarDistritosEnSistema();
 
-                        ArrayList<String> distritos = pharmacyDao.listarDistritosLimite(pagina, busqueda, limitedistritos);
-                        int numDistritos = pharmacyDao.listarDistritosLimite(0, busqueda, 1000).size();
+            RequestDispatcher view;
+            switch (accion) {
 
-                        request.setAttribute("pagActual", pagina);
-                        request.setAttribute("pagTotales", (int) Math.ceil((double) numDistritos / limitedistritos));
-                        request.setAttribute("numDistritos", limitedistritos);
-                        request.setAttribute("listaDistritosAMostrar", distritos);
+                case "":
+                    int limitedistritos = 2;
+                    ArrayList<String> distritos = pharmacyDao.listarDistritosLimite(pagina, busqueda, limitedistritos);
 
-                        ArrayList<ArrayList<BPharmacy>> listaListaFarmacias = new ArrayList<ArrayList<BPharmacy>>();
+                    request.setAttribute("pagActual", pagina);
+                    request.setAttribute("pagTotales", (int) Math.ceil((double) pharmacyDao.listarDistritosLimite(0, busqueda, 1000).size() / limitedistritos));
+                    request.setAttribute("numDistritos", limitedistritos);
+                    request.setAttribute("listaDistritosAMostrar", distritos);
 
-                        for (String d : distritos) {
-                            ArrayList<BPharmacy> farmaciasAdmin = pharmacyDao.listarFarmaciasAdminPorDistrito(d, busqueda);
-                            listaListaFarmacias.add(farmaciasAdmin);
-                        }
+                    ArrayList<ArrayList<BPharmacy>> listaListaFarmacias = new ArrayList<>();
+                    for (String d : distritos) {
+                        ArrayList<BPharmacy> farmaciasAdmin = pharmacyDao.listarFarmaciasAdminPorDistrito(d, busqueda);
+                        listaListaFarmacias.add(farmaciasAdmin);
+                    }
+                    request.setAttribute("listaListaFarmacias", listaListaFarmacias);
 
-                        request.setAttribute("listaListaFarmacias", listaListaFarmacias);
+                    view = request.getRequestDispatcher("/admin/buscadorFarmacias.jsp");
+                    view.forward(request, response);
+                    break;
 
-                        view = request.getRequestDispatcher("/admin/buscadorFarmacias.jsp");
-                        view.forward(request, response);
-                        break;
+                case "registrarForm":
+                    request.setAttribute("listaDistritosSistema", distritosSistema);
+                    request.setAttribute("datosIngresados", f);
+                    view = request.getRequestDispatcher("/admin/registroFarmacia.jsp");
+                    view.forward(request, response);
+                    break;
 
-                    case "registrarForm":
-                        request.setAttribute("listaDistritosSistema", distritosSistema);
-                        request.setAttribute("datosIngresados", f);
-                        view = request.getRequestDispatcher("/admin/registroFarmacia.jsp");
-                        view.forward(request, response);
-                        break;
+                case "editarForm":
+                    String idStr = request.getParameter("id") == null ? "" : request.getParameter("id");
+                    String distrito = request.getParameter("distrito") == null ? "" : request.getParameter("distrito");
+                    if ((idStr != null && !idStr.equals("")) && (distrito != null && !distrito.equals(""))) {
+                        if (pharmacyDao.listarFarmaciasAdminPorDistrito(distrito, pharmacyDao.obtenerFarmaciaPorId(Integer.parseInt(idStr)).getName()).size() != 0) {
+                            request.setAttribute("farmacia", pharmacyDao.listarFarmaciasAdminPorDistrito(distrito, pharmacyDao.obtenerFarmaciaPorId(Integer.parseInt(idStr)).getName()).get(0));
+                            request.setAttribute("listaDistritosSistema", distritosSistema);
 
-                    case "editarForm":
-                        String idStr = request.getParameter("id") == null ? "" : request.getParameter("id");
-                        String distrito = request.getParameter("distrito") == null ? "" : request.getParameter("distrito");
-                        if ((idStr != null && !idStr.equals("")) && (distrito != null && !distrito.equals(""))) {
-                            if (pharmacyDao.listarFarmaciasAdminPorDistrito(distrito, pharmacyDao.obtenerFarmaciaPorId(Integer.parseInt(idStr)).getName()).size() != 0) {
-                                request.setAttribute("farmacia", pharmacyDao.listarFarmaciasAdminPorDistrito(distrito, pharmacyDao.obtenerFarmaciaPorId(Integer.parseInt(idStr)).getName()).get(0));
-                                request.setAttribute("listaDistritosSistema", distritosSistema);
-
-                                view = request.getRequestDispatcher("/admin/editarFarmacia.jsp");
-                                view.forward(request, response);
-                            } else {
-                                response.sendRedirect(request.getContextPath() + "/AdminServlet?edicion=ne");
-                            }
+                            view = request.getRequestDispatcher("/admin/editarFarmacia.jsp");
+                            view.forward(request, response);
                         } else {
                             response.sendRedirect(request.getContextPath() + "/AdminServlet?edicion=ne");
                         }
-                        break;
-                }
-
-            } else {
-                if (sesionAdmin.getClient() != null) {
-                    response.sendRedirect(request.getContextPath() + "/ClientServlet");
-                } else if (sesionAdmin.getPharmacy() != null) {
-                    response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
-                }
+                    } else {
+                        response.sendRedirect(request.getContextPath() + "/AdminServlet?edicion=ne");
+                    }
+                    break;
             }
-
         } else {
             response.sendRedirect(request.getContextPath());
         }
@@ -246,6 +235,5 @@ public class AdminServlet extends HttpServlet {
                 }
                 break;
         }
-
     }
 }

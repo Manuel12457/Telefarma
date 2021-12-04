@@ -5,8 +5,7 @@
              type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BPharmacy>>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"
-             class="com.example.telefarma.dtos.DtoSesion"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
 
 <!DOCTYPE html>
@@ -17,7 +16,7 @@
 
     <body>
         <!--Barra de Navegación Superior-->
-        <%String nombreCliente = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
+        <%String nombreCliente = sesion.getName() + " " + sesion.getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
@@ -76,7 +75,6 @@
                                     break;
                             }
                         }
-
                 %>
                 <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
                     <%=alertMssg%>
@@ -89,7 +87,7 @@
                 <!--Mismo Distrito-->
                 <%
                     boolean otraFarmaciaMostrada = false;
-                    String distritoCliente = sesion.getClient().getDistrict().getName();
+                    String distritoCliente = sesion.getDistrict().getName();
                     for (ArrayList<BPharmacy> listaFarmaciasDistrito : listaFarmacias) {
 
                         if (listaFarmaciasDistrito.size() > 0) {

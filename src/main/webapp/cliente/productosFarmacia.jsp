@@ -7,8 +7,7 @@
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="idPharmacy" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String" class="java.lang.String"/>
-<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.dtos.DtoSesion"
-             class="com.example.telefarma.dtos.DtoSesion"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
 <%
     String servletBusqueda = "ClientServlet?action=buscarProductosDeFarmacia&idPharmacy=" + idPharmacy + "&";
@@ -24,7 +23,7 @@
 
     <body>
         <!--Barra de Navegación Superior-->
-        <%String nombreCliente = sesion.getClient().getName() + " " + sesion.getClient().getLastName();%>
+        <%String nombreCliente = sesion.getName() + " " + sesion.getLastName();%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
@@ -81,7 +80,7 @@
                                 </div>
                                 <div class="card-body d-flex flex-column">
                                     <img src="${pageContext.request.contextPath}/Image?idProduct=<%= producto.getIdProduct() %>"
-                                         class="card-img-top mb-1"
+                                         class="card-img-top mb-1" alt="producto"
                                          aria-label="Producto">
                                     <div class="mt-auto">
                                         <div class="d-flex justify-content-around">
