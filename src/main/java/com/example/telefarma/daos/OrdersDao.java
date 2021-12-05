@@ -35,7 +35,7 @@ public class OrdersDao extends BaseDao {
         return null;
     }
 
-    public ArrayList<BOrders> listarOrdenes(String busqueda, int pagina, int limite, int id) {
+    public ArrayList<BOrders> listarOrdenes(int pagina, int limite, String busqueda, int id) {
         ArrayList<BOrders> listaOrdenes = new ArrayList<>();
 
         String sql = "select o.idOrder,f.name,o.orderDate,o.pickUpDate,sum(p.price*od.quantity),o.status \n" +
@@ -46,8 +46,9 @@ public class OrdersDao extends BaseDao {
                 "inner join client c on (o.idClient=c.idClient) \n" +
                 "where c.idClient=" + id + " and o.idOrder like ? \n" +
                 "group by o.idOrder \n" +
-                "order by o.orderDate desc\n" +
-                "limit " + pagina * limite + "," + limite + ";";
+                "order by o.orderDate desc\n";
+
+        sql = (limite != -1) ? (sql + "limit " + (limite * pagina) + "," + limite + ";") : sql;
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

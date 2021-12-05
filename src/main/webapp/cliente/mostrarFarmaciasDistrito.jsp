@@ -4,24 +4,24 @@
              type="java.util.ArrayList<com.example.telefarma.beans.BPharmacy>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="district" scope="request" type="java.lang.String"/>
+<jsp:useBean id="district" scope="request" type="com.example.telefarma.beans.BDistrict"/>
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String" class="java.lang.String"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
 <%
-    String servletBusqueda = "ClientServlet?action=buscarFarmaciaDeDistrito&district=" + district + "&";
-    String busquedaPlaceholder = "Busca una farmacia en " + district;
+    String servletBusqueda = "ClientServlet?action=buscarFarmaciaDeDistrito&district=" + district.getIdDistrict() + "&";
+    String busquedaPlaceholder = "Busca una farmacia en " + district.getName();
 %>
 
 <!DOCTYPE html>
 <html lang="en">
     <jsp:include page="/includes/head.jsp">
-        <jsp:param name="title" value="Telefarma - <%=district%>"/>
+        <jsp:param name="title" value="Telefarma - <%=district.getName()%>"/>
     </jsp:include>
 
     <body>
         <!--Barra de Navegación Superior-->
-        <%String nombreCliente = sesion.getName() + " " + sesion.getLastName();%>
+        <% String nombreCliente = sesion.getName() + " " + sesion.getLastName(); %>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
@@ -39,7 +39,7 @@
                 <div class="row">
                     <div class="container px-5 pb-2" id="custom-cards-san-juan">
                         <!--Nombre distrito-->
-                        <h4 class="dist-name"><%= district %>
+                        <h4 class="dist-name"><%= district.getName() %>
                         </h4>
                         <!--Farmacias-->
                         <div class="row row-cols-1 row-cols-lg-3 g-4 py-3">
@@ -53,7 +53,7 @@
                                     imageCount++;
                             %>
                             <div class="col">
-                                <div onclick="location.href='<%= request.getContextPath()%>/ClientServlet?action=farmaciaYProductos&idPharmacy=<%= farmacia.getIdPharmacy() %>'"
+                                <div onclick="location.href='<%= request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%= farmacia.getIdPharmacy() %>'"
                                      class="card card-farmacia f<%= imageCount %>">
                                     <h2><%= farmacia.getName() %>
                                     </h2>
@@ -74,7 +74,7 @@
                 </div>
             </div>
             <!--Paginación-->
-            <%String servlet = "/ClientServlet?action=farmaciasDeDistrito&busqueda=" + busqueda + "&district=" + district + "&";%>
+            <%String servlet = "/ClientServlet?action=verFarmaciasDistrito&busqueda=" + busqueda + "&district=" + district.getIdDistrict() + "&";%>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>

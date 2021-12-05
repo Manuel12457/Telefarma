@@ -1,5 +1,6 @@
 package com.example.telefarma.dtos;
 
+import com.example.telefarma.beans.BDistrict;
 import com.example.telefarma.beans.BPharmacy;
 
 public class DtoPharmacy extends BPharmacy {
@@ -18,7 +19,7 @@ public class DtoPharmacy extends BPharmacy {
         this.setBanReason(pharmacy.getBanReason());
     }
 
-    public DtoPharmacy(String name, String address, String mail, String RUC, String district, byte isBanned, int idPharmacy, String password, String banReason, String fechaRecojo) {
+    public DtoPharmacy(String name, String address, String mail, String RUC, BDistrict district, byte isBanned, int idPharmacy, String password, String banReason, String fechaRecojo) {
         super(name, address, mail, RUC, district, isBanned, idPharmacy, password, banReason);
         this.fechaRecojo = fechaRecojo;
     }

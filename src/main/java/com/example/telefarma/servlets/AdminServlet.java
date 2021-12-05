@@ -1,6 +1,5 @@
 package com.example.telefarma.servlets;
 
-import com.example.telefarma.beans.BAdmin;
 import com.example.telefarma.beans.BDistrict;
 import com.example.telefarma.beans.BPharmacy;
 import com.example.telefarma.daos.*;
@@ -19,7 +18,6 @@ public class AdminServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession();
-
         if (session.getAttribute("rol").equals("admin")) {
 
 //            BAdmin admin = (BAdmin) session.getAttribute("sesion");
@@ -32,55 +30,53 @@ public class AdminServlet extends HttpServlet {
             BPharmacy f = new BPharmacy();
             DistrictDao districtDao = new DistrictDao();
 
-            ArrayList<String> distritosSistema = districtDao.listarDistritosEnSistema();
+            ArrayList<BDistrict> listaDistritos = districtDao.listarDistritos();
 
             RequestDispatcher view;
             switch (accion) {
-
                 case "":
                     int limitedistritos = 2;
-                    ArrayList<String> distritos = pharmacyDao.listarDistritosLimite(pagina, busqueda, limitedistritos);
+                    ArrayList<BDistrict> distritos = districtDao.listarDistritosAdmin(pagina, limitedistritos, busqueda);
 
                     request.setAttribute("pagActual", pagina);
-                    request.setAttribute("pagTotales", (int) Math.ceil((double) pharmacyDao.listarDistritosLimite(0, busqueda, 1000).size() / limitedistritos));
+                    request.setAttribute("pagTotales", (int) Math.ceil((double) districtDao.listarDistritosAdmin(0, -1, busqueda).size() / limitedistritos));
                     request.setAttribute("numDistritos", limitedistritos);
                     request.setAttribute("listaDistritosAMostrar", distritos);
 
-                    ArrayList<ArrayList<BPharmacy>> listaListaFarmacias = new ArrayList<>();
-                    for (String d : distritos) {
-                        ArrayList<BPharmacy> farmaciasAdmin = pharmacyDao.listarFarmaciasAdminPorDistrito(d, busqueda);
-                        listaListaFarmacias.add(farmaciasAdmin);
+                    ArrayList<ArrayList<BPharmacy>> listaFarmacias = new ArrayList<>();
+                    for (BDistrict distrito : distritos) {
+                        ArrayList<BPharmacy> farmaciasAdmin = pharmacyDao.listarFarmaciasPorDistrito(0, -1, busqueda, 1, distrito.getIdDistrict());
+                        listaFarmacias.add(farmaciasAdmin);
                     }
-                    request.setAttribute("listaListaFarmacias", listaListaFarmacias);
+                    request.setAttribute("listaFarmacias", listaFarmacias);
 
                     view = request.getRequestDispatcher("/admin/buscadorFarmacias.jsp");
                     view.forward(request, response);
                     break;
 
                 case "registrarForm":
-                    request.setAttribute("listaDistritosSistema", distritosSistema);
+                    request.setAttribute("listaDistritos", listaDistritos);
                     request.setAttribute("datosIngresados", f);
                     view = request.getRequestDispatcher("/admin/registroFarmacia.jsp");
                     view.forward(request, response);
                     break;
 
                 case "editarForm":
-                    String idStr = request.getParameter("id") == null ? "" : request.getParameter("id");
-                    String distrito = request.getParameter("distrito") == null ? "" : request.getParameter("distrito");
-                    if ((idStr != null && !idStr.equals("")) && (distrito != null && !distrito.equals(""))) {
-                        if (pharmacyDao.listarFarmaciasAdminPorDistrito(distrito, pharmacyDao.obtenerFarmaciaPorId(Integer.parseInt(idStr)).getName()).size() != 0) {
-                            request.setAttribute("farmacia", pharmacyDao.listarFarmaciasAdminPorDistrito(distrito, pharmacyDao.obtenerFarmaciaPorId(Integer.parseInt(idStr)).getName()).get(0));
-                            request.setAttribute("listaDistritosSistema", distritosSistema);
+                    try {
+                        int idPharmacy = Integer.parseInt(request.getParameter("id"));
 
-                            view = request.getRequestDispatcher("/admin/editarFarmacia.jsp");
-                            view.forward(request, response);
-                        } else {
-                            response.sendRedirect(request.getContextPath() + "/AdminServlet?edicion=ne");
-                        }
-                    } else {
+                        request.setAttribute("farmacia", pharmacyDao.obtenerFarmaciaPorId(idPharmacy));
+                        request.setAttribute("listaDistritos", listaDistritos);
+
+                        view = request.getRequestDispatcher("/admin/editarFarmacia.jsp");
+                        view.forward(request, response);
+                        break;
+
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
                         response.sendRedirect(request.getContextPath() + "/AdminServlet?edicion=ne");
+                        break;
                     }
-                    break;
             }
         } else {
             response.sendRedirect(request.getContextPath());
@@ -99,7 +95,9 @@ public class AdminServlet extends HttpServlet {
         SessionDao sessionDao = new SessionDao();
 
         int idPharmacy;
+        String dominio = "http://localhost:8080/";
         boolean correoExiste, rucExiste, longitudRUCValida, rucIsNum, rucValido;
+        ArrayList<BDistrict> listaDistritos = districtDao.listarDistritos();
 
         String action = request.getParameter("action");
 
@@ -110,7 +108,7 @@ public class AdminServlet extends HttpServlet {
                 f.setName(request.getParameter("nombre"));
                 f.setMail(request.getParameter("correo"));
                 f.setAddress(request.getParameter("direccion"));
-                f.setDistrict(new BDistrict(request.getParameter("distrito")));
+                f.setDistrict(new BDistrict(Integer.parseInt(request.getParameter("distrito"))));
 
                 correoExiste = sessionDao.correoExiste(f.getMail());
                 rucExiste = pharmacyDao.existeRUC(f.getRUC());
@@ -125,20 +123,14 @@ public class AdminServlet extends HttpServlet {
                 rucValido = !rucExiste && longitudRUCValida && rucIsNum;
 
                 if (!correoExiste && rucValido) {
-                    if (pharmacyDao.registrarFarmacia(f.getRUC(), f.getName(), f.getMail(), f.getAddress(), f.getDistrict().getName())) {
+                    if (pharmacyDao.registrarFarmacia(f.getRUC(), f.getName(), f.getMail(), f.getAddress(), f.getDistrict().getIdDistrict())) {
                         request.getSession().setAttribute("actionResult", "Farmacia registrada exitosamente.");
                         request.getSession().setAttribute("actionResultBoolean", true);
+                        MailServlet.sendMail(f.getMail(), "Registro de Farmacia", MailServlet.pharmacyRegMssg(f, dominio + request.getContextPath()));
                     } else {
                         request.getSession().setAttribute("actionResult", "Hubo un problema con el registro de la farmacia");
                         request.getSession().setAttribute("actionResultBoolean", false);
                     }
-
-                    String emailRegistro = "La farmacia " + f.getName() + " se ha registrado correctamente:\n" +
-                            "Email: " + f.getMail() + "\n" +
-                            "Dirección: " + f.getAddress() + "\n" +
-                            "Distrito: " + f.getDistrict().getName() + "\n" +
-                            "RUC: " + f.getRUC();
-                    MailServlet.sendMail(f.getMail(), "Farmacia registrada exitosamente", emailRegistro);
                     response.sendRedirect(request.getContextPath() + "/AdminServlet");
                 } else {
                     ArrayList<String> errorList = new ArrayList<>();
@@ -148,8 +140,7 @@ public class AdminServlet extends HttpServlet {
                     if (!longitudRUCValida) errorList.add("El RUC debe tener 11 dígitos.");
                     request.getSession().setAttribute("errorList", errorList);
 
-                    ArrayList<String> distritosSistema = districtDao.listarDistritosEnSistema();
-                    request.setAttribute("listaDistritosSistema", distritosSistema);
+                    request.setAttribute("listaDistritos", listaDistritos);
                     request.setAttribute("datosIngresados", f);
 
                     view = request.getRequestDispatcher("/admin/registroFarmacia.jsp");
@@ -168,11 +159,12 @@ public class AdminServlet extends HttpServlet {
                     request.getSession().setAttribute("actionResult", "La farmacia tiene al menos un pedido pendiente. Inténtalo de nuevo más tarde.");
                     request.getSession().setAttribute("actionResultBoolean", false);
                 } else {
-                    String razon = request.getParameter("razon") == null ? "" : request.getParameter("razon");
-                    //ENVIAR CORREO CON LA RAZON
+                    String razon = request.getParameter("razon");
                     pharmacyDao.banearFarmacia(idPharmacy, razon);
                     request.getSession().setAttribute("actionResult", "La farmacia fue baneada con éxito.");
                     request.getSession().setAttribute("actionResultBoolean", true);
+                    BPharmacy pharmacy = pharmacyDao.obtenerFarmaciaPorId(idPharmacy);
+                    MailServlet.sendMail(pharmacy.getMail(), "Notificación de Bloqueo", MailServlet.pharmacyBanMssg(pharmacy));
                 }
                 response.sendRedirect(request.getContextPath() + "/AdminServlet");
                 break;
@@ -180,9 +172,11 @@ public class AdminServlet extends HttpServlet {
             case "desbanear":
                 idPharmacy = Integer.parseInt(request.getParameter("id"));
                 pharmacyDao.desBanearFarmacia(idPharmacy);
-                //TAL VEZ TAMBIÉN ENVIAR CORREO DE DESBAN?
+                //-----Faltaría borrar el banReason de la farmacia?-----
                 request.getSession().setAttribute("actionResult", "La farmacia seleccionada fue desbaneada.");
                 request.getSession().setAttribute("actionResultBoolean", true);
+                BPharmacy pharmacy = pharmacyDao.obtenerFarmaciaPorId(idPharmacy);
+                MailServlet.sendMail(pharmacy.getMail(), "Notificación de Desbloqueo", MailServlet.pharmacyUnbanMssg(pharmacy));
                 response.sendRedirect(request.getContextPath() + "/AdminServlet?result=desban");
                 break;
 
@@ -191,7 +185,7 @@ public class AdminServlet extends HttpServlet {
                 f.setName(request.getParameter("nombre"));
                 f.setMail(request.getParameter("correo"));
                 f.setAddress(request.getParameter("direccion"));
-                f.setDistrict(new BDistrict(request.getParameter("distrito")));
+                f.setDistrict(new BDistrict(Integer.parseInt(request.getParameter("distrito"))));
                 f.setIdPharmacy(Integer.parseInt(request.getParameter("id")));
 
                 BPharmacy fa = pharmacyDao.obtenerFarmaciaPorId(f.getIdPharmacy());
@@ -210,9 +204,10 @@ public class AdminServlet extends HttpServlet {
                 rucValido = !rucExiste && longitudRUCValida && rucIsNum;
 
                 if (!correoExiste && rucValido) {
-                    if (pharmacyDao.editarFarmacia(f.getRUC(), f.getName(), f.getMail(), f.getAddress(), f.getDistrict().getName(), f.getIdPharmacy())) {
+                    if (pharmacyDao.editarFarmacia(f.getRUC(), f.getName(), f.getMail(), f.getAddress(), f.getDistrict().getIdDistrict(), f.getIdPharmacy())) {
                         request.getSession().setAttribute("actionResult", "Farmacia editada exitosamente.");
                         request.getSession().setAttribute("actionResultBoolean", true);
+                        MailServlet.sendMail(f.getMail(), "Cambio de información de la farmacia", MailServlet.pharmacyEditMssg(f));
                     } else {
                         request.getSession().setAttribute("actionResult", "Hubo un problema con la edición de la farmacia.");
                         request.getSession().setAttribute("actionResultBoolean", false);
@@ -226,8 +221,7 @@ public class AdminServlet extends HttpServlet {
                     if (!longitudRUCValida) errorList.add("El RUC debe tener 11 dígitos.");
                     request.getSession().setAttribute("errorList", errorList);
 
-                    ArrayList<String> distritosSistema = districtDao.listarDistritosEnSistema();
-                    request.setAttribute("listaDistritosSistema", distritosSistema);
+                    request.setAttribute("listaDistritos", listaDistritos);
                     request.setAttribute("farmacia", f);
 
                     view = request.getRequestDispatcher("/admin/editarFarmacia.jsp");

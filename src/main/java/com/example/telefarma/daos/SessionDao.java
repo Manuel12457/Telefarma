@@ -58,7 +58,7 @@ public class SessionDao extends BaseDao {
     }
 
     public String registrarUsuario(BClient client) {
-        String sql = "insert into client (name,lastName,DNI,password,mail,District_name)\n" +
+        String sql = "insert into client (name,lastName,DNI,password,mail,idDistrict)\n" +
                 "values (?,?,?,?,?,?);";
 
         try (Connection conn = this.getConnection();
@@ -69,7 +69,7 @@ public class SessionDao extends BaseDao {
             pstmt.setString(3, client.getDni());
             pstmt.setString(4, client.getPassword());
             pstmt.setString(5, client.getMail());
-            pstmt.setString(6, client.getDistrict().getName());
+            pstmt.setInt(6, client.getDistrict().getIdDistrict());
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -246,9 +246,8 @@ public class SessionDao extends BaseDao {
     }
 
     public BClient usuarioClient(int id) {
-
         BClient client = new BClient();
-        String sql = "select * from telefarma.client where idClient = ?;";
+        String sql = "select * from client where idClient = ?;";
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
@@ -262,7 +261,7 @@ public class SessionDao extends BaseDao {
                     client.setDni(rs.getString(4));
                     client.setPassword(rs.getString(5));
                     client.setMail(rs.getString(6));
-                    client.setDistrict(new BDistrict(rs.getString(7)));
+                    client.setDistrict(new BDistrict(rs.getInt(7)));
                 }
             }
 
@@ -275,7 +274,7 @@ public class SessionDao extends BaseDao {
     public BPharmacy usuarioFarmacia(int id) {
 
         BPharmacy farmacia = new BPharmacy();
-        String sql = "select * from telefarma.pharmacy where idPharmacy = ?;";
+        String sql = "select * from pharmacy where idPharmacy = ?;";
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
@@ -291,7 +290,7 @@ public class SessionDao extends BaseDao {
                     farmacia.setAddress(rs.getString(6));
                     farmacia.setIsBanned(rs.getByte(7));
                     farmacia.setBanReason(rs.getString(8));
-                    farmacia.setDistrict(new BDistrict(rs.getString(9)));
+                    farmacia.setDistrict(new BDistrict(rs.getInt(9)));
                 }
             }
 

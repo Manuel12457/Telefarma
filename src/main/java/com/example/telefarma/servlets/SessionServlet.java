@@ -59,9 +59,8 @@ public class SessionServlet extends HttpServlet {
 
                 case "registrarForm":
                     DistrictDao districtDao = new DistrictDao();
-                    ArrayList<String> distritosSistema = districtDao.listarDistritosEnSistema();
                     request.setAttribute("cliente", new BClient());
-                    request.setAttribute("listaDistritosSistema", distritosSistema);
+                    request.setAttribute("listaDistritos", districtDao.listarDistritos());
                     request.setAttribute("errContrasenha", 0);
                     request.setAttribute("errDNI", 0);
                     request.setAttribute("errMail", 0);
@@ -96,7 +95,7 @@ public class SessionServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
-        String dominio = "http://localhost:8080";
+        String dominio = "http://localhost:8080/";
         SessionDao s = new SessionDao();
 
         RequestDispatcher view;
@@ -106,7 +105,7 @@ public class SessionServlet extends HttpServlet {
                 BClient client = new BClient();
                 client.setName(request.getParameter("nombre"));
                 client.setLastName(request.getParameter("apellido"));
-                client.setDistrict(new BDistrict(request.getParameter("distrito")));
+                client.setDistrict(new BDistrict(Integer.parseInt(request.getParameter("distrito"))));
                 client.setDni(request.getParameter("dni"));
                 client.setMail(request.getParameter("email"));
                 String contrasenha = request.getParameter("password");
@@ -126,12 +125,11 @@ public class SessionServlet extends HttpServlet {
                 }
 
                 if (contrasenhasCoinciden && !dniRepetido && !mailRepetido && dniNumero && dniLongitud) {
-
                     String md5pass = DigestUtils.md5Hex(contrasenha);
                     client.setPassword(md5pass);
                     String err = s.registrarUsuario(client);
+                    MailServlet.sendMail(client.getMail(), "Bienvenido a Telefarma", MailServlet.clientRegMssg(client, dominio + request.getContextPath()));
                     view = request.getRequestDispatcher("/ingreso/registroExitoso.jsp");
-
                 } else {
                     request.setAttribute("errContrasenha", contrasenhasCoinciden ? 0 : 1);
                     request.setAttribute("errDNI", !dniRepetido ? 0 : 1);
@@ -140,12 +138,9 @@ public class SessionServlet extends HttpServlet {
                     request.setAttribute("errDNILong", dniLongitud ? 0 : 1);
 
                     DistrictDao districtDao = new DistrictDao();
-
-                    ArrayList<String> distritosSistema = districtDao.listarDistritosEnSistema();
                     request.setAttribute("cliente", client);
-                    request.setAttribute("listaDistritosSistema", distritosSistema);
+                    request.setAttribute("listaDistritos", districtDao.listarDistritos());
                     view = request.getRequestDispatcher("/ingreso/registrarUsuario.jsp");
-
                 }
                 view.forward(request, response);
                 break;
@@ -167,12 +162,7 @@ public class SessionServlet extends HttpServlet {
                     String rol = hm.get(idUser);
 
                     s.loadToken(token, rol, idUser);
-
-                    String tokenMail = "Ingrese al siguiente enlace para cambiar la contraseña: \n" + dominio +
-                            request.getContextPath() + "/?action=cambiarContrasenha&rol=" + rol + "&token=" + token +
-                            "\n\n<i>Si no fuiste tú, ignora este mensaje.</i>";
-                    MailServlet.sendMail(mail, "Cambio de contraseña", tokenMail);
-
+                    MailServlet.sendMail(mail, "Cambio de contraseña", MailServlet.rstPassTokenMssg(rol, token, dominio + request.getContextPath()));
                     request.setAttribute("mensaje", "Se ha enviado un correo a la dirección de correo indicada");
                     view = request.getRequestDispatcher("/ingreso/resultadoIngreso.jsp");
                 } else {
@@ -201,8 +191,8 @@ public class SessionServlet extends HttpServlet {
                 String md5passIni = DigestUtils.md5Hex(request.getParameter("password"));
                 DtoUsuario u = s.validarCorreoContrasenha(usuarioIni, md5passIni);
 
+                HttpSession session = request.getSession();
                 if (u.getTipoUsuario() != null) {
-                    HttpSession session = request.getSession();
                     session.setMaxInactiveInterval(10 * 60);
                     switch (u.getTipoUsuario()) {
                         case "client":
@@ -225,12 +215,10 @@ public class SessionServlet extends HttpServlet {
                             break;
                     }
                 } else {
-                    HttpSession session = request.getSession();
                     session.setAttribute("errorLogin", "Correo o constraseña incorrecto");
                     response.sendRedirect(request.getContextPath() + "/");
                 }
                 break;
         }
-
     }
 }

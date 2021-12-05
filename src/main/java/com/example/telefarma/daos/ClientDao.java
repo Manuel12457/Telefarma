@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class ClientDao extends BaseDao {
 
     public String editarCliente(BClient client) {
-        String sql = "update client set name = ?, lastName = ?, District_name = ?\n" +
+        String sql = "update client set name = ?, lastName = ?, idDistrict = ?\n" +
                 "where idClient = ?;";
 
         try (Connection conn = this.getConnection();
@@ -17,7 +17,7 @@ public class ClientDao extends BaseDao {
 
             pstmt.setString(1, client.getName());
             pstmt.setString(2, client.getLastName());
-            pstmt.setString(3, client.getDistrict().getName());
+            pstmt.setInt(3, client.getDistrict().getIdDistrict());
             pstmt.setInt(4, client.getIdClient());
             pstmt.executeUpdate();
 

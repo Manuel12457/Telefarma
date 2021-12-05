@@ -37,7 +37,6 @@
                     String alertMssg = "";
                     if (session.getAttribute("orden") != null) {
                         String estadoOrden = (String) session.getAttribute("orden");
-
                         if (!estadoOrden.equals("")) {
                             switch (estadoOrden) {
                                 case "e":
@@ -59,8 +58,6 @@
                 <%
                         session.removeAttribute("orden");
                     }
-                %>
-                <%
                     String estadoEditar = (String) session.getAttribute("editar");
                     if (estadoEditar != null) {
                         if (!estadoEditar.equals("")) {
@@ -87,11 +84,10 @@
                 <!--Mismo Distrito-->
                 <%
                     boolean otraFarmaciaMostrada = false;
-                    String distritoCliente = sesion.getDistrict().getName();
+                    int distritoCliente = sesion.getDistrict().getIdDistrict();
                     for (ArrayList<BPharmacy> listaFarmaciasDistrito : listaFarmacias) {
-
                         if (listaFarmaciasDistrito.size() > 0) {
-                            if (listaFarmaciasDistrito.get(0).getDistrict().getName().equals(distritoCliente)) {
+                            if (listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict() == distritoCliente) {
                 %>
                 <div class="row">
                     <h3><i class="fas fa-thumbtack fa-xs"></i>&nbsp;Farmacias cercanas a usted</h3>
@@ -121,7 +117,7 @@
                                     imageCount++; //el loop será solo de 3 veces por el limit, entonces será f1,f2,f3
                             %>
                             <div class="col">
-                                <div onclick="location.href='<%= request.getContextPath()%>/ClientServlet?action=farmaciaYProductos&idPharmacy=<%= farmacia.getIdPharmacy() %>'"
+                                <div onclick="location.href='<%= request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%= farmacia.getIdPharmacy() %>'"
                                      class="card card-farmacia f<%= imageCount %>">
                                     <h2><%= farmacia.getName() %>
                                     </h2>
@@ -140,7 +136,7 @@
                         </div>
                         <!--Boton ver más-->
                         <div class="d-flex justify-content-end">
-                            <a href="<%=request.getContextPath()%>/ClientServlet?action=farmaciasDeDistrito&district=<%=listaFarmaciasDistrito.get(0).getDistrict().getName()%>"
+                            <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmaciasDistrito&district=<%=listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict()%>"
                                class="btn btn-tele" role="button">Ver más</a>
                         </div>
                     </div>

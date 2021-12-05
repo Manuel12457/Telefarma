@@ -1,6 +1,7 @@
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.example.telefarma.beans.BDistrict" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
+<jsp:useBean id="listaDistritos" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BDistrict>"/>
 <jsp:useBean id="datosIngresados" scope="request" type="com.example.telefarma.beans.BPharmacy"/>
 
 <!DOCTYPE html>
@@ -61,33 +62,17 @@
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaDistrict">Distrito</label>
                                                 <select class="form-select" name="distrito" id="farmaDistrict" required>
-                                                    <%
-                                                        boolean distritoIngresado = datosIngresados.getDistrict() != null && !datosIngresados.getDistrict().getName().equals("");
-                                                        if (distritoIngresado) {
-                                                    %>
-                                                    <option selected><%=datosIngresados.getDistrict().getName()%>
+                                                    <% if (datosIngresados.getDistrict() != null && datosIngresados.getDistrict().getIdDistrict() == 0) { %>
+                                                    <option value="0" selected>Ingrese el distrito de la farmacia</option>
+                                                    <% } else { %>
+                                                    <option value="0">Ingrese el distrito de la farmacia</option>
+                                                    <% }
+                                                        for (BDistrict distrito : listaDistritos) { %>
+                                                    <option value="<%=distrito.getIdDistrict()%>"
+                                                            <%=datosIngresados.getDistrict() != null ? (distrito.getIdDistrict() == datosIngresados.getDistrict().getIdDistrict() ? "selected" : "") : ""%>>
+                                                        <%=distrito.getName()%>
                                                     </option>
-                                                    <option value="">Ingrese el distrito de la farmacia</option>
-                                                    <%  } else { %>
-                                                    <option value="" selected>Ingrese el distrito de la farmacia
-                                                    </option>
-                                                    <%  }
-                                                        for (String distrito : listaDistritosSistema) {
-                                                            if (distritoIngresado) {
-                                                                if (!distrito.equals(datosIngresados.getDistrict().getName())) {
-                                                    %>
-                                                    <option value="<%=distrito%>"><%=distrito%>
-                                                    </option>
-                                                    <%
-                                                                }
-                                                            } else {
-                                                    %>
-                                                    <option value="<%=distrito%>"><%=distrito%>
-                                                    </option>
-                                                    <%
-                                                            }
-                                                        }
-                                                    %>
+                                                    <% } %>
                                                 </select>
                                             </div>
                                         </div>

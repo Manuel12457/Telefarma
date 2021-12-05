@@ -1,7 +1,7 @@
 <%@ page import="com.example.telefarma.beans.BProduct" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="infoFarmacia" scope="request" type="com.example.telefarma.beans.BPharmacy"/>
-<jsp:useBean id="productosDeLaFarmacia" scope="request"
+<jsp:useBean id="farmacia" scope="request" type="com.example.telefarma.beans.BPharmacy"/>
+<jsp:useBean id="listaProductos" scope="request"
              type="java.util.ArrayList<com.example.telefarma.beans.BProduct>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
@@ -11,8 +11,8 @@
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
 <%
     String servletBusqueda = "ClientServlet?action=buscarProductosDeFarmacia&idPharmacy=" + idPharmacy + "&";
-    String busquedaPlaceholder = "Busca un producto en " + infoFarmacia.getName();
-    String title = "Telefarma - " + infoFarmacia.getName();
+    String busquedaPlaceholder = "Busca un producto en " + farmacia.getName();
+    String title = "Telefarma - " + farmacia.getName();
 %>
 
 <!DOCTYPE html>
@@ -42,17 +42,17 @@
                 <div class="container text-center">
                     <!--Nombre-->
                     <div class="row">
-                        <h1><%= infoFarmacia.getName() %>
+                        <h1><%= farmacia.getName() %>
                         </h1>
                     </div>
                     <!--Distrito-->
                     <div class="row">
-                        <h5><%= infoFarmacia.getDistrict().getName() %>
+                        <h5><%= farmacia.getDistrict().getName() %>
                         </h5>
                     </div>
                     <!--Dirección-->
                     <div class="row mb-3">
-                        <h6><i class="fas fa-map-marker-alt fa-xs"></i>&nbsp;&nbsp;<%= infoFarmacia.getAddress() %>
+                        <h6><i class="fas fa-map-marker-alt fa-xs"></i>&nbsp;&nbsp;<%= farmacia.getAddress() %>
                         </h6>
                     </div>
                     <!--Titulo-->
@@ -70,7 +70,7 @@
                 <div class="container">
                     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
                         <%--Loop de productos--%>
-                        <% for (BProduct producto : productosDeLaFarmacia) { %>
+                        <% for (BProduct producto : listaProductos) { %>
                         <div class="col">
                             <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProduct()%>'"
                                  class="card card-producto">
@@ -98,7 +98,7 @@
                 </div>
             </div>
             <!--Paginación-->
-            <%String servlet = "/ClientServlet?action=farmaciaYProductos&busqueda=" + busqueda + "&idPharmacy=" + idPharmacy + "&";%>
+            <%String servlet = "/ClientServlet?action=verFarmacia&busqueda=" + busqueda + "&idPharmacy=" + idPharmacy + "&";%>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>

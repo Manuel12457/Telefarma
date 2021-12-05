@@ -85,7 +85,7 @@ public class PharmacyServlet extends HttpServlet {
                     try {
                         int idProducto = Integer.parseInt(request.getParameter("idProducto"));
                         if (productDao.productoPerteneceFarmacia(idProducto, idFarmacia)) {
-                            BProduct producto = productDao.obtenerProducto(idProducto);
+                            BProduct producto = productDao.obtenerProductoPorId(idProducto);
                             request.setAttribute("producto", producto);
                         } else {
                             response.sendRedirect(request.getContextPath() + "/PharmacyServlet");

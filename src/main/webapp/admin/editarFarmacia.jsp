@@ -1,6 +1,7 @@
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.example.telefarma.beans.BDistrict" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
+<jsp:useBean id="listaDistritos" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BDistrict>"/>
 <jsp:useBean id="farmacia" scope="request" type="com.example.telefarma.beans.BPharmacy"/>
 
 <!DOCTYPE html>
@@ -19,9 +20,8 @@
                                 <h4 class="my-2">Editar farmacia</h4>
                             </div>
                             <div class="card-body p-4 p-md-5">
-                                <form method="POST"
-                                      action="<%=request.getContextPath()%>/AdminServlet?action=editar">
-                                    <input type="hidden" class="form-control" name="id"
+                                <form method="POST" action="<%=request.getContextPath()%>/AdminServlet?action=editar">
+                                    <input type="number" class="form-control" name="id" hidden
                                            value="<%=farmacia.getIdPharmacy()%>">
                                     <div class="row mb-3">
                                         <div class="col-md-6">
@@ -55,8 +55,8 @@
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaDistrict">Distrito</label>
                                                 <select class="form-select" name="distrito" id="farmaDistrict" required>
-                                                    <% for (String distrito : listaDistritosSistema) { %>
-                                                    <option value="<%=distrito%>" <%=farmacia.getDistrict().getName().equals(distrito) ? "selected" : ""%> ><%=distrito%>
+                                                    <% for (BDistrict distrito : listaDistritos) { %>
+                                                    <option value="<%=distrito.getIdDistrict()%>" <%=farmacia.getDistrict().getIdDistrict() == distrito.getIdDistrict() ? "selected" : ""%>><%=distrito.getName()%>
                                                     </option>
                                                     <% } %>
                                                 </select>

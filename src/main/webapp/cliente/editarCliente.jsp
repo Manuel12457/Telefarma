@@ -1,5 +1,6 @@
+<%@ page import="com.example.telefarma.beans.BDistrict" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
+<jsp:useBean id="listaDistritos" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BDistrict>"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 
 <!DOCTYPE html>
@@ -53,8 +54,8 @@
                                                     <label class="form-label" for="farmaDistrict">Distrito</label>
                                                     <select class="form-select" name="distrito" id="farmaDistrict"
                                                             required>
-                                                        <% for (String distrito : listaDistritosSistema) { %>
-                                                        <option value="<%=distrito%>" <%=sesion.getDistrict().getName().equals(distrito) ? "selected" : ""%> ><%=distrito%>
+                                                        <% for (BDistrict distrito : listaDistritos) { %>
+                                                        <option value="<%=distrito.getIdDistrict()%>" <%=sesion.getDistrict().getIdDistrict()==distrito.getIdDistrict() ? "selected" : ""%> ><%=distrito.getName()%>
                                                         </option>
                                                         <% } %>
                                                     </select>
@@ -78,7 +79,6 @@
         <!--JS-->
         <script src="${pageContext.request.contextPath}/res/js/main.js"></script>
         <script src="${pageContext.request.contextPath}/res/bootstrap/js/bootstrap.min.js"></script>
-
     </body>
 </html>
 

@@ -2,27 +2,19 @@ package com.example.telefarma.beans;
 
 public class BDistrict {
 
-    private String name;
     private int idDistrict;
+    private String name;
 
-    public BDistrict(String name, int idDistrict) {
+    public BDistrict(int idDistrict, String name) {
+        this.idDistrict = idDistrict;
         this.name = name;
+    }
+
+    public BDistrict(int idDistrict) {
         this.idDistrict = idDistrict;
     }
 
-    public BDistrict(String name) {
-        this.name = name;
-    }
-
     public BDistrict() {
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getIdDistrict() {
@@ -31,5 +23,13 @@ public class BDistrict {
 
     public void setIdDistrict(int idDistrict) {
         this.idDistrict = idDistrict;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

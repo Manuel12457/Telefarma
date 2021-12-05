@@ -52,7 +52,7 @@
                                     <tr>
                                         <th class="ps-0 w-25" scope="row">Farmacia</th>
                                         <td>
-                                            <a href="<%=request.getContextPath()%>/ClientServlet?action=farmaciaYProductos&idPharmacy=<%=producto.getPharmacy().getIdPharmacy()%>"
+                                            <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%=producto.getPharmacy().getIdPharmacy()%>"
                                                style="text-decoration: none; color: inherit">
                                                 <%=producto.getPharmacy().getName()%>
                                             </a>

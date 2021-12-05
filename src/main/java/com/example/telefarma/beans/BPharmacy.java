@@ -11,12 +11,12 @@ public class BPharmacy {
     private String banReason;
     private BDistrict district;
 
-    public BPharmacy(String nombreFarmacia, String direccionFarmacia, String emailFarmacia, String RUCFarmacia, String distritoFarmacia, byte isBanned, int idPharmacy, String password, String banReason) {
-        this.name = nombreFarmacia;
-        this.address = direccionFarmacia;
-        this.mail = emailFarmacia;
-        this.RUC = RUCFarmacia;
-        this.setDistrict(new BDistrict(distritoFarmacia));
+    public BPharmacy(String name, String address, String mail, String RUC, BDistrict district, byte isBanned, int idPharmacy, String password, String banReason) {
+        this.name = name;
+        this.address = address;
+        this.mail = mail;
+        this.RUC = RUC;
+        this.district = district;
         this.isBanned = isBanned;
         this.idPharmacy = idPharmacy;
         this.password = password;

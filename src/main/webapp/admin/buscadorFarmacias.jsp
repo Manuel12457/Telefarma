@@ -1,7 +1,7 @@
 <%@ page import="com.example.telefarma.beans.BPharmacy" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="listaListaFarmacias" scope="request"
+<jsp:useBean id="listaFarmacias" scope="request"
              type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BPharmacy>>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
@@ -46,7 +46,7 @@
                     <h3 class="text-dark">Farmacias registradas</h3>
                 </div>
                 <!--Loop de farmacias-->
-                <% for (ArrayList<BPharmacy> listaFarmaciasDistrito : listaListaFarmacias) { %>
+                <% for (ArrayList<BPharmacy> listaFarmaciasDistrito : listaFarmacias) { %>
                 <div class="row">
                     <div class="container px-5 py-2" id="custom-cards-san-miguel">
                         <h4 class="pb-2 border-bottom"
@@ -69,9 +69,9 @@
                                         <!--Botón editar-->
                                         <div class="d-flex justify-content-end ">
                                             <a role="button"
-                                               href="<%=request.getContextPath()%>/AdminServlet?action=editarForm&distrito=<%=farmacia.getDistrict().getName()%>&id=<%=farmacia.getIdPharmacy()%>"
+                                               href="<%=request.getContextPath()%>/AdminServlet?action=editarForm&&id=<%=farmacia.getIdPharmacy()%>"
                                                class="btn btn-tele pe-2 pt-1"><i
-                                                    class="fas fa-edit"></i></i>
+                                                    class="fas fa-edit"></i>
                                             </a>
                                         </div>
                                         <!--Nombre-->
@@ -111,13 +111,13 @@
                                                     data-bs-whatever="<%=farmacia.getIdPharmacy()%>">Bloquear
                                             </button>
                                             <button type="button" class="btn btn-light" disabled>Desbloquear</button>
-                                            <%} else {%>
+                                            <% } else { %>
                                             <button type="button" class="btn btn-light" disabled>Bloquear</button>
                                             <button type="button" class="btn btn-success" data-bs-toggle="modal"
                                                     data-bs-target="#desbloquearFarmacia"
                                                     data-bs-whatever="<%=farmacia.getIdPharmacy()%>">Desbloquear
                                             </button>
-                                            <%}%>
+                                            <% } %>
                                         </div>
                                     </div>
                                 </div>

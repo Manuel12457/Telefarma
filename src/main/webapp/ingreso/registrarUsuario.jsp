@@ -1,5 +1,6 @@
+<%@ page import="com.example.telefarma.beans.BDistrict" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="listaDistritosSistema" scope="request" type="java.util.ArrayList<java.lang.String>"/>
+<jsp:useBean id="listaDistritos" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BDistrict>"/>
 <jsp:useBean id="cliente" scope="request" type="com.example.telefarma.beans.BClient"/>
 <jsp:useBean id="errContrasenha" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="errDNI" scope="request" type="java.lang.Integer"/>
@@ -30,12 +31,15 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <input class="form-control mb-3" type="text" name="nombre"
-                                                   placeholder="Nombre" value="<%=cliente.getName() == null ? "" : cliente.getName()%>" maxlength="45"
+                                                   placeholder="Nombre"
+                                                   value="<%=cliente.getName() == null ? "" : cliente.getName()%>"
+                                                   maxlength="45"
                                                    required>
                                         </div>
                                         <div class="col-md-6">
                                             <input class="form-control mb-3" type="text" name="apellido"
-                                                   placeholder="Apellido" value="<%=cliente.getLastName() == null ? "" : cliente.getLastName()%>"
+                                                   placeholder="Apellido"
+                                                   value="<%=cliente.getLastName() == null ? "" : cliente.getLastName()%>"
                                                    maxlength="45" required>
                                         </div>
                                     </div>
@@ -43,27 +47,28 @@
                                         <div class="col-md-5 mb-3">
                                             <input class="form-control" aria-describedby="validationServer03Feedback"
                                                    type="text" name="dni" placeholder="DNI"
-                                                   value="<%=cliente.getDni() == null ? "" : cliente.getDni()%>" maxlength="8" required>
+                                                   value="<%=cliente.getDni() == null ? "" : cliente.getDni()%>"
+                                                   maxlength="8" required>
                                         </div>
                                         <div class="col-md-7 mb-3">
                                             <select class="form-select" name="distrito" id="farmaDistrict" required>
-                                                <%if (cliente.getDistrict() != null && !cliente.getDistrict().getName().equals("")) {%>
-                                                <option value="" selected>Seleccione su distrito</option>
-                                                <%} else {%>
-                                                <option value="">Seleccione su distrito</option>
-                                                <%}%>
-                                                <%for (String distrito : listaDistritosSistema) {%>
-                                                <option value="<%=distrito%>" <%=cliente.getDistrict()!=null?(cliente.getDistrict().getName().equals(distrito) ? "selected" : ""):""%> ><%=distrito%>
+                                                <% if (cliente.getDistrict() != null && cliente.getDistrict().getIdDistrict() != 0) { %>
+                                                <option value="0" selected>Seleccione su distrito</option>
+                                                <% } else { %>
+                                                <option value="0">Seleccione su distrito</option>
+                                                <% }
+                                                    for (BDistrict distrito : listaDistritos) {%>
+                                                <option value="<%=distrito.getIdDistrict()%>" <%=cliente.getDistrict() != null ? (cliente.getDistrict().getIdDistrict() == distrito.getIdDistrict() ? "selected" : "") : ""%> ><%=distrito.getName()%>
                                                 </option>
-                                                <%}%>
-
+                                                <% } %>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <input class="form-control" aria-describedby="validationServer03Feedback"
                                                type="email" name="email" placeholder="Correo"
-                                               value="<%=cliente.getMail() == null ? "" : cliente.getMail()%>" maxlength="70" required>
+                                               value="<%=cliente.getMail() == null ? "" : cliente.getMail()%>"
+                                               maxlength="70" required>
                                     </div>
                                     <div class="mb-3">
                                         <input class="form-control" aria-describedby="validationServer03Feedback"

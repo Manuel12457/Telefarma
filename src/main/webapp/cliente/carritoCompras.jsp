@@ -58,7 +58,7 @@
                                 <!--Nombre cabecera-->
                                 <h3 class="cart-header px-4 py-3">
                                     <span>
-                                        <a href="<%=request.getContextPath()%>/ClientServlet?action=farmaciaYProductos&idPharmacy=<%=farmacia.getIdPharmacy()%>"
+                                        <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%=farmacia.getIdPharmacy()%>"
                                         style="color: inherit; text-decoration: none">
                                             <%=farmacia.getName()%>
                                         </a>

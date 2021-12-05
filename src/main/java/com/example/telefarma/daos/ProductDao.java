@@ -27,37 +27,29 @@ public class ProductDao extends BaseDao {
         return 0;
     }
 
-    public ArrayList<BProduct> listarProductosBusqueda(int pagina, String busqueda, int limite, int id) {
-
+    public ArrayList<BProduct> listarProductosBusqueda(int pagina, int limite, String busqueda, int id) {
         ArrayList<BProduct> listaProductosBuscador = new ArrayList<>();
 
-        String sql = "select f.name,f.District_name,p.idProduct,p.name,stock,price from telefarma.product p\n" +
-                "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
-                "inner join telefarma.client c on (c.District_name=f.District_name)\n" +
-                "where lower(p.name) like ? and isBanned = 0 and idClient=" + id + "\n" +
-                "union\n" +
-                "select f.name,f.District_name,p.idProduct,p.name,stock,price from telefarma.product p\n" +
-                "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
-                "inner join telefarma.client c on (c.District_name!=f.District_name)\n" +
-                "where lower(p.name) like ? and isBanned = 0 and idClient=" + id + "\n" +
-                "order by District_name\n" +
+        String sql = "select f.name,f.idDistrict,d.name,p.idProduct,p.name,stock,price from product p\n" +
+                "inner join pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
+                "inner join district d on (f.idDistrict=d.idDistrict)\n" +
+                "where lower(p.name) like ? and isBanned = 0\n" +
+                "order by f.idDistrict = (select idDistrict from client where idClient = " + id + ") desc, price asc " +
                 "limit " + pagina * limite + "," + limite + ";";
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
-            pstmt.setString(1, "%" + busqueda.toLowerCase() + "%");
-            pstmt.setString(2, "%" + busqueda.toLowerCase() + "%");
+            pstmt.setString(1, "%" + busqueda.toLowerCase().trim() + "%");
 
             try (ResultSet rs = pstmt.executeQuery()) {
-
                 while (rs.next()) {
                     BProduct productoBuscador = new BProduct();
-                    productoBuscador.setPharmacy(new BPharmacy(rs.getString(1), new BDistrict(rs.getString(2))));
-                    productoBuscador.setIdProduct(rs.getInt(3));
-                    productoBuscador.setName(rs.getString(4));
-                    productoBuscador.setStock(rs.getInt(5));
-                    productoBuscador.setPrice(rs.getDouble(6));
+                    productoBuscador.setPharmacy(new BPharmacy(rs.getString(1), new BDistrict(rs.getInt(2), rs.getString(3))));
+                    productoBuscador.setIdProduct(rs.getInt(4));
+                    productoBuscador.setName(rs.getString(5));
+                    productoBuscador.setStock(rs.getInt(6));
+                    productoBuscador.setPrice(rs.getDouble(7));
                     listaProductosBuscador.add(productoBuscador);
                 }
             }
@@ -69,7 +61,7 @@ public class ProductDao extends BaseDao {
         return listaProductosBuscador;
     }
 
-    public BProduct obtenerDetalles(int id) {
+    public BProduct obtenerProductoPorId(int id) {
         BProduct producto = new BProduct();
 
         String sql = "select p.idProduct,p.name, ph.name,p.description,p.stock,p.price,p.requiresPrescription,ph.idPharmacy from product p\n" +
@@ -82,7 +74,6 @@ public class ProductDao extends BaseDao {
             pstmt.setInt(1, id);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-
                 while (rs.next()) {
                     producto.setIdProduct(rs.getInt(1));
                     producto.setName(rs.getString(2));
@@ -102,9 +93,6 @@ public class ProductDao extends BaseDao {
     }
 
     public int cantidadProductos(String busqueda, int idFarmacia) {
-
-        int cantidad = 0;
-
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("select count(*) from product p " +
@@ -113,35 +101,39 @@ public class ProductDao extends BaseDao {
                      "f.idPharmacy=" + idFarmacia + " ;")) {
 
             if (rs.next()) {
-                cantidad = rs.getInt(1);
+                return rs.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return cantidad;
+        return 0;
     }
 
-    public ArrayList<BProduct> listaProductosFarmacia(int pagina, String busqueda, int idPharmacy, int limite) {
-
+    public ArrayList<BProduct> listarProductosPorFarmacia(int pagina, int limite, String busqueda, int idPharmacy) {
         ArrayList<BProduct> listaProductos = new ArrayList<>();
 
-        try (Connection conn = this.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("select p.idProduct, p.name,stock,price,photo from product p\n" +
-                     "inner join pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
-                     "where lower(p.name) like '%" + busqueda + "%' and " +
-                     "f.idPharmacy=" + idPharmacy + "\n" +
-                     "order by name\n" +
-                     "limit " + limite * pagina + "," + limite + ";")) {
+        String sql = "select p.idProduct,p.name,stock,price from product p\n" +
+                "inner join pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
+                "where lower(p.name) like ? and f.idPharmacy=" + idPharmacy + "\n" +
+                "order by name\n";
 
-            while (rs.next()) {
-                BProduct producto = new BProduct();
-                producto.setIdProduct(rs.getInt(1));
-                producto.setName(rs.getString(2));
-                producto.setStock(rs.getInt(3));
-                producto.setPrice(rs.getDouble(4));
-                listaProductos.add(producto);
+        sql = (limite != -1) ? (sql + "limit " + (limite * pagina) + "," + limite + ";") : sql;
+
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, "%" + busqueda.toLowerCase().trim() + "%");
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    BProduct producto = new BProduct();
+                    producto.setIdProduct(rs.getInt(1));
+                    producto.setName(rs.getString(2));
+                    producto.setStock(rs.getInt(3));
+                    producto.setPrice(rs.getDouble(4));
+                    listaProductos.add(producto);
+                }
             }
 
         } catch (SQLException e) {
@@ -286,32 +278,6 @@ public class ProductDao extends BaseDao {
         }
 
         return count == 1;
-    }
-
-    public BProduct obtenerProducto(int idProducto) {
-
-        BProduct producto = new BProduct();
-        producto.setIdProduct(idProducto);
-        String sql = "select name, description, stock, price, requiresPrescription from telefarma.product " +
-                "where idProduct=" + idProducto + ";";
-
-        try (Connection conn = this.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
-            while (rs.next()) {
-                producto.setName(rs.getString(1));
-                producto.setDescription(rs.getString(2));
-                producto.setStock(rs.getInt(3));
-                producto.setPrice(rs.getDouble(4));
-                producto.setRequiresPrescription(Byte.compare(rs.getByte(5), (byte) 0) != 0);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return producto;
     }
 
     public boolean editarProducto(BProduct producto) {
