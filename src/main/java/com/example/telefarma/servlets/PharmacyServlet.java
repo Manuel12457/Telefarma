@@ -22,7 +22,6 @@ public class PharmacyServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession();
-        if (session.getAttribute("rol").equals("pharmacy")) {
 
             BPharmacy pharmacy = (BPharmacy) request.getSession().getAttribute("sesion");
 
@@ -97,9 +96,6 @@ public class PharmacyServlet extends HttpServlet {
                     view.forward(request, response);
                     break;
             }
-        } else {
-            response.sendRedirect(request.getContextPath());
-        }
     }
 
     @Override

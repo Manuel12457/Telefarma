@@ -27,65 +27,52 @@ public class SessionServlet extends HttpServlet {
 
         String action = request.getParameter("action") == null ? "pantallaInicio" : request.getParameter("action");
         HttpSession session = request.getSession();
+        RequestDispatcher view;
 
-        if (action.equals("logout")) {
-            request.getSession().invalidate();
-            response.sendRedirect(request.getContextPath());
-        } else if (session.getAttribute("sesion") != null) {
-            switch ((String) session.getAttribute("rol")) {
-                case "client":
-                    response.sendRedirect(request.getContextPath() + "/ClientServlet");
-                    break;
-                case "pharmacy":
-                    response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
-                    break;
-                case "admin":
-                    response.sendRedirect(request.getContextPath() + "/AdminServlet");
-                    break;
-            }
-        } else {
-            RequestDispatcher view;
-            switch (action) {
-                case "pantallaInicio":
-                    view = request.getRequestDispatcher("/ingreso/inicioSesion.jsp");
-                    view.forward(request, response);
-                    break;
+        switch (action) {
+            case "pantallaInicio":
+                view = request.getRequestDispatcher("/ingreso/inicioSesion.jsp");
+                view.forward(request, response);
+                break;
 
-                case "mail":
-                    request.setAttribute("err", "e");
-                    view = request.getRequestDispatcher("/ingreso/correoParaCambioContrasenha.jsp");
-                    view.forward(request, response);
-                    break;
+            case "mail":
+                request.setAttribute("err", "e");
+                view = request.getRequestDispatcher("/ingreso/correoParaCambioContrasenha.jsp");
+                view.forward(request, response);
+                break;
 
-                case "registrarForm":
-                    DistrictDao districtDao = new DistrictDao();
-                    request.setAttribute("cliente", new BClient());
-                    request.setAttribute("listaDistritos", districtDao.listarDistritos());
-                    request.setAttribute("errContrasenha", 0);
-                    request.setAttribute("errDNI", 0);
-                    request.setAttribute("errMail", 0);
-                    request.setAttribute("errDNINum", 0);
-                    request.setAttribute("errDNILong", 0);
-                    view = request.getRequestDispatcher("/ingreso/registrarUsuario.jsp");
-                    view.forward(request, response);
-                    break;
+            case "registrarForm":
+                DistrictDao districtDao = new DistrictDao();
+                request.setAttribute("cliente", new BClient());
+                request.setAttribute("listaDistritos", districtDao.listarDistritos());
+                request.setAttribute("errContrasenha", 0);
+                request.setAttribute("errDNI", 0);
+                request.setAttribute("errMail", 0);
+                request.setAttribute("errDNINum", 0);
+                request.setAttribute("errDNILong", 0);
+                view = request.getRequestDispatcher("/ingreso/registrarUsuario.jsp");
+                view.forward(request, response);
+                break;
 
-                case "cambiarContrasenha":
-                    String token = request.getParameter("token");
-                    String rol = request.getParameter("rol");
+            case "cambiarContrasenha":
+                String token = request.getParameter("token");
+                String rol = request.getParameter("rol");
 
-                    SessionDao sessionDao = new SessionDao();
-                    if (sessionDao.existeToken(token, rol)) {
-                        request.setAttribute("token", token);
-                        request.setAttribute("rol", rol);
-                        view = request.getRequestDispatcher("/ingreso/cambioContrasenha.jsp");
-                    } else {
-                        request.setAttribute("mensaje", "El token ingresado es invalido");
-                        view = request.getRequestDispatcher("/ingreso/resultadoIngreso.jsp");
-                    }
-                    view.forward(request, response);
-                    break;
-            }
+                SessionDao sessionDao = new SessionDao();
+                if (sessionDao.existeToken(token, rol)) {
+                    request.setAttribute("token", token);
+                    request.setAttribute("rol", rol);
+                    view = request.getRequestDispatcher("/ingreso/cambioContrasenha.jsp");
+                } else {
+                    request.setAttribute("mensaje", "El token ingresado es invalido");
+                    view = request.getRequestDispatcher("/ingreso/resultadoIngreso.jsp");
+                }
+                view.forward(request, response);
+                break;
+            case "logout":
+                request.getSession().invalidate();
+                response.sendRedirect(request.getContextPath());
+                break;
         }
     }
 
