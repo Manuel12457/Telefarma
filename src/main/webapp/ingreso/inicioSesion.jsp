@@ -14,29 +14,28 @@
                         <div class="card border-0" style="border-radius: 1rem;">
                             <div class="row g-0">
                                 <!--Foto login-->
-                                <div class="col-6 d-none d-md-block">
+                                <div class="d-none d-md-block align-self-center" style="width: 50%;">
                                     <img src="${pageContext.request.contextPath}/res/img/login-photo.jpg"
                                          class="img-fluid"
                                          alt="telefarma-login"
                                          style="border-radius: 1rem 0 0 1rem;">
                                 </div>
                                 <!--Form login-->
-                                <div class="col-6 d-flex align-items-center responsive-login-form">
-                                    <div class="card-body p-4 p-lg-5 text-black text-center">
+                                <div class="col d-flex align-items-center responsive-login-form">
+                                    <div class="card-body p-4 p-lg-5 text-black text-center align-items-center">
                                         <form method="post" action="<%=request.getContextPath()%>/?action=ini">
                                             <!--Logo-->
-                                            <div class="d-flex align-items-center mb-3 pb-1 justify-content-center">
-                                                <h1 class="logo-header" style="font-size: 48px;">
-                                                    TeleFarma</h1>
+                                            <div class="d-flex align-items-center mb-4 pb-1 justify-content-center">
+                                                <img src="<%=request.getContextPath()%>/res/img/telefarma.svg" alt="TeleFarma">
                                             </div>
                                             <!--Correo-->
                                             <div class="form-outline mb-4">
-                                                <input class="form-control form-control-lg" type="email" name="email"
+                                                <input class="form-control form-control-lg readex-15" type="email" name="email"
                                                        placeholder="Correo">
                                             </div>
                                             <!--Password-->
-                                            <div class="form-outline mb-2">
-                                                <input class="form-control form-control-lg" type="password"
+                                            <div class="form-outline mb-4">
+                                                <input class="form-control form-control-lg readex-15" type="password"
                                                        name="password"
                                                        placeholder="Contraseña">
                                             </div>
@@ -52,16 +51,15 @@
                                             %>
                                             <!--Botón ingresar-->
                                             <div class="pt-1 mt-2 mb-3">
-                                                <button class="btn btn-tele btn-block mb-3" type="submit"
-                                                        style="background: var(--bs-orange); border-color: var(--bs-orange)">
-                                                    <strong>Ingresar</strong>
+                                                <button class="btn btn-tele btn-block mb-3" type="submit">
+                                                    Ingresar
                                                 </button>
                                             </div>
                                             <!--Contraseña olvidada-->
                                             <a class="a-login" href="<%=request.getContextPath()%>/?action=mail">¿Olvidó
                                                 su contraseña?</a>
                                             <!--Registrarse-->
-                                            <p class="mb-5 pb-lg-2" style="color: #393f81;">¿Eres nuevo aquí?
+                                            <p class="pb-lg-2" style="color: #393f81; font-family: 'Heebo', sans-serif;font-size: 16px">¿Eres nuevo aquí?
                                                 <a class="a-login"
                                                    href="<%=request.getContextPath()%>/?action=registrarForm">
                                                     Regístrate</a>

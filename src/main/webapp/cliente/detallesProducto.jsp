@@ -35,84 +35,68 @@
                         </div>
                     </div>
                     <!--Info del producto-->
-                    <div class="col-md-7 mt-4">
+                    <div class="col-md-7 my-4">
                         <!--Nombre-->
-                        <h3><%=producto.getName()%>
-                        </h3>
+                        <div class="producto-detalles"><%=producto.getName()%>
+                        </div>
+                        <!--Farmacia-->
+                        <div class="farmacia-detalles">
+                            <a class="a-gray text-decoration-none" href="<%=request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%=producto.getPharmacy().getIdPharmacy()%>">
+                                <%=producto.getPharmacy().getName().toUpperCase()%>
+                            </a>
+                        </div>
                         <!--Precio-->
-                        <h3><span class="me-1">s/ <%=String.format("%.2f", producto.getPrice())%></span></h3>
+                        <div class="precio-detalles">
+                            <span class="me-1">s/ <%=String.format("%.2f", producto.getPrice())%></span>
+                        </div>
+                        <hr>
                         <!--Descripción-->
-                        <p class="pt-1"><%=producto.getDescription()%>
+                        <p class="pt-1 descripcion-detalles"><%=producto.getDescription()%>
                         </p>
                         <!--Detalles-->
-                        <div class="table-responsive">
-                            <table class="table table-sm table-borderless mb-0">
-                                <tbody>
-                                    <!--Farmacia-->
-                                    <tr>
-                                        <th class="ps-0 w-25" scope="row">Farmacia</th>
-                                        <td>
-                                            <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%=producto.getPharmacy().getIdPharmacy()%>"
-                                               style="text-decoration: none; color: inherit">
-                                                <%=producto.getPharmacy().getName()%>
-                                            </a>
-
-                                        </td>
-                                    </tr>
-                                    <!--Stock-->
-                                    <tr>
-                                        <th class="ps-0 w-25" scope="row">Stock</th>
-                                        <td><%=producto.getStock()%>
-                                        </td>
-                                    </tr>
-                                    <!--Receta-->
-                                    <tr>
-                                        <th class="ps-0 w-25" scope="row">¿Requiere receta?</th>
-                                        <td><% if (producto.getRequierePrescripcion()) { %>Sí<% } else { %>No<% } %>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="m-auto">
+                            <!--Stock-->
+                            <p>
+                                <strong class="detalles-str">
+                                    Disponibles:
+                                    <span class="detalles-sp">
+                                        <%=producto.getStock()%>
+                                    </span>
+                                </strong>
+                            </p>
+                            <!--Receta-->
+                            <p class="rubik-500">
+                                <strong class="detalles-str">
+                                    ¿Requiere receta?
+                                    <span class="detalles-sp">
+                                        <% if (producto.getRequierePrescripcion()) { %>Sí<% } else { %>No<% } %>
+                                    </span>
+                                </strong>
+                            </p>
                         </div>
                         <hr>
                         <!--Cantidad y añadir carrito-->
-                        <div class="table-responsive">
-                            <table class="table table-sm table-borderless">
-                                <tbody>
-                                    <!--Label-->
-                                    <tr>
-                                        <td class="ps-2 p-0 w-25">Cantidad</td>
-                                    </tr>
-                                    <!--Botones aumentar/disminuir-->
-                                    <tr>
-                                        <form method="post"
-                                              action="<%=request.getContextPath()%>/ClientServlet?action=addToCart&idProduct=<%=producto.getIdProduct()%>">
-                                            <td class="ps-0 pt-0">
-                                                <div class="d-flex">
-                                                    <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
-                                                            class="btn btn-tele" id="menos" type="button">
-                                                        <i class="fas fa-minus fa-xs"></i>
-                                                    </button>
-                                                    <input class="form-control border-start-0 border-end-0 text-center"
-                                                           type="number" style="width:46px;" id="quantity"
-                                                           name="quantity"
-                                                           value="1" min="1" max="<%=producto.getStock()%>"/>
-                                                    <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
-                                                            class="btn btn-tele" id="mas" type="button">
-                                                        <i class="fas fa-plus fa-xs"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <!--Botón añadir a carrito-->
-                                            <td class="text-end">
-                                                <button type="submit" class="btn btn-tele btn-md mr-1 mb-2">
-                                                    <i class="fas fa-shopping-cart"></i> Añadir al carrito
-                                                </button>
-                                            </td>
-                                        </form>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div>
+                            <form method="post"
+                                  action="<%=request.getContextPath()%>/ClientServlet?action=addToCart&idProduct=<%=producto.getIdProduct()%>">
+                                <div class="d-flex h-45px mt-4">
+                                    <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
+                                                class="btn btn-tele" id="menos" type="button">
+                                        <i class="fas fa-minus fa-xs"></i>
+                                    </button>
+                                    <input class="form-control border-start-0 border-end-0 text-center readex-15"
+                                               type="number" style="width:46px;" id="quantity"
+                                               name="quantity"
+                                               value="1" min="1" max="<%=producto.getStock()%>"/>
+                                    <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
+                                                class="btn btn-tele" id="mas" type="button">
+                                            <i class="fas fa-plus fa-xs"></i>
+                                    </button>
+                                    <button type="submit" class="mx-4 btn btn-rectangle-out h-100">
+                                        <i class="fas fa-shopping-cart"></i> Añadir al carrito
+                                    </button>
+                                </div>
+                            </form>
                             <%
                                 String alertClass = null;
                                 String alertMssg = null;

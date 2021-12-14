@@ -71,7 +71,7 @@ public class SessionServlet extends HttpServlet {
                 break;
             case "logout":
                 request.getSession().invalidate();
-                response.sendRedirect(request.getContextPath());
+                response.sendRedirect(request.getContextPath()+"/");
                 break;
         }
     }

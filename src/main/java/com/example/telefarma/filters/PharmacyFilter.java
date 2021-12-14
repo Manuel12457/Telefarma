@@ -22,7 +22,7 @@ public class PharmacyFilter implements Filter {
         String rol = (String) request.getSession().getAttribute("rol");
 
         if (rol == null) {
-            response.sendRedirect(request.getContextPath());
+            response.sendRedirect(request.getContextPath()+"/");
         } else {
             if (rol.equals("client")) {
                 response.sendRedirect(request.getContextPath() + "/ClientServlet");

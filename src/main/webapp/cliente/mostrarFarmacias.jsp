@@ -89,14 +89,14 @@
                         if (listaFarmaciasDistrito.size() > 0) {
                             if (listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict() == distritoCliente) {
                 %>
-                <div class="row">
+                <div class="row gray-heebo">
                     <h3><i class="fas fa-thumbtack fa-xs"></i>&nbsp;Farmacias cercanas a usted</h3>
                 </div>
                 <%
                 } else if (!otraFarmaciaMostrada) {
                 %>
                 <!--Otras farmacias-->
-                <div class="row">
+                <div class="row gray-heebo">
                     <h3><i class="fas fa-thumbtack fa-xs"></i>&nbsp;Otras farmacias</h3>
                 </div>
                 <%

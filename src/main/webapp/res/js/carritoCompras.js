@@ -46,21 +46,21 @@ function updateCart() {
             validar()
             var quantity = producto.getElementsByClassName("cart-quantity")[0]
             //Obtenemos los valores de los tags
-            price = parseFloat(price.innerText.replace("s/ ", ""))
+            price = parseFloat(price.innerText.replace("S/", ""))
             quantity = quantity.value
 
             var subtotal = Math.round((price * quantity) * 100) / 100
             var fila = document.getElementById("item-resumen-" + contador)
             fila.cells.item(0).innerHTML = quantity
-            fila.cells.item(2).innerHTML = "S/ " + subtotal
+            fila.cells.item(2).innerHTML = "S/" + subtotal
 
             var subtotalproducto = document.getElementsByClassName("cart-subtotal-" + contador)[0]
-            subtotalproducto.innerHTML = "S/ " + subtotal
+            subtotalproducto.innerHTML = "S/" + subtotal
 
             total = total + subtotal
             contador++
         }
     }
     total = Math.round(total * 100) / 100
-    document.getElementsByClassName("cart-total")[0].innerText = " s/ " + total
+    document.getElementsByClassName("cart-total")[0].innerText = " S/" + total
 }

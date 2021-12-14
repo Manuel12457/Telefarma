@@ -3,12 +3,12 @@
     String nombre = request.getParameter("nombre");
 %>
 <!--Barra lateral-->
-<div class="sidebar active">
+<div class="sidebar active heebo">
     <!--Logo: Vuelve al home-->
     <div class="logo-content border-bottom">
         <div class="logo">
             <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet';" class="logo-name">
-                TeleFarma
+                <img src="<%=request.getContextPath()%>/res/img/telefarma.svg" alt="TeleFarma" width="70%">
             </div>
         </div>
         <i class='fas fa-bars' id="btn-sidebar"></i>

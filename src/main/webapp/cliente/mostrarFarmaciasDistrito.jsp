@@ -39,7 +39,7 @@
                 <div class="row">
                     <div class="container px-5 pb-2" id="custom-cards-san-juan">
                         <!--Nombre distrito-->
-                        <h4 class="dist-name"><%= district.getName() %>
+                        <h4 class="dist-name" style="font-size: 28px;"><%= district.getName() %>
                         </h4>
                         <!--Farmacias-->
                         <div class="row row-cols-1 row-cols-lg-3 g-4 py-3">

@@ -56,32 +56,34 @@
                             %>
                             <div class="cart-items-container">
                                 <!--Nombre cabecera-->
-                                <h3 class="cart-header px-4 py-3">
-                                    <span>
-                                        <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%=farmacia.getIdPharmacy()%>"
-                                        style="color: inherit; text-decoration: none">
-                                            <%=farmacia.getName()%>
-                                        </a>
-                                    </span>
-                                    <div>
-                                        <h6 class="mb-0">Fecha de Recojo:&nbsp;&nbsp;
+                                <div class="cart-header px-4 py-3">
+                                    <div class="col d-flex">
+                                        <span>
+                                            <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%=farmacia.getIdPharmacy()%>"
+                                            class="a-white text-decoration-none">
+                                                <%=farmacia.getName()%>
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div class="col d-flex justify-content-end">
+                                        <div class="mb-0">Fecha de Recojo:&nbsp;&nbsp;
                                             <input value="<%=farmacia.getIdPharmacy()%>" name="idFarmacia<%=i%>" hidden>
                                             <input type="datetime-local" name="pickUpDate<%=i%>" min="<%=dateNow%>"
-                                                   style="max-width: 180px;"
+                                                   class="readex-15" style="max-width: 180px;"
                                                    onchange="guardarCambios('<%=request.getContextPath()%>')"
                                                 <%String pickUpDate = farmacia.getFechaRecojo() != null ? farmacia.getFechaRecojo() : "";%>
                                                    value="<%=pickUpDate%>"
                                                    required>
-                                        </h6>
+                                        </div>
                                     </div>
-                                </h3>
+                                </div>
                                 <%
                                     ArrayList<DtoProductoCarrito> listaProductos = listaCarrito.get(farmacia);
                                     for (int j = 0; j < listaProductos.size(); j++) {
                                         DtoProductoCarrito producto = listaProductos.get(j);
                                 %>
                                 <!--Producto-->
-                                <div class="cart-item d-sm-flex justify-content-between my-4 px-lg-2 px-xl-5 pb-4 border-bottom">
+                                <div class="cart-item d-sm-flex gray-heebo justify-content-between my-3 px-lg-2 px-xl-5 pb-4 border-bottom">
                                     <!--Bloque 1-->
                                     <div class="d-sm-flex">
                                         <!--Imagen del producto-->
@@ -92,30 +94,30 @@
                                         <!--Info del producto-->
                                         <div class="pt-1 pt-md-3 ps-sm-3 ps-0 text-sm-start text-center">
                                             <!--Nombre-->
-                                            <h5 class="mb-sm-3 mb-1">
+                                            <h4 class="mb-sm-3 mb-1">
                                                 <a href="<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProduct()%>"
-                                                   style="color: inherit; text-decoration: none">
+                                                   class="a-gray text-decoration-none">
                                                     <%=producto.getName()%>
                                                 </a>
-                                            </h5>
+                                            </h4>
                                             <!--Precios-->
                                             <div>
-                                                <span class="text-muted"><i class="fas fa-tag"></i> Precio:&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                                <span class="cart-price font-size-lgr ms-sm-2 ms-0 ">s/ <%=producto.getPrice()%></span>
+                                                <span class="cart-precio-tag"><i class="fas fa-tag"></i> Precio:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                <span class="cart-price cart-precio ms-sm-2 ms-0 ">S/<%=producto.getPrice()%></span>
                                             </div>
                                             <div>
                                                 <input value="<%=producto.getIdProduct()%>"
                                                        name="idProducto<%=i%>-<%=j%>" hidden>
-                                                <span class="text-muted"><i class="fas fa-tags"></i> Subtotal:</span>
-                                                <span class="cart-subtotal-<%=cont%> font-size-lgr ms-sm-2 ms-0 "></span>
+                                                <span class="cart-precio-tag"><i class="fas fa-tags"></i> Subtotal:</span>
+                                                <span class="cart-subtotal-<%=cont%> cart-precio ms-sm-2 ms-0 "></span>
                                             </div>
                                             <%
                                                 if (producto.getRequierePrescripcion()) {
                                             %>
                                             <div class="mt-3">
-                                            <span class="text-muted">
+                                            <span class="cart-precio">
                                                 Receta:
-                                                <input class="form-control form-control-sm custom-file-control"
+                                                <input class="form-control readex-15 form-control-sm custom-file-control"
                                                        type="file" value="<%=producto.getReceta()%>"
                                                        id="conReceta" accept="image/png, image/gif, image/jpeg"
                                                        <%--Descomentar para probar--%> <%--onchange="guardarCambios('<%=request.getContextPath()%>')"--%>
@@ -135,14 +137,14 @@
                                         <!--Cantidad-->
                                         <div class="form-group mt-sm-4 mt-0">
                                             <!--Label-->
-                                            <span class="text-muted">Cantidad:</span>
+                                            <span class="cart-precio">Cantidad:</span>
                                             <!--Botones-->
                                             <div class="d-flex justify-content-center">
                                                 <button onclick="this.parentNode.querySelector('input[type=number]').stepDown(); guardarCambios('<%=request.getContextPath()%>')"
                                                         class="btn btn-tele" id="menos" type="button">
                                                     <i class="fas fa-minus fa-xs"></i>
                                                 </button>
-                                                <input class="cart-quantity form-control border-start-0 border-end-0 text-center"
+                                                <input class="cart-quantity form-control border-start-0 border-end-0 text-center readex-15"
                                                        type="number" style="width:46px;" id="contador"
                                                        value="<%=producto.getCantidad()%>" min="1"
                                                        onchange="guardarCambios('<%=request.getContextPath()%>')"
@@ -176,14 +178,14 @@
                                 <h3 class="cart-header px-4 py-3 justify-content-center">Resumen</h3>
                                 <!--Tabla resumen-->
                                 <div class="table-responsive">
-                                    <table class="table table-striped text-center mb-0">
+                                    <table class="table table-striped text-center mb-0 readex-15">
                                         <%
                                             cont = 0;
                                             for (DtoPharmacy farmacia : listaFarmacias) {
                                         %>
                                         <thead>
                                             <tr>
-                                                <th colspan="4" style="background-color: rgba(246,141,33,0.84); color:white;">
+                                                <th class="cart-th" colspan="4" >
                                                     <%=farmacia.getName()%>
                                                 </th>
                                             </tr>
@@ -214,12 +216,12 @@
                                     </table>
                                 </div>
                                 <!--Total-->
-                                <div class="h4 text-center py-2">
-                                    <span class="font-size-lg">Total:</span>
-                                    <span class="cart-total"></span>
+                                <div class="text-center py-2 rubik-500">
+                                    <span style="font-weight: 400;">Total:</span>
+                                    <span class="cart-total" style="font-size: 20px"></span>
                                 </div>
                                 <!--Boton pedir-->
-                                <button class="btn btn-tele btn-block" type="submit" <%=listaCarrito.size() == 0 ? "disabled" : ""%>>
+                                <button class="btn w-100 h-45px btn-rectangle-out" type="submit" <%=listaCarrito.size() == 0 ? "disabled" : ""%>>
                                     Realizar pedido
                                 </button>
                             </div>

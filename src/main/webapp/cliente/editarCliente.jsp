@@ -26,24 +26,24 @@
                             <h4 class="my-2">Editar Usuario</h4>
                         </div>
                         <!--Contenido-->
-                        <div class="card-body">
+                        <div class="card-body heebo">
                             <div class="container-fluid">
                                 <div class="row px-lg-5 px-0 py-3">
                                     <!--Datos a editar-->
                                     <form method="POST"
                                           action="<%=request.getContextPath()%>/ClientServlet?action=editar">
-                                        <input class="form-control mt-3" type="text" name="id" hidden
+                                        <input class="form-control mt-3 readex-15" type="text" name="id" hidden
                                                value="<%=sesion.getIdClient()%>">
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <label class="form-label mt-3" for="nombre">Nombre</label>
-                                                <input class="form-control " type="text" name="nombre" id="nombre"
+                                                <input class="form-control readex-15" type="text" name="nombre" id="nombre"
                                                        placeholder="Nombre" value="<%=sesion.getName()%>"
                                                        required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label mt-3" for="apellido">Apellido</label>
-                                                <input class="form-control" type="text" name="apellido"
+                                                <input class="form-control readex-15" type="text" name="apellido"
                                                        placeholder="Apellido" id="apellido"
                                                        value="<%=sesion.getLastName()%>" required>
                                             </div>
@@ -52,7 +52,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-outline">
                                                     <label class="form-label" for="farmaDistrict">Distrito</label>
-                                                    <select class="form-select" name="distrito" id="farmaDistrict"
+                                                    <select class="form-select readex-15" name="distrito" id="farmaDistrict"
                                                             required>
                                                         <% for (BDistrict distrito : listaDistritos) { %>
                                                         <option value="<%=distrito.getIdDistrict()%>" <%=sesion.getDistrict().getIdDistrict()==distrito.getIdDistrict() ? "selected" : ""%> ><%=distrito.getName()%>

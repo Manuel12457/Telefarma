@@ -41,27 +41,30 @@
                 <!--Info de farmacia-->
                 <div class="container text-center">
                     <!--Nombre-->
-                    <div class="row">
-                        <h1><%= farmacia.getName() %>
+                    <div class="row gray-heebo">
+                        <h1 class="mb-auto" style="font-weight: 700"><%= farmacia.getName() %>
                         </h1>
                     </div>
                     <!--Distrito-->
-                    <div class="row">
-                        <h5><%= farmacia.getDistrict().getName() %>
-                        </h5>
+                    <div class="row opensans">
+
+                        <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmaciasDistrito&district=<%=farmacia.getDistrict().getIdDistrict()%>" class="a-gray text-decoration-none">
+                            <h5><%= farmacia.getDistrict().getName().toUpperCase() %>
+                            </h5>
+                        </a>
                     </div>
                     <!--Dirección-->
-                    <div class="row mb-3">
+                    <div class="row mb-3 rubik-500 gray5">
                         <h6><i class="fas fa-map-marker-alt fa-xs"></i>&nbsp;&nbsp;<%= farmacia.getAddress() %>
                         </h6>
                     </div>
                     <!--Titulo-->
                     <div class="row mb-3">
                         <% if (busqueda.equals("")) { %>
-                        <h4 class="pb-2 border-bottom d-flex justify-content-start" style="color: #f57f00">Productos
+                        <h4 class="pb-2 border-bottom d-flex justify-content-start dist-name">Productos
                             disponibles</h4>
                         <% } else { %>
-                        <h4 class="pb-2 border-bottom d-flex justify-content-start" style="color: #f57f00">Resultados de
+                        <h4 class="pb-2 border-bottom d-flex justify-content-start dist-name">Resultados de
                             "<%= busqueda %>"</h4>
                         <% } %>
                     </div>
@@ -74,20 +77,21 @@
                         <div class="col">
                             <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProduct()%>'"
                                  class="card card-producto">
-                                <div class="card-header">
-                                    <h6><%= producto.getName() %>
-                                    </h6>
-                                </div>
-                                <div class="card-body d-flex flex-column">
+                                <div class="img-producto">
                                     <img src="${pageContext.request.contextPath}/Image?idProduct=<%= producto.getIdProduct() %>"
                                          class="card-img-top mb-1" alt="producto"
                                          aria-label="Producto">
+                                </div>
+                                <div class="card-body d-flex flex-column">
                                     <div class="mt-auto">
-                                        <div class="d-flex justify-content-around">
-                                            <h5 class="text-dark">S/ <%= producto.getPrice() %>
-                                            </h5>
-                                            <h5 class="text-dark">Stock: <%= producto.getStock() %>
-                                            </h5>
+                                        <div class="d-flex row-producto">
+                                                <%= producto.getName()%>
+                                        </div>
+                                        <div class="d-flex gray5 opensans justify-content-center">
+                                                <%= producto.getStock()%> disponibles
+                                        </div>
+                                        <div class="d-flex row-precio">
+                                                S/<%= producto.getPrice()%>
                                         </div>
                                     </div>
                                 </div>

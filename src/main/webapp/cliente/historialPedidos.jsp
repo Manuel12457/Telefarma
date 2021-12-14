@@ -38,7 +38,7 @@
                                       action="<%=request.getContextPath()%>/ClientServlet?action=buscarHistorial&idClient=<%=idClient%>">
                                     <div class="input-group justify-content-center">
                                         <div class="form-outline" style="width: 36%">
-                                            <input type="search" id="buscarPedido" class="form-control"
+                                            <input type="search" id="buscarPedido" class="form-control readex-15"
                                                    placeholder="Buscar pedidos" name="busqueda"
                                                    value="<%=busqueda%>"/>
                                         </div>
@@ -49,7 +49,7 @@
                                 </form>
                                 <%--Tabla de pedidos--%>
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table readex-15">
                                         <!--Cabecera tabla de pedidos-->
                                         <thead>
                                             <tr class="text-center">
@@ -145,7 +145,7 @@
                                                     <form method="post"
                                                           action="<%=request.getContextPath()%>/ClientServlet?action=cancelarPedido&idOrder=<%=orden.getIdOrder()%>">
                                                         <button type="submit"
-                                                                class="btn btn-danger">
+                                                                class="btn btn-danger rubik-500">
                                                             Cancelar pedido
                                                         </button>
                                                     </form>
@@ -195,7 +195,7 @@
              aria-labelledby="recetaModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content border-0">
-                    <div class="modal-header bg-tele">
+                    <div class="modal-header bg-tele heebo">
                         <h5 class="modal-title text-white">Receta Médica</h5>
                         <button type="button"
                                 class="btn-close btn-close-white"

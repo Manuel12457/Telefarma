@@ -14,8 +14,8 @@
     <div class="row w-100 align-items-center pe-sm-4 ps-0 my-2">
         <!--Logo telefarma-->
         <div class="col-md-3 col-sm-5 col-6 d-flex justify-content-center ps-xxl-2 ps-xl-5 ps-lg-4 ps-md-5 ps-2">
-            <a class="navbar-brand py-0" href="${pageContext.request.contextPath}/ClientServlet">
-                <p class="logo-header mb-0">TeleFarma</p>
+            <a class="navbar-brand py-0" href="${pageContext.request.contextPath}/ClientServlet" style="width: 70%; height: 70%">
+                <img src="<%=request.getContextPath()%>/res/img/telefarma.svg" alt="TeleFarma">
             </a>
         </div>
         <!--Buscador de productos-->
@@ -23,7 +23,7 @@
             <form method="post" action="<%=request.getContextPath()%>/<%=servletBusqueda%>">
                 <div class="input-group">
                     <div style="width:40%">
-                        <input type="search" name="busqueda" class="form-control" placeholder="<%=busquedaPlaceholder%>"
+                        <input type="search" name="busqueda" class="form-control readex-15" placeholder="<%=busquedaPlaceholder%>"
                                value="<%=busqueda%>"/>
                     </div>
                     <button role="button" class="btn btn-tele border-start-1 input-group-text">
@@ -62,7 +62,7 @@
 <!--Menú de usuario-->
 <div class="offcanvas offcanvas-end text-center" tabindex="-1" id="menuDeUsuario"
      aria-labelledby="menuDeUsuario">
-    <div class="d-flex align-items-center flex-column mb-3 vh-100">
+    <div class="d-flex align-items-center flex-column mb-3 vh-100 gray-heebo">
         <!--Título y botón-->
         <div class="p-2 w-100">
             <div class="offcanvas-header border-bottom">
@@ -76,22 +76,22 @@
             <div class="offcanvas-body p-3">
                 <div class="d-flex flex-column">
                     <div class="my-2">
-                        <h4 class="mb-3"><%=nombre%>
-                        </h4>
                         <img src="${pageContext.request.contextPath}/res/img/images.png"
                              class="rounded-circle mx-auto d-block mb-3 h-25 w-50" alt="profile image">
+                        <h4 class="mb-3"><%=nombre%>
+                        </h4>
                     </div>
                     <%if (tipoUsuario.equals("cliente")) {%>
                     <div class="mb-3">
                         <div class="p-2">
-                            <a href="<%=request.getContextPath()%>/ClientServlet?action=editarForm" class="text-dark text-decoration-none">
+                            <a href="<%=request.getContextPath()%>/ClientServlet?action=editarForm" class="a-gray text-decoration-none">
                                 <span><i class="fas fa-user-edit"></i></span>
                                 <span>Editar usuario</span>
                             </a>
                         </div>
                         <div class="p-2">
                             <a href="<%=request.getContextPath()%>/ClientServlet?action=historial"
-                               class="text-dark text-decoration-none">
+                               class="a-gray text-decoration-none">
                                 <span><i class="fas fa-list"></i></span>
                                 <span>Historial de compras</span>
                             </a>
@@ -103,7 +103,7 @@
         </div>
         <div class="mt-auto p-2 w-100">
             <div class="offcanvas-body border-top pt-4">
-                <a href="<%=request.getContextPath()%>/?action=logout" class="text-dark text-decoration-none">
+                <a href="<%=request.getContextPath()%>/?action=logout" class="a-gray text-decoration-none">
                     <span><i class="fas fa-sign-out-alt"></i></span>
                     <span>Cerrar sesión</span>
                 </a>
