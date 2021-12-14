@@ -1,6 +1,7 @@
 package com.example.telefarma.daos;
 
 import com.example.telefarma.beans.*;
+import com.example.telefarma.dtos.DtoProductoCarrito;
 import com.example.telefarma.dtos.DtoProductoVisualizacion;
 
 import java.io.InputStream;

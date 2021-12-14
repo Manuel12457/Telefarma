@@ -355,6 +355,12 @@ public class ClientServlet extends HttpServlet {
                         int idProducto = Integer.parseInt(request.getParameter("idProducto" + i + "-" + j));
                         int cantidad = Integer.parseInt(request.getParameter("cantidad" + i + "-" + j));
 
+                        //
+                        BProduct product = productDao.obtenerProductoPorId(idProducto);
+                        product.setStock(product.getStock() - cantidad);
+                        productDao.editarProducto(product);
+                        //
+
                         if (cantidad == 0) {
                             response.sendRedirect(request.getContextPath() + "/ClientServlet?orden=ne");
                         }
@@ -406,6 +412,17 @@ public class ClientServlet extends HttpServlet {
                 try {
                     String idOrder = request.getParameter("idOrder");
                     ordersDao.cancelarPedido(idOrder, idClient);
+
+                    //
+                    ArrayList<BOrders> orden = ordersDao.listarOrdenes(0,-1,idOrder,idClient);
+                    ordersDao.agregarOrderDetails(orden.get(0));
+                    for (BOrderDetails orderDetails : orden.get(0).getListaDetails()) {
+                        BProduct product = productDao.obtenerProductoPorId(orderDetails.getIdProduct());
+                        product.setStock(product.getStock() + orderDetails.getQuantity());
+                        productDao.editarProducto(product);
+                    }
+                    //
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

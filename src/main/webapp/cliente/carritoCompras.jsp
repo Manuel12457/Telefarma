@@ -40,7 +40,7 @@
                 if (tamanoCarrito>0){
                 %>
                 <form method="POST"
-                      action="<%=request.getContextPath()%>/ClientServlet?action=registrarPedido&idClient=1"
+                      action="<%=request.getContextPath()%>/ClientServlet?action=registrarPedido&idClient=<%=sesion.getIdClient()%>>"
                       enctype="multipart/form-data">
                     <div class="row">
                         <!--Productos en carrito-->

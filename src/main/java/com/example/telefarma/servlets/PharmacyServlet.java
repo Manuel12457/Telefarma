@@ -137,6 +137,17 @@ public class PharmacyServlet extends HttpServlet {
                 } else if (cambiarCancelado != null) {
                     ordersDao.cambiarEstadoPedido("Cancelado", idOrder);
                     response.sendRedirect(request.getContextPath() + "/PharmacyServlet?action=buscarPedido");
+
+                    //
+                    ArrayList<BOrders> orden = ordersDao.listarOrdenesFarmacia(0,idOrder,1,idFarmacia);
+                    ordersDao.agregarOrderDetails(orden.get(0));
+                    for (BOrderDetails orderDetails : orden.get(0).getListaDetails()) {
+                        BProduct product = productDao.obtenerProductoPorId(orderDetails.getIdProduct());
+                        product.setStock(product.getStock() + orderDetails.getQuantity());
+                        productDao.editarProducto(product);
+                    }
+                    //
+
                 } else {
                     response.sendRedirect(request.getContextPath() + "/PharmacyServlet?action=buscarPedido&busqueda=" + busqueda);
                 }

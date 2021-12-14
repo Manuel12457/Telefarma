@@ -48,7 +48,8 @@
                     <div class="container">
                         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
                             <%--Loop de productos--%>
-                            <% for (BProduct producto : listaProductosBusqueda) { %>
+                            <% for (BProduct producto : listaProductosBusqueda) {
+                                    if (producto.getStock() > 0) {%>
                                 <div class="col">
                                     <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProduct()%>'"
                                          class="card card-producto">
@@ -80,7 +81,7 @@
                         </div>
                     </div>
                 </div>
-                <%
+                <%}
                 }else{
                 %>
                 <jsp:include page="/includes/noResultados.jsp"/>
