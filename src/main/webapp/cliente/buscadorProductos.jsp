@@ -31,11 +31,18 @@
             <div class="card-header my-5"></div>
             <!--Resultados de búsqueda-->
             <div class="container">
+                <%
+                if (listaProductosBusqueda.size()!=0){
+                %>
                 <div class="album pb-2">
                     <!--Título-->
                     <div class="row mb-3">
-                        <h4 class="pb-2 border-bottom d-flex justify-content-start dist-name" style="color: #f57f00">Resultados de
-                            búsqueda: "<%=busqueda%>"</h4>
+                        <% if (busqueda.equals("")) { %>
+                        <h4 class="pb-2 border-bottom d-flex justify-content-start dist-name">Mostrando todos los productos</h4>
+                        <% } else { %>
+                        <h4 class="pb-2 border-bottom d-flex justify-content-start dist-name">Resultados de
+                            "<%= busqueda %>"</h4>
+                        <% } %>
                     </div>
                     <!--Productos-->
                     <div class="container">
@@ -73,6 +80,13 @@
                         </div>
                     </div>
                 </div>
+                <%
+                }else{
+                %>
+                <jsp:include page="/includes/noResultados.jsp"/>
+                <%
+                }
+                %>
             </div>
             <!--Paginación-->
             <%

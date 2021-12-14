@@ -7,7 +7,6 @@
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <%
-    int idClient = sesion.getIdClient();
     String nombreCliente = sesion.getName();
 %>
 
@@ -35,7 +34,7 @@
                             <div class="rounded py-2">
                                 <%--Buscador de pedidos--%>
                                 <form class="mb-4" method="post"
-                                      action="<%=request.getContextPath()%>/ClientServlet?action=buscarHistorial&idClient=<%=idClient%>">
+                                      action="<%=request.getContextPath()%>/ClientServlet?action=buscarHistorial">
                                     <div class="input-group justify-content-center">
                                         <div class="form-outline" style="width: 36%">
                                             <input type="search" id="buscarPedido" class="form-control readex-15"
@@ -47,6 +46,9 @@
                                         </button>
                                     </div>
                                 </form>
+                                <%
+                                    if (listaOrdenes.size()!=0){
+                                %>
                                 <%--Tabla de pedidos--%>
                                 <div class="table-responsive">
                                     <table class="table readex-15">
@@ -170,6 +172,25 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <%
+                                }else{
+                                %>
+                                    <div class="col w-100 text-center my-4" style="max-height: 350px;">
+                                        <div class="w-75 div-nr">
+                                            <div class="div-nr">
+                                                <img style="max-width: 720px; max-height: 200px;" src="<%=request.getContextPath()%>/res/img/no-encontrado.png" alt="No encontrado">
+                                            </div>
+                                            <div class="div-nr">
+                                                Ups... No encontramos resultados para tu búsqueda :(
+                                            </div>
+                                            <div style="font-weight: 400; font-size: 16px;" class="div-nr gray5">
+                                                Prueba buscando otro término
+                                            </div>
+                                        </div>
+                                    </div>
+                                <%
+                                }
+                                %>
                             </div>
                             <!--Paginación-->
                             <jsp:include page="../paginacion.jsp">
@@ -195,7 +216,7 @@
              aria-labelledby="recetaModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content border-0">
-                    <div class="modal-header bg-tele heebo">
+                    <div class="modal-header bg-tele heebo-500">
                         <h5 class="modal-title text-white">Receta Médica</h5>
                         <button type="button"
                                 class="btn-close btn-close-white"

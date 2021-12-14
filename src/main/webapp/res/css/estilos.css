@@ -468,6 +468,7 @@ td {
 .card-header-tele {
     background-color: #f17f07;
     font-family: 'Heebo', sans-serif;
+    font-weight: 500;
     color: white;
 }
 
@@ -480,6 +481,7 @@ td {
 
 .dist-name {
     font-family: 'Heebo', sans-serif;
+    font-weight: 500;
     border-bottom: 1px solid #dee2e6 !important;
     padding-bottom: .5rem !important;
     color: #f57f00
@@ -576,6 +578,7 @@ td {
     display: flex;
     flex-direction: column;
     font-family: 'Heebo', sans-serif;
+    font-weight: 500;
     font-size: 22px;
     text-align: center;
     color: #333333;
@@ -660,6 +663,7 @@ td {
 
 .cart-header {
     font-family: 'Heebo', sans-serif;
+    font-weight: 500;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -724,6 +728,7 @@ strong.detalles-str{
     display: flex;
     flex-direction: column;
     font-family: 'Heebo', sans-serif;
+    font-weight: 500;
     font-size: 36px;
     text-align: left;
     color: #333333;
@@ -764,6 +769,7 @@ strong.detalles-str{
 .a-login {
     font-size: 16px;
     font-family: 'Heebo', sans-serif;
+    font-weight: 500;
     color: #393f81;
 }
 
@@ -798,8 +804,9 @@ strong.detalles-str{
     font-weight: 500;
 }
 
-.heebo{
+.heebo-500{
     font-family: 'Heebo', sans-serif;
+    font-weight: 500;
 }
 
 .opensans{
@@ -808,6 +815,7 @@ strong.detalles-str{
 
 .gray-heebo{
     font-family: 'Heebo', sans-serif;
+    font-weight: 500;
     color: #333333;
 }
 
@@ -880,4 +888,14 @@ strong.detalles-str{
 .btn-rectangle-out:hover:before, .hvr-rectangle-out:focus:before, .hvr-rectangle-out:active:before {
     -webkit-transform: scale(1);
     transform: scale(1);
+}
+
+/*No hay resultados*/
+.div-nr{
+    font-family: 'Heebo', sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    text-align: center;
+    margin-left:auto;
+    margin-right:auto;
 }

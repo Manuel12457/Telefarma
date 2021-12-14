@@ -51,6 +51,11 @@ public class PharmacyServlet extends HttpServlet {
                     request.setAttribute("pagActual", pagina);
                     request.setAttribute("pagTotales", pagTotales);
 
+                    if (pagina>=pagTotales && pagTotales>0){
+                        response.sendRedirect(request.getContextPath()+"/PharmacyServlet?action=buscarProducto&busqueda="+busqueda+"&pagina="+(pagTotales-1));
+                        return;
+                    }
+
                     view = request.getRequestDispatcher("/farmacia/visualizacionProductos.jsp");
                     view.forward(request, response);
                     break;
@@ -60,7 +65,6 @@ public class PharmacyServlet extends HttpServlet {
                     pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
                     busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
                     pagTotales = (int) Math.ceil((double) ordersDao.listarOrdenesFarmacia(pagina, busqueda, 1000, idFarmacia).size() / limitePedidos);
-
                     ArrayList<BOrders> listaOrdenes = ordersDao.listarOrdenesFarmacia(pagina, busqueda, limitePedidos, idFarmacia);
                     for (BOrders orden : listaOrdenes) {
                         ordersDao.agregarOrderDetails(orden);
@@ -71,6 +75,11 @@ public class PharmacyServlet extends HttpServlet {
                     request.setAttribute("listaOrdenes", listaOrdenes);
                     request.setAttribute("pagActual", pagina);
                     request.setAttribute("pagTotales", pagTotales);
+
+                    if (pagina>=pagTotales && pagTotales>0){
+                        response.sendRedirect(request.getContextPath()+"/PharmacyServlet?action=buscarPedido&busqueda="+busqueda+"&pagina="+(pagTotales));
+                        return;
+                    }
 
                     view = request.getRequestDispatcher("/farmacia/gestionPedidos.jsp");
                     view.forward(request, response);

@@ -41,6 +41,9 @@
                         <!--Nombre distrito-->
                         <h4 class="dist-name" style="font-size: 28px;"><%= district.getName() %>
                         </h4>
+                        <%
+                            if (listaFarmaciasDistrito.size()!=0){
+                        %>
                         <!--Farmacias-->
                         <div class="row row-cols-1 row-cols-lg-3 g-4 py-3">
                             <!--Loop de farmacia-->
@@ -70,6 +73,13 @@
                                 }
                             %>
                         </div>
+                        <%
+                        }else{
+                        %>
+                        <jsp:include page="/includes/noResultados.jsp"/>
+                        <%
+                        }
+                        %>
                     </div>
                 </div>
             </div>

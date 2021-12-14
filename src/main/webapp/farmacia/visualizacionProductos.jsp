@@ -83,91 +83,102 @@
 
             <!--Productos-->
             <div class="container">
-                <!--Loop de productos-->
                 <%
-                    for (DtoProductoVisualizacion producto : listaProductosBusqueda) {
+                    if (listaProductosBusqueda.size()!=0){
                 %>
-                <div class="row col-12 justify-content-center align-items-start">
-                    <!--Nombre del producto e imagen referencial-->
-                    <div class="col-md-2 text-center mt-2">
-                        <h5><%=producto.getName()%>
-                        </h5>
-                        <img class="w-100"
-                             src="${pageContext.request.contextPath}/Image?idProduct=<%= producto.getIdProduct() %>"
-                             style="max-height: 250px; max-width: 250px">
-                    </div>
-                    <!--Precio y Stock-->
-                    <div class="col-md-1 text-center mt-5 d-none d-md-block">
-                        <h6>Precio</h6>
-                        <p style="font-size: larger">s/ <%=String.format("%.2f", producto.getPrice())%>
-                        </p>
-                        <h6>Stock</h6>
-                        <p style="font-size: larger"><%=producto.getStock()%>
-                        </p>
-                    </div>
-                    <div class="d-flex justify-content-around align-items-center d-md-none">
-                        <h6 style="display: inline">
-                            Precio:
-                            <p style="display: inline;font-size: large; font-weight: normal;">
-                                &nbsp;s/ <%=String.format("%.2f", producto.getPrice())%>
-                            </p>
-                        </h6>
-                        <h6 style="display: inline">
-                            Stock:
-                            <p style="display: inline;font-size: large; font-weight: normal;">
-                                &nbsp;<%=producto.getStock()%>
-                            </p>
-                        </h6>
-                    </div>
-                    <!--Descripción del producto-->
-                    <div class="col-md-6 mt-5 d-none d-md-block">
-                        <h6>Descripción</h6>
-                        <p><%=producto.getDescription()%>
-                        </p>
-                        <h6 class="mt-1">¿Requiere Receta? <b><%=producto.getRequierePrescripcion() ? "Sí" : "No"%>
-                        </b></h6>
-                    </div>
-                    <div class="d-flex flex-column mt-1 d-md-none px-5">
-                        <h6>Descripción</h6>
-                        <p><%=producto.getDescription()%>
-                        </p>
-                        <h6 class="mt-1">¿Requiere Receta? <b><%=producto.getRequierePrescripcion() ? "Sí" : "No"%>
-                        </b></h6>
-                    </div>
-
+                    <!--Loop de productos-->
                     <%
-                        String modalTarget;
-                        if (producto.getPosibleEliminar()) {
-                            modalTarget = "confirmacionEliminar";
-                        } else {
-                            modalTarget = "productoEnOrden";
+                        for (DtoProductoVisualizacion producto : listaProductosBusqueda) {
+                    %>
+                    <div class="row col-12 justify-content-center align-items-start">
+                        <!--Nombre del producto e imagen referencial-->
+                        <div class="col-md-2 text-center mt-2">
+                            <h5><%=producto.getName()%>
+                            </h5>
+                            <img class="w-100"
+                                 src="${pageContext.request.contextPath}/Image?idProduct=<%= producto.getIdProduct() %>"
+                                 style="max-height: 250px; max-width: 250px">
+                        </div>
+                        <!--Precio y Stock-->
+                        <div class="col-md-1 text-center mt-5 d-none d-md-block">
+                            <h6>Precio</h6>
+                            <p style="font-size: larger">s/ <%=String.format("%.2f", producto.getPrice())%>
+                            </p>
+                            <h6>Stock</h6>
+                            <p style="font-size: larger"><%=producto.getStock()%>
+                            </p>
+                        </div>
+                        <div class="d-flex justify-content-around align-items-center d-md-none">
+                            <h6 style="display: inline">
+                                Precio:
+                                <p style="display: inline;font-size: large; font-weight: normal;">
+                                    &nbsp;s/ <%=String.format("%.2f", producto.getPrice())%>
+                                </p>
+                            </h6>
+                            <h6 style="display: inline">
+                                Stock:
+                                <p style="display: inline;font-size: large; font-weight: normal;">
+                                    &nbsp;<%=producto.getStock()%>
+                                </p>
+                            </h6>
+                        </div>
+                        <!--Descripción del producto-->
+                        <div class="col-md-6 mt-5 d-none d-md-block">
+                            <h6>Descripción</h6>
+                            <p><%=producto.getDescription()%>
+                            </p>
+                            <h6 class="mt-1">¿Requiere Receta? <b><%=producto.getRequierePrescripcion() ? "Sí" : "No"%>
+                            </b></h6>
+                        </div>
+                        <div class="d-flex flex-column mt-1 d-md-none px-5">
+                            <h6>Descripción</h6>
+                            <p><%=producto.getDescription()%>
+                            </p>
+                            <h6 class="mt-1">¿Requiere Receta? <b><%=producto.getRequierePrescripcion() ? "Sí" : "No"%>
+                            </b></h6>
+                        </div>
+
+                        <%
+                            String modalTarget;
+                            if (producto.getPosibleEliminar()) {
+                                modalTarget = "confirmacionEliminar";
+                            } else {
+                                modalTarget = "productoEnOrden";
+                            }
+                        %>
+                        <!--Botones de editar y eliminar-->
+                        <div class="col-sm-1 mt-5 d-none d-md-block text-center">
+                            <a href="<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProduct()%>">
+                                <i class="far fa-edit fa-lg btn-tele p-2 rounded"></i>
+                            </a>
+                            <hr class="my-1" style="background-color: white">
+                            <button class="btn btn-danger fa-lg px-2" type="button"
+                                    data-bs-toggle="modal" data-bs-target="#<%=modalTarget%>"
+                                    data-bs-whatever="<%=producto.getIdProduct()%>">
+                                <i class="fas fa-times-circle"></i>
+                            </button>
+                        </div>
+                        <div class="d-flex justify-content-center my-2 d-md-none">
+                            <a href="<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProduct()%>">
+                                <i class="far fa-edit fa-lg btn-tele p-2 rounded"></i>
+                            </a>
+                            <div class="mx-3"></div>
+                            <button class="btn btn-danger fa-lg px-2" type="button"
+                                    data-bs-toggle="modal" data-bs-target="#<%=modalTarget%>"
+                                    data-bs-whatever="<%=producto.getIdProduct()%>">
+                                <i class="fas fa-times-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <hr class="mx-md-5 mx-sm-3">
+                    <%
                         }
                     %>
-                    <!--Botones de editar y eliminar-->
-                    <div class="col-sm-1 mt-5 d-none d-md-block text-center">
-                        <a href="<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProduct()%>">
-                            <i class="far fa-edit fa-lg btn-tele p-2 rounded"></i>
-                        </a>
-                        <hr class="my-1" style="background-color: white">
-                        <button class="btn btn-danger fa-lg px-2" type="button"
-                                data-bs-toggle="modal" data-bs-target="#<%=modalTarget%>"
-                                data-bs-whatever="<%=producto.getIdProduct()%>">
-                            <i class="fas fa-times-circle"></i>
-                        </button>
-                    </div>
-                    <div class="d-flex justify-content-center my-2 d-md-none">
-                        <a href="<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProduct()%>">
-                            <i class="far fa-edit fa-lg btn-tele p-2 rounded"></i>
-                        </a>
-                        <div class="mx-3"></div>
-                        <button class="btn btn-danger fa-lg px-2" type="button"
-                                data-bs-toggle="modal" data-bs-target="#<%=modalTarget%>"
-                                data-bs-whatever="<%=producto.getIdProduct()%>">
-                            <i class="fas fa-times-circle"></i>
-                        </button>
-                    </div>
-                </div>
-                <hr class="mx-md-5 mx-sm-3">
+
+                <%
+                }else{
+                %>
+                <jsp:include page="/includes/noResultados.jsp"/>
                 <%
                     }
                 %>

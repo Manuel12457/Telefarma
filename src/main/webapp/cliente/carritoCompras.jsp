@@ -36,17 +36,15 @@
             <div class="card-header my-5"></div>
             <!--Carrito-->
             <div class="container pb-5 mt-2 mt-md-3">
+                <%
+                if (tamanoCarrito>0){
+                %>
                 <form method="POST"
                       action="<%=request.getContextPath()%>/ClientServlet?action=registrarPedido&idClient=1"
                       enctype="multipart/form-data">
                     <div class="row">
                         <!--Productos en carrito-->
                         <div class="col-md-9 col-xl-8">
-                            <%if (listaCarrito.size() == 0) {%>
-                            <h5 class="mb-sm-3 mb-1">
-                                Aún no ha agregado ningún producto a su carrito
-                            </h5>
-                            <%}%>
                             <!--Items de la farmacia 1-->
                             <%
                                 int cont = 0;
@@ -228,6 +226,45 @@
                         </div>
                     </div>
                 </form>
+                <%
+                }else{
+                %>
+                <div class="row">
+                    <div class="col-md-9 col-xl-8">
+                        <div class="col w-100 h-100 text-center">
+                            <div class="w-75 div-nr">
+                                <div class="div-nr">
+                                    <img style="max-width: 100%; width: auto; height:100%; max-height: 500px;" src="<%=request.getContextPath()%>/res/img/vacio.png" alt="Vacio">
+                                </div>
+                                <div class="div-nr">
+                                    Tu carrito está vacío
+                                </div>
+                                <div style="font-weight: 400; font-size: 16px;" class="div-nr gray5">
+                                    Añade productos y vuelve más tarde
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Costo total-->
+                    <div class="col-md-3 col-xl-4 pt-3 pt-md-0">
+                        <div class="row">
+                            <!--Cabecera resumen-->
+                            <h3 class="cart-header px-4 py-3 justify-content-center">Resumen</h3>
+                            <!--Total-->
+                            <div class="text-center py-2 rubik-500">
+                                <span style="font-weight: 400;">Total:</span>
+                                <span class="cart-total" style="font-size: 20px"> S/0.00</span>
+                            </div>
+                            <!--Boton pedir-->
+                            <button class="btn w-100 h-45px btn-rectangle-out" type="button" disabled>
+                                Realizar pedido
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <%
+                }
+                %>
             </div>
         </main>
 

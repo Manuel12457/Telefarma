@@ -47,7 +47,6 @@
                     </div>
                     <!--Distrito-->
                     <div class="row opensans">
-
                         <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmaciasDistrito&district=<%=farmacia.getDistrict().getIdDistrict()%>" class="a-gray text-decoration-none">
                             <h5><%= farmacia.getDistrict().getName().toUpperCase() %>
                             </h5>
@@ -58,6 +57,9 @@
                         <h6><i class="fas fa-map-marker-alt fa-xs"></i>&nbsp;&nbsp;<%= farmacia.getAddress() %>
                         </h6>
                     </div>
+                    <%
+                        if (listaProductos.size()!=0){
+                    %>
                     <!--Titulo-->
                     <div class="row mb-3">
                         <% if (busqueda.equals("")) { %>
@@ -68,9 +70,15 @@
                             "<%= busqueda %>"</h4>
                         <% } %>
                     </div>
+                    <%
+                        }
+                    %>
                 </div>
                 <!--Productos-->
                 <div class="container">
+                    <%
+                        if (listaProductos.size()!=0){
+                    %>
                     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
                         <%--Loop de productos--%>
                         <% for (BProduct producto : listaProductos) { %>
@@ -99,6 +107,13 @@
                         </div>
                         <% } %>
                     </div>
+                    <%
+                    }else{
+                    %>
+                    <jsp:include page="/includes/noResultados.jsp"/>
+                    <%
+                    }
+                    %>
                 </div>
             </div>
             <!--Paginación-->

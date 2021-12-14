@@ -3,7 +3,7 @@
     String nombre = request.getParameter("nombre");
 %>
 <!--Barra lateral-->
-<div class="sidebar active heebo">
+<div class="sidebar active heebo-500">
     <!--Logo: Vuelve al home-->
     <div class="logo-content border-bottom">
         <div class="logo">

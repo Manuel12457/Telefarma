@@ -34,9 +34,10 @@ public class AdminServlet extends HttpServlet {
             case "":
                 int limitedistritos = 2;
                 ArrayList<BDistrict> distritos = districtDao.listarDistritosAdmin(pagina, limitedistritos, busqueda);
+                int pagTotales = (int) Math.ceil((double) districtDao.listarDistritosAdmin(0, -1, busqueda).size() / limitedistritos);
 
                 request.setAttribute("pagActual", pagina);
-                request.setAttribute("pagTotales", (int) Math.ceil((double) districtDao.listarDistritosAdmin(0, -1, busqueda).size() / limitedistritos));
+                request.setAttribute("pagTotales", pagTotales);
                 request.setAttribute("numDistritos", limitedistritos);
                 request.setAttribute("listaDistritosAMostrar", distritos);
 
@@ -46,6 +47,11 @@ public class AdminServlet extends HttpServlet {
                     listaFarmacias.add(farmaciasAdmin);
                 }
                 request.setAttribute("listaFarmacias", listaFarmacias);
+
+                if (pagina>=pagTotales && pagTotales>0){
+                    response.sendRedirect(request.getContextPath()+"/AdminServlet?busqueda="+busqueda+"&pagina="+(pagTotales-1));
+                    return;
+                }
 
                 view = request.getRequestDispatcher("/admin/buscadorFarmacias.jsp");
                 view.forward(request, response);

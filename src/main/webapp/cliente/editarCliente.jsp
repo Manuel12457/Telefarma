@@ -26,7 +26,7 @@
                             <h4 class="my-2">Editar Usuario</h4>
                         </div>
                         <!--Contenido-->
-                        <div class="card-body heebo">
+                        <div class="card-body heebo-500">
                             <div class="container-fluid">
                                 <div class="row px-lg-5 px-0 py-3">
                                     <!--Datos a editar-->

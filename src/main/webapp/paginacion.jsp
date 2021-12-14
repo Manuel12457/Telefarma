@@ -8,6 +8,7 @@
         int pagActual=Integer.parseInt(request.getParameter("pagActual"));
         int pagTotales=Integer.parseInt(request.getParameter("pagTotales"));
         String servlet = request.getParameter("servlet");
+        if(pagTotales>0){
         %>
 
         <div class="container">
@@ -72,5 +73,8 @@
                 </nav>
             </div>
         </div>
+        <%
+        }
+        %>
     </body>
 </html>

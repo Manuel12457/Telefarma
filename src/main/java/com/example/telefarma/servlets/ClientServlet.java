@@ -70,8 +70,14 @@ public class ClientServlet extends HttpServlet {
                 }
                 request.setAttribute("listaFarmacias", listaFarmacias);
 
-                request.setAttribute("pagTotales", (int) Math.ceil((double) districtDao.listarDistritosCliente(0, -1, idClient).size() / limiteDistritos));
+                pagTotales=(int) Math.ceil((double) districtDao.listarDistritosCliente(0, -1, idClient).size() / limiteDistritos);
+                request.setAttribute("pagTotales", pagTotales);
                 request.setAttribute("estadoOrden", estadoOrden);
+
+                if (pagina>=pagTotales && pagTotales>0){
+                    response.sendRedirect(request.getContextPath()+"/ClientServlet?action=mostrarFarmacias&pagina="+(pagTotales-1));
+                    return;
+                }
 
                 view = request.getRequestDispatcher("/cliente/mostrarFarmacias.jsp");
                 view.forward(request, response);
@@ -86,7 +92,13 @@ public class ClientServlet extends HttpServlet {
                 }
                 request.setAttribute("listaOrdenes", listaOrdenes);
 
-                request.setAttribute("pagTotales", (int) Math.ceil((double) ordersDao.listarOrdenes(0, -1, busqueda, idClient).size() / limite));
+                pagTotales=(int) Math.ceil((double) ordersDao.listarOrdenes(0, -1, busqueda, idClient).size() / limite);
+                request.setAttribute("pagTotales", pagTotales);
+
+                if (pagina>=pagTotales && pagTotales>0){
+                    response.sendRedirect(request.getContextPath()+"/ClientServlet?action=historial&busqueda="+busqueda+"&pagina="+(pagTotales-1));
+                    return;
+                }
 
                 view = request.getRequestDispatcher("/cliente/historialPedidos.jsp");
                 view.forward(request, response);
@@ -98,8 +110,13 @@ public class ClientServlet extends HttpServlet {
                 request.setAttribute("idPharmacy", idPharmacy);
                 request.setAttribute("listaProductos", productDao.listarProductosPorFarmacia(pagina, limiteProductos, busqueda, idPharmacy));
                 request.setAttribute("farmacia", pharmacyDao.obtenerFarmaciaPorId(idPharmacy));
+                pagTotales = (int) Math.ceil((double) productDao.listarProductosPorFarmacia(0, -1, busqueda, idPharmacy).size() / limiteProductos);
+                request.setAttribute("pagTotales", pagTotales);
 
-                request.setAttribute("pagTotales", (int) Math.ceil((double) productDao.listarProductosPorFarmacia(0, -1, busqueda, idPharmacy).size() / limiteProductos));
+                if (pagina>=pagTotales && pagTotales>0){
+                    response.sendRedirect(request.getContextPath()+"/ClientServlet?action=verFarmacia&busqueda="+busqueda+"&idPharmacy="+idPharmacy+"&pagina="+(pagTotales-1));
+                    return;
+                }
 
                 view = request.getRequestDispatcher("/cliente/productosFarmacia.jsp");
                 view.forward(request, response);
@@ -107,10 +124,16 @@ public class ClientServlet extends HttpServlet {
 
             case "buscarProducto":
                 limiteProductos = 16;
-                request.setAttribute("listaProductosBusqueda", productDao.listarProductosBusqueda(pagina, limiteProductos, busqueda, idClient));
 
                 pagTotales = (int) Math.ceil((double) productDao.cantidadProductos(busqueda) / limiteProductos);
                 request.setAttribute("pagTotales", pagTotales);
+
+                if (pagina>=pagTotales && pagTotales>0){
+                    response.sendRedirect(request.getContextPath()+"/ClientServlet?action=buscarProducto&busqueda="+busqueda+"&pagina="+(pagTotales-1));
+                    return;
+                }
+                request.setAttribute("listaProductosBusqueda", productDao.listarProductosBusqueda(pagina, limiteProductos, busqueda, idClient));
+
 
                 view = request.getRequestDispatcher("/cliente/buscadorProductos.jsp");
                 view.forward(request, response);
@@ -130,8 +153,13 @@ public class ClientServlet extends HttpServlet {
                 int idDistrict = Integer.parseInt(request.getParameter("district"));
                 request.setAttribute("district", districtDao.obtenerDistritoPorId(idDistrict));
                 request.setAttribute("listaFarmaciasDistrito", pharmacyDao.listarFarmaciasPorDistrito(pagina, limiteFarmacias, busqueda, 0, idDistrict));
+                pagTotales = (int) Math.ceil((double) pharmacyDao.listarFarmaciasPorDistrito(0, -1, busqueda, 0, idDistrict).size() / limiteFarmacias);
+                request.setAttribute("pagTotales", pagTotales);
 
-                request.setAttribute("pagTotales", (int) Math.ceil((double) pharmacyDao.listarFarmaciasPorDistrito(0, -1, busqueda, 0, idDistrict).size() / limiteFarmacias));
+                if (pagina>=pagTotales && pagTotales>0){
+                    response.sendRedirect(request.getContextPath()+"/ClientServlet?action=verFarmaciasDistrito&district="+idDistrict+"&pagina="+(pagTotales-1));
+                    return;
+                }
 
                 view = request.getRequestDispatcher("/cliente/mostrarFarmaciasDistrito.jsp");
                 view.forward(request, response);
@@ -250,7 +278,7 @@ public class ClientServlet extends HttpServlet {
                 break;
 
             case "buscarHistorial":
-                response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial&busqueda=" + busqueda + "&idClient=" + idClient);
+                response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial&busqueda=" + busqueda);
                 break;
 
             case "buscarProductosDeFarmacia":
