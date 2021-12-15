@@ -7,6 +7,7 @@
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="hashMostrarBoton" scope="request" type="java.util.HashMap<java.lang.Integer,java.lang.Integer>"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -135,10 +136,15 @@
                             %>
                         </div>
                         <!--Boton ver más-->
+                        <%if (hashMostrarBoton.containsKey(listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict())) {
+                            if (hashMostrarBoton.get(listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict()) == 1) {
+                        %>
                         <div class="d-flex justify-content-end">
                             <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmaciasDistrito&district=<%=listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict()%>"
                                class="btn btn-tele" role="button">Ver más</a>
                         </div>
+                        <%}
+                        }%>
                     </div>
                 </div>
                 <%

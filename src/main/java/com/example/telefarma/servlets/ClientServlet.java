@@ -64,11 +64,15 @@ public class ClientServlet extends HttpServlet {
                 ArrayList<BDistrict> distritos = districtDao.listarDistritosCliente(pagina, limiteDistritos, idClient);
                 limiteFarmacias = 3;
                 ArrayList<ArrayList<BPharmacy>> listaFarmacias = new ArrayList<>();
+                HashMap<Integer, Integer> mostrarBotonVerMas = new HashMap<>();
                 for (BDistrict distrito : distritos) {
                     ArrayList<BPharmacy> farmaciasCliente = pharmacyDao.listarFarmaciasPorDistrito(0, limiteFarmacias, "", 0, distrito.getIdDistrict());
                     listaFarmacias.add(farmaciasCliente);
+
+                    mostrarBotonVerMas.put(distrito.getIdDistrict(), pharmacyDao.listarFarmaciasPorDistrito(0, -1, "", 0, distrito.getIdDistrict()).size() > 3 ? 1 : 0);
                 }
                 request.setAttribute("listaFarmacias", listaFarmacias);
+                request.setAttribute("hashMostrarBoton", mostrarBotonVerMas);
 
                 pagTotales=(int) Math.ceil((double) districtDao.listarDistritosCliente(0, -1, idClient).size() / limiteDistritos);
                 request.setAttribute("pagTotales", pagTotales);
