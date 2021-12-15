@@ -1,6 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.example.telefarma.beans.BOrders" %>
 <%@ page import="com.example.telefarma.beans.BOrderDetails" %>
+<%@ page import="java.time.LocalDateTime" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.Duration" %>
 <jsp:useBean id="listaOrdenes" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BOrders>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
@@ -8,6 +11,8 @@
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <%
     String nombreCliente = sesion.getName();
+    LocalDateTime now = LocalDateTime.now().plus(Duration.parse("PT30M"));
+    String dateNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "T" + now.format(DateTimeFormatter.ofPattern("HH:mm"));
 %>
 
 <!DOCTYPE html>
@@ -37,9 +42,9 @@
                                       action="<%=request.getContextPath()%>/ClientServlet?action=buscarHistorial">
                                     <div class="input-group justify-content-center">
                                         <div class="form-outline" style="width: 36%">
-                                            <input type="search" id="buscarPedido" class="form-control readex-15"
-                                                   placeholder="Buscar pedidos" name="busqueda"
-                                                   value="<%=busqueda%>"/>
+                                            <input type="date" name="busqueda" min="<%=dateNow%>"
+                                                   class="readex-15" style="max-width: 180px;"
+                                                   value="<%=busqueda%>">
                                         </div>
                                         <button role="button" class="btn btn-tele border-start-1">
                                             <i class="fas fa-search"></i>
@@ -165,8 +170,7 @@
                                                     %>
                                                 </td>
                                             </tr>
-                                            <%
-                                                    }
+                                            <%}
                                                 }
                                             %>
                                         </tbody>
