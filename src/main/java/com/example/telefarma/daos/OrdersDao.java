@@ -44,7 +44,7 @@ public class OrdersDao extends BaseDao {
                 "inner join product p on (p.idProduct=od.idProduct) \n" +
                 "inner join pharmacy f on (p.idPharmacy=f.idPharmacy) \n" +
                 "inner join client c on (o.idClient=c.idClient) \n" +
-                "where c.idClient=" + id + " and o.idOrder like ? \n" +
+                "where c.idClient=" + id + "\n" +
                 "group by o.idOrder \n" +
                 "order by o.orderDate desc\n";
 
@@ -53,20 +53,21 @@ public class OrdersDao extends BaseDao {
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, "%" + busqueda + "%");
-
             try (ResultSet rs = pstmt.executeQuery();) {
                 while (rs.next()) {
-                    BOrders clientOrders = new BOrders();
-                    clientOrders.setIdOrder(rs.getString(1));
-                    clientOrders.setFarmaciaAsociada(rs.getString(2));
-                    String dtOrden = rs.getString(3);
-                    clientOrders.setFechaOrden(dtOrden.substring(0, 10) + " - " + dtOrden.substring(11, 16));
-                    String dtRecojo = rs.getString(4);
-                    clientOrders.setFechaRecojo(dtRecojo.substring(0, 10) + " - " + dtRecojo.substring(11, 16));
-                    clientOrders.setTotal(rs.getDouble(5));
-                    clientOrders.setEstado(rs.getString(6));
-                    listaOrdenes.add(clientOrders);
+                    String[] fechaOrden = rs.getString(3).split("\\s+");
+                    if (busqueda.equals("") || fechaOrden[0].equals(busqueda)) {
+                        BOrders clientOrders = new BOrders();
+                        clientOrders.setIdOrder(rs.getString(1));
+                        clientOrders.setFarmaciaAsociada(rs.getString(2));
+                        String dtOrden = rs.getString(3);
+                        clientOrders.setFechaOrden(dtOrden.substring(0, 10) + " - " + dtOrden.substring(11, 16));
+                        String dtRecojo = rs.getString(4);
+                        clientOrders.setFechaRecojo(dtRecojo.substring(0, 10) + " - " + dtRecojo.substring(11, 16));
+                        clientOrders.setTotal(rs.getDouble(5));
+                        clientOrders.setEstado(rs.getString(6));
+                        listaOrdenes.add(clientOrders);
+                    }
                 }
             }
 

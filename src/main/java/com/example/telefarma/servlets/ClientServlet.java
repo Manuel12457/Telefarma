@@ -85,11 +85,18 @@ public class ClientServlet extends HttpServlet {
 
             case "historial":
                 int limite = 9;
-                ArrayList<BOrders> listaOrdenes = ordersDao.listarOrdenes(pagina, limite, busqueda, idClient);
+                int paginaHistorial = pagina;
+
+                ArrayList<BOrders> listaOrdenes = new ArrayList<>();
+                while (listaOrdenes.size() == 0 && paginaHistorial < 10) {
+                    listaOrdenes = ordersDao.listarOrdenes(paginaHistorial, limite, busqueda, idClient);
+                    paginaHistorial = paginaHistorial + 1;
+                }
                 for (BOrders orden : listaOrdenes) {
                     ordersDao.agregarOrderDetails(orden);
                     ordersDao.agregarTimeDiff(orden);
                 }
+
                 request.setAttribute("listaOrdenes", listaOrdenes);
 
                 pagTotales=(int) Math.ceil((double) ordersDao.listarOrdenes(0, -1, busqueda, idClient).size() / limite);
