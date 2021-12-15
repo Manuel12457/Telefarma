@@ -88,10 +88,14 @@ public class ClientServlet extends HttpServlet {
                 int paginaHistorial = pagina;
 
                 ArrayList<BOrders> listaOrdenes = new ArrayList<>();
-                while (listaOrdenes.size() == 0 && paginaHistorial < 10) {
-                    listaOrdenes = ordersDao.listarOrdenes(paginaHistorial, limite, busqueda, idClient);
-                    paginaHistorial = paginaHistorial + 1;
+
+                if (ordersDao.listarOrdenes(0,-1,busqueda,idClient).size() != 0) {
+                    while (listaOrdenes.size() == 0 && paginaHistorial < 10) {
+                        listaOrdenes = ordersDao.listarOrdenes(paginaHistorial, limite, busqueda, idClient);
+                        paginaHistorial = paginaHistorial + 1;
+                    }
                 }
+
                 for (BOrders orden : listaOrdenes) {
                     ordersDao.agregarOrderDetails(orden);
                     ordersDao.agregarTimeDiff(orden);
