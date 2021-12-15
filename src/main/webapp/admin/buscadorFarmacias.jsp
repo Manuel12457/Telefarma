@@ -28,6 +28,7 @@
             <div class="card-header my-5"></div>
             <!--Farmacias-->
             <div class="container">
+                <% if (!listaFarmacias.isEmpty()) { %>
                 <!--Alertas-->
                 <%
                     if (request.getSession().getAttribute("actionResult") != null) {
@@ -126,6 +127,10 @@
                         </div>
                     </div>
                 </div>
+                <%      }
+                    } else {
+                %>
+                <jsp:include page="/includes/noResultados.jsp"/>
                 <% } %>
             </div>
         </main>

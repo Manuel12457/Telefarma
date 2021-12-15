@@ -105,9 +105,9 @@ public class AdminServlet extends HttpServlet {
         switch (action) {
             case "registrar":
                 f.setRUC(request.getParameter("ruc"));
-                f.setName(request.getParameter("nombre"));
+                f.setName(request.getParameter("nombre").trim());
                 f.setMail(request.getParameter("correo"));
-                f.setAddress(request.getParameter("direccion"));
+                f.setAddress(request.getParameter("direccion").trim());
                 f.setDistrict(new BDistrict(Integer.parseInt(request.getParameter("distrito"))));
 
                 correoExiste = sessionDao.correoExiste(f.getMail());
@@ -149,7 +149,7 @@ public class AdminServlet extends HttpServlet {
                 break;
 
             case "buscar":
-                String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
+                String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda").trim();
                 response.sendRedirect(request.getContextPath() + "/AdminServlet?busqueda=" + busqueda);
                 break;
 
@@ -159,7 +159,7 @@ public class AdminServlet extends HttpServlet {
                     request.getSession().setAttribute("actionResult", "La farmacia tiene al menos un pedido pendiente. Inténtalo de nuevo más tarde.");
                     request.getSession().setAttribute("actionResultBoolean", false);
                 } else {
-                    String razon = request.getParameter("razon");
+                    String razon = request.getParameter("razon").trim();
                     pharmacyDao.banearFarmacia(idPharmacy, razon);
                     request.getSession().setAttribute("actionResult", "La farmacia fue baneada con éxito.");
                     request.getSession().setAttribute("actionResultBoolean", true);
@@ -182,9 +182,9 @@ public class AdminServlet extends HttpServlet {
 
             case "editar":
                 f.setRUC(request.getParameter("ruc"));
-                f.setName(request.getParameter("nombre"));
+                f.setName(request.getParameter("nombre").trim());
                 f.setMail(request.getParameter("correo"));
-                f.setAddress(request.getParameter("direccion"));
+                f.setAddress(request.getParameter("direccion").trim());
                 f.setDistrict(new BDistrict(Integer.parseInt(request.getParameter("distrito"))));
                 f.setIdPharmacy(Integer.parseInt(request.getParameter("id")));
 

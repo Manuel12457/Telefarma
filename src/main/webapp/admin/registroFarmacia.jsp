@@ -3,6 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaDistritos" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BDistrict>"/>
 <jsp:useBean id="datosIngresados" scope="request" type="com.example.telefarma.beans.BPharmacy"/>
+<jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BAdmin"/>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -11,15 +12,26 @@
     </jsp:include>
 
     <body>
-        <section class="vh-100 ">
-            <div class="container py-4 h-100">
-                <div class="row justify-content-center align-items-center h-100">
-                    <div class="col-12 col-lg-9 col-xl-7">
-                        <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
-                            <div class="card-header" style="background-color: rgba(245, 127, 0, 0.87); color: white;">
-                                <h4 class="my-2">Registrar farmacia</h4>
-                            </div>
-                            <div class="card-body p-4 p-md-5">
+        <%--Cabecera de admin--%>
+        <%String admin = "Admin " + sesion.getIdAdmin();%>
+        <jsp:include page="../barraSuperior.jsp">
+            <jsp:param name="tipoUsuario" value="admin"/>
+            <jsp:param name="nombre" value="<%=admin%>"/>
+            <jsp:param name="servletBusqueda" value="AdminServlet?action=buscar"/>
+            <jsp:param name="busquedaPlaceholder" value="Busca una farmacia"/>
+        </jsp:include>
+
+        <section
+                class="d-flex flex-grow-1 flex-shrink-1 p-4 justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center align-items-xl-center vh-100"
+                style="min-height: 700px;">
+            <div class="container d-flex justify-content-center">
+                <div class="card responsive-form w-75">
+                    <div class="card-header card-header-tele">
+                        <h4 class="my-2">Registrar farmacia</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="container w-75">
+                            <div class="row my-4">
                                 <!--Form registro farmacia-->
                                 <form method="POST"
                                       action="<%=request.getContextPath()%>/AdminServlet?action=registrar">
@@ -29,7 +41,6 @@
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaName">Nombre</label>
                                                 <input type="text" name="nombre" id="farmaName" class="form-control"
-                                                       placeholder="Ingrese nombre de la farmacia"
                                                        value="<%=datosIngresados.getName() != null ? datosIngresados.getName() : ""%>"
                                                        required="required" maxlength="50"/>
                                             </div>
@@ -39,7 +50,7 @@
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaMail">Correo</label>
                                                 <input type="email" name="correo" id="farmaMail" class="form-control"
-                                                       placeholder="Ingrese el mail de la farmacia"
+                                                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                                        value="<%=datosIngresados.getMail() != null ? datosIngresados.getMail() : ""%>"
                                                        required="required" maxlength="70"/>
                                             </div>
@@ -52,7 +63,6 @@
                                                 <label class="form-label" for="farmaDireccion">Dirección</label>
                                                 <input type="text" name="direccion" id="farmaDireccion"
                                                        class="form-control"
-                                                       placeholder="Ingrese la dirección de la farmacia"
                                                        value="<%=datosIngresados.getAddress() != null ? datosIngresados.getAddress() : ""%>"
                                                        required="required" maxlength="100"/>
                                             </div>
@@ -63,7 +73,8 @@
                                                 <label class="form-label" for="farmaDistrict">Distrito</label>
                                                 <select class="form-select" name="distrito" id="farmaDistrict" required>
                                                     <% if (datosIngresados.getDistrict() != null && datosIngresados.getDistrict().getIdDistrict() == 0) { %>
-                                                    <option value="0" selected>Ingrese el distrito de la farmacia</option>
+                                                    <option value="0" selected>Ingrese el distrito de la farmacia
+                                                    </option>
                                                     <% } else { %>
                                                     <option value="0">Ingrese el distrito de la farmacia</option>
                                                     <% }
@@ -83,7 +94,7 @@
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaRUC">RUC</label>
                                                 <input type="number" name="ruc" id="farmaRUC" class="form-control"
-                                                       placeholder="Ingrese el RUC de la farmacia" maxlength="11"
+                                                       maxlength="11"
                                                        value="<%=datosIngresados.getRUC() != null ? datosIngresados.getRUC() : ""%>"
                                                        minlength="11" required/>
                                                 <div id="passwordHelpBlock" class="form-text">

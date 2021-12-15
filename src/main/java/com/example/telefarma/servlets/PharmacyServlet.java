@@ -122,7 +122,7 @@ public class PharmacyServlet extends HttpServlet {
 
         switch (request.getParameter("action")) {
             case "buscarProducto":
-                busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
+                busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda").trim();
                 response.sendRedirect(request.getContextPath() + "/PharmacyServlet?action=buscarProducto&busqueda=" + busqueda);
                 break;
 
@@ -155,8 +155,8 @@ public class PharmacyServlet extends HttpServlet {
 
             case "registrarProducto":
                 BProduct p = new BProduct();
-                p.setName(request.getParameter("nombre"));
-                p.setDescription(request.getParameter("descripcion"));
+                p.setName(request.getParameter("nombre").trim());
+                p.setDescription(request.getParameter("descripcion").trim());
                 p.setRequiresPrescription(request.getParameter("requiereReceta").equals("true"));
                 p.setPharmacy(new BPharmacy(idFarmacia));
 
@@ -190,8 +190,8 @@ public class PharmacyServlet extends HttpServlet {
 
             case "editarProducto":
                 BProduct ep = new BProduct();
-                ep.setName(request.getParameter("nombre"));
-                ep.setDescription(request.getParameter("descripcion"));
+                ep.setName(request.getParameter("nombre").trim());
+                ep.setDescription(request.getParameter("descripcion").trim());
                 ep.setRequiresPrescription(request.getParameter("requiereReceta").equals("true"));
                 ep.setPharmacy(new BPharmacy(idFarmacia));
 

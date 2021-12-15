@@ -527,17 +527,17 @@ td {
 }
 
 .f1 {
-    background-image: url('../img/national-cancer-institute-byGTytEGjBo-unsplash.jpg');
+    background-image: url('../img/national-cancer-institute-byGTytEGjBo-unsplash.jpg') !important;
     background-size: cover;
 }
 
 .f2 {
-    background-image: url('../img/tbel-abuseridze-eBW1nlFdZFw-unsplash.jpg');
+    background-image: url('../img/tbel-abuseridze-eBW1nlFdZFw-unsplash.jpg') !important;
     background-size: cover;
 }
 
 .f3 {
-    background-image: url('../img/national-cancer-institute-cw2Zn2ZQ9YQ-unsplash.jpg');
+    background-image: url('../img/national-cancer-institute-cw2Zn2ZQ9YQ-unsplash.jpg') !important;
     background-size: cover;
 }
 
@@ -672,8 +672,6 @@ td {
     background-color: #f17f07;
     border: 1px solid white;
     border-radius: .5rem;
-    /*background-image: url('../img/bgfar2.jpg');*/
-    /*background-size: cover;*/
 }
 
 .font-size-lgr {
@@ -774,7 +772,7 @@ strong.detalles-str{
 }
 
 .login-bg {
-    background-image: url('../img/freestocks-0-HAIyTj7Xw-unsplash.jpg');
+    background-image: url('../img/freestocks-0-HAIyTj7Xw-unsplash.jpg') !important;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: 100% 100%;

@@ -231,7 +231,7 @@ public class ClientServlet extends HttpServlet {
 
         int idClient = client.getIdClient();
         int i, j;
-        String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
+        String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda").trim();
 
 
         switch (request.getParameter("action")) {
@@ -408,8 +408,8 @@ public class ClientServlet extends HttpServlet {
             case "editar":
                 BClient clientE = new BClient();
                 clientE.setIdClient(Integer.parseInt(request.getParameter("id")));
-                clientE.setName(request.getParameter("nombre"));
-                clientE.setLastName(request.getParameter("apellido"));
+                clientE.setName(request.getParameter("nombre").trim());
+                clientE.setLastName(request.getParameter("apellido").trim());
                 clientE.setDistrict(new BDistrict(Integer.parseInt(request.getParameter("distrito"))));
 
                 String exitoEditar = clientDao.editarCliente(clientE);
