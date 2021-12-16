@@ -21,17 +21,16 @@
             <jsp:param name="busquedaPlaceholder" value="Busca una farmacia"/>
         </jsp:include>
 
-
-        <section
-                class="d-flex flex-grow-1 flex-shrink-1 p-4 justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center align-items-xl-center vh-100"
-                style="min-height: 700px;">
+        <div id="remaining-height"
+             class="d-flex justify-content-center align-items-center flex-wrap my-3 my-xxl-0 pb-xxl-3 w-100">
+            <%--Contenido--%>
             <div class="container d-flex justify-content-center">
-                <div class="card responsive-form w-75">
+                <div class="card col-sm-11">
                     <div class="card-header card-header-tele">
                         <h4 class="my-2">Editar farmacia</h4>
                     </div>
                     <div class="card-body">
-                        <div class="container w-75">
+                        <div class="container" style="width: 85%">
                             <div class="row my-4">
                                 <form method="POST" action="<%=request.getContextPath()%>/AdminServlet?action=editar">
                                     <input type="number" class="form-control" name="id" hidden
@@ -87,7 +86,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row row-cols-3 justify-content-center">
+                                    <div class="d-flex justify-content-center">
+                                        <a role="button" href="<%=request.getContextPath()%>/AdminServlet"
+                                           class="btn btn-light mx-2">Cancelar</a>
                                         <input class="btn btn-tele" type="submit" id="" value="Editar farmacia"/>
                                     </div>
                                     <br>
@@ -112,8 +113,9 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
+        <%--JS--%>
         <script src="<%=request.getContextPath()%>/res/bootstrap/js/bootstrap.min.js"></script>
     </body>
 </html>

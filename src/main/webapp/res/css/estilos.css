@@ -1,4 +1,8 @@
 /*Generales*/
+html, body {
+    height: 100%;
+    margin: 0;
+}
 
 .logo-header {
     color: #f57f00;
@@ -17,6 +21,12 @@ hr {
 input, select {
     box-shadow: none !important;
     border: 1px solid #ced4da !important;
+}
+
+#remaining-height {
+    position: absolute;
+    top: 77px;
+    bottom: 0;
 }
 
 /*Tele radius*/

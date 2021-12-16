@@ -183,11 +183,10 @@
                                 <label class="form-label" for="bloqueoFarmacia">
                                     Escriba el motivo del bloqueo de la farmacia:
                                 </label>
-
                                 <textarea type="tel" id="bloqueoFarmacia" name="razon" class="form-control"
-                                          maxlength="250"></textarea>
+                                          maxlength="350" rows="5"></textarea>
                                 <div id="passwordHelpBlock" class="form-text">
-                                    La razón de bloqueo no puede exceder de los 250 caracteres
+                                    La razón de bloqueo no puede exceder de los 350 caracteres
                                 </div>
                             </div>
                             <br>

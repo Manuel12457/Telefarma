@@ -88,6 +88,7 @@ public class PharmacyServlet extends HttpServlet {
                 case "registrarProducto":
                     view = request.getRequestDispatcher("/farmacia/registrarProducto.jsp");
                     view.forward(request, response);
+                    break;
 
                 case "editarProducto":
                     try {

@@ -17,7 +17,7 @@
     </jsp:include>
 
     <body>
-        <%--Cabecera de admin--%>
+        <%--Cabecera de farmacia--%>
         <jsp:include page="../barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="farmacia"/>
             <jsp:param name="nombre" value="<%=sesion.getName()%>"/>
