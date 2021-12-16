@@ -31,9 +31,7 @@
             <div class="card-header my-5"></div>
             <!--Resultados de búsqueda-->
             <div class="container">
-                <%
-                if (listaProductosBusqueda.size()!=0){
-                %>
+                <%if (listaProductosBusqueda.size()!=0){%>
                 <div class="album pb-2">
                     <!--Título-->
                     <div class="row mb-3">
@@ -41,7 +39,7 @@
                         <h4 class="pb-2 border-bottom d-flex justify-content-start dist-name">Mostrando todos los productos</h4>
                         <% } else { %>
                         <h4 class="pb-2 border-bottom d-flex justify-content-start dist-name">Resultados de
-                            "<%= busqueda %>"</h4>
+                            "<%= busqueda.replace("�","ñ") %>"</h4>
                         <% } %>
                     </div>
                     <!--Productos-->

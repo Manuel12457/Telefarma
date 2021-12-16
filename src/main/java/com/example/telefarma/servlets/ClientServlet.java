@@ -12,6 +12,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,7 +43,7 @@ public class ClientServlet extends HttpServlet {
         int limiteFarmacias, pagTotales, limiteProductos;
         int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
         request.setAttribute("pagActual", pagina);
-        String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
+        String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda").replace("�","ñ");
         request.setAttribute("busqueda", busqueda);
         int idProduct;
         int idClient = client.getIdClient();
@@ -148,7 +150,6 @@ public class ClientServlet extends HttpServlet {
                     return;
                 }
                 request.setAttribute("listaProductosBusqueda", productDao.listarProductosBusqueda(pagina, limiteProductos, busqueda, idClient));
-
 
                 view = request.getRequestDispatcher("/cliente/buscadorProductos.jsp");
                 view.forward(request, response);
