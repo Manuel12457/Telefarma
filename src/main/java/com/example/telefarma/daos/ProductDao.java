@@ -16,7 +16,7 @@ public class ProductDao extends BaseDao {
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("select count(*) from product p\n" +
                      "inner join pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
-                     "where f.isBanned=0 and p.name like '%" + busqueda.toLowerCase() + "%';")) {
+                     "where f.isBanned=0 and p.name and p.stock > 0 like '%" + busqueda.toLowerCase() + "%';")) {
 
             if (rs.next()) {
                 return rs.getInt(1);
@@ -34,7 +34,7 @@ public class ProductDao extends BaseDao {
         String sql = "select f.name,f.idDistrict,d.name,p.idProduct,p.name,stock,price from product p\n" +
                 "inner join pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
                 "inner join district d on (f.idDistrict=d.idDistrict)\n" +
-                "where lower(p.name) like ? and isBanned = 0\n" +
+                "where lower(p.name) like ? and isBanned = 0 and p.stock > 0\n" +
                 "order by f.idDistrict = (select idDistrict from client where idClient = " + id + ") desc, price asc " +
                 "limit " + pagina * limite + "," + limite + ";";
 
@@ -99,7 +99,7 @@ public class ProductDao extends BaseDao {
              ResultSet rs = stmt.executeQuery("select count(*) from product p " +
                      "inner join pharmacy f on (p.idPharmacy=f.idPharmacy) " +
                      "where lower(p.name) like '%" + busqueda + "%' and " +
-                     "f.idPharmacy=" + idFarmacia + " ;")) {
+                     "f.idPharmacy=" + idFarmacia + " and stock > -1;")) {
 
             if (rs.next()) {
                 return rs.getInt(1);
@@ -116,7 +116,7 @@ public class ProductDao extends BaseDao {
 
         String sql = "select p.idProduct,p.name,stock,price from product p\n" +
                 "inner join pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
-                "where lower(p.name) like ? and f.idPharmacy=" + idPharmacy + "\n" +
+                "where lower(p.name) like ? and f.idPharmacy=" + idPharmacy + " and stock > -1\n" +
                 "order by name\n";
 
         sql = (limite != -1) ? (sql + "limit " + (limite * pagina) + "," + limite + ";") : sql;
@@ -148,9 +148,9 @@ public class ProductDao extends BaseDao {
 
         ArrayList<DtoProductoVisualizacion> listaProductos = new ArrayList<>();
 
-        String sql = "select p.idProduct, p.name, p.description, p.stock, p.price, p.requiresPrescription from telefarma.product p\n" +
+        String sql = "select p.idProduct, p.name, p.description, p.stock, p.price, p.requiresPrescription from product p\n" +
                 "inner join telefarma.pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
-                "where lower(p.name) like '%" + busqueda + "%' and f.idPharmacy=" + idFarmacia + "\n" +
+                "where lower(p.name) like '%" + busqueda + "%' and f.idPharmacy=" + idFarmacia + " and stock > -1\n" +
                 "limit " + limite * pagina + "," + limite + ";";
 
         try (Connection conn = this.getConnection();
@@ -176,17 +176,17 @@ public class ProductDao extends BaseDao {
     }
 
     public void agregarposibleEliminar(DtoProductoVisualizacion producto) {
+        String sql = "select od.idProduct, o.idOrder from orderdetails od\n" +
+                "inner join orders o on (od.idOrder = o.idOrder)\n" +
+                "where od.idProduct = ? and o.status != 'Pendiente';";
 
         try (Connection conn = this.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("select p.idProduct, o.idOrder from product p\n" +
-                     "inner join orderdetails od on (p.idProduct = od.idProduct)\n" +
-                     "inner join orders o on (od.idOrder = o.idOrder)\n" +
-                     "where p.idProduct = ?;");) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, producto.getIdProduct());
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                producto.setPosibleEliminar(!rs.next());
+                producto.setPosibleEliminar(rs.next());
             }
 
         } catch (SQLException e) {
@@ -263,7 +263,6 @@ public class ProductDao extends BaseDao {
     }
 
     public boolean productoPerteneceFarmacia(int idProducto, int idFarmacia) {
-
         int count = 0;
 
         try (Connection conn = this.getConnection();
@@ -304,7 +303,7 @@ public class ProductDao extends BaseDao {
     }
 
     public void eliminarProducto(int idProducto) {
-        String sql = "delete from telefarma.product where (idProduct=?);";
+        String sql = "update product set stock = -1 where idProduct = ?;";
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
