@@ -116,7 +116,7 @@
                                     }
 
                             %>
-                            <div class="alert <%=alertClass%> alert-dismissible fade show"
+                            <div class="alert <%=alertClass%> alert-dismissible fade show mt-lg-3"
                                  role="alert">
                                 <%=alertMssg%>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"

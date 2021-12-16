@@ -67,14 +67,28 @@ public class ClientServlet extends HttpServlet {
                 limiteFarmacias = 3;
                 ArrayList<ArrayList<BPharmacy>> listaFarmacias = new ArrayList<>();
                 HashMap<Integer, Integer> mostrarBotonVerMas = new HashMap<>();
-                for (BDistrict distrito : distritos) {
-                    ArrayList<BPharmacy> farmaciasCliente = pharmacyDao.listarFarmaciasPorDistrito(0, limiteFarmacias, "", 0, distrito.getIdDistrict());
+
+                int idDistritoFiltrado = request.getParameter("idDistrito") == null ? 0 : Integer.parseInt(request.getParameter("idDistrito")) ;
+
+                if (idDistritoFiltrado == 0) {
+                    for (BDistrict distrito : distritos) {
+                        ArrayList<BPharmacy> farmaciasCliente = pharmacyDao.listarFarmaciasPorDistrito(0, limiteFarmacias, "", 0, distrito.getIdDistrict());
+                        listaFarmacias.add(farmaciasCliente);
+
+                        mostrarBotonVerMas.put(distrito.getIdDistrict(), pharmacyDao.listarFarmaciasPorDistrito(0, -1, "", 0, distrito.getIdDistrict()).size() > 3 ? 1 : 0);
+                    }
+                } else {
+                    ArrayList<BPharmacy> farmaciasCliente = pharmacyDao.listarFarmaciasPorDistrito(0, limiteFarmacias, "", 0, idDistritoFiltrado);
                     listaFarmacias.add(farmaciasCliente);
 
-                    mostrarBotonVerMas.put(distrito.getIdDistrict(), pharmacyDao.listarFarmaciasPorDistrito(0, -1, "", 0, distrito.getIdDistrict()).size() > 3 ? 1 : 0);
+                    mostrarBotonVerMas.put(idDistritoFiltrado, pharmacyDao.listarFarmaciasPorDistrito(0, -1, "", 0, idDistritoFiltrado).size() > 3 ? 1 : 0);
                 }
                 request.setAttribute("listaFarmacias", listaFarmacias);
                 request.setAttribute("hashMostrarBoton", mostrarBotonVerMas);
+
+                ArrayList<BDistrict> listaDistritosFiltro = districtDao.listarDistritos();
+                request.setAttribute("distritosFiltrado", listaDistritosFiltro);
+                request.setAttribute("idDistritoFil", idDistritoFiltrado);
 
                 pagTotales=(int) Math.ceil((double) districtDao.listarDistritosCliente(0, -1, idClient).size() / limiteDistritos);
                 request.setAttribute("pagTotales", pagTotales);
@@ -341,6 +355,7 @@ public class ClientServlet extends HttpServlet {
                     }
                     if (!encontrado) {
                         listaProductos.add(dtoProductoCarrito);
+                        productoYaEnCarrito = "0";
                     }
                     listaCarrito.put(farmaciaRef, listaProductos);
 
@@ -443,6 +458,10 @@ public class ClientServlet extends HttpServlet {
                     e.printStackTrace();
                 }
                 response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial");
+                break;
+            case "filtroDistrito":
+                int idDistritoFiltrado = request.getParameter("distrito").equals("") || request.getParameter("distrito") == null ? 0 : Integer.parseInt(request.getParameter("distrito"));
+                response.sendRedirect(request.getContextPath() + "/ClientServlet?idDistrito=" + idDistritoFiltrado);
                 break;
         }
     }

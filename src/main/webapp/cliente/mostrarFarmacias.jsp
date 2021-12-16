@@ -1,5 +1,6 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.example.telefarma.beans.BPharmacy" %>
+<%@ page import="com.example.telefarma.beans.BDistrict" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaFarmacias" scope="request"
              type="java.util.ArrayList<java.util.ArrayList<com.example.telefarma.beans.BPharmacy>>"/>
@@ -8,6 +9,8 @@
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="hashMostrarBoton" scope="request" type="java.util.HashMap<java.lang.Integer,java.lang.Integer>"/>
+<jsp:useBean id="distritosFiltrado" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BDistrict>"/>
+<jsp:useBean id="idDistritoFil" scope="request" type="java.lang.Integer"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -82,6 +85,29 @@
                         session.removeAttribute("editar");
                     }
                 %>
+                <!--Filtrado por Distrito-->
+                <div class="row align-items-center">
+                    <form method="post" action="<%=request.getContextPath()%>/ClientServlet?action=filtroDistrito">
+                        <div class="col">
+                            <label class="form-label" for="farmaDistrict">Filtrar por distrito</label>
+                        </div>
+                        <div class="col">
+                            <select class="form-select" name="distrito" id="farmaDistrict">
+                                <option value="" <%=idDistritoFil == 0 ? "selected" : ""%>><%="Sin filtro"%></option>
+                                <% for (BDistrict distrito : distritosFiltrado) { %>
+                                <option value="<%=distrito.getIdDistrict()%>" <%=idDistritoFil == distrito.getIdDistrict() ? "selected" : ""%>><%=distrito.getName()%>
+                                </option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <div class="row row-cols-3 justify-content-center">
+                                <input class="btn btn-tele" type="submit" id="" value="Filtrar"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
                 <!--Mismo Distrito-->
                 <%
                     boolean otraFarmaciaMostrada = false;
