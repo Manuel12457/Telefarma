@@ -189,7 +189,7 @@ public class ProductDao extends BaseDao {
     public void agregarposibleEliminar(DtoProductoVisualizacion producto) {
         String sql = "select od.idProduct, o.idOrder from orderdetails od\n" +
                 "inner join orders o on (od.idOrder = o.idOrder)\n" +
-                "where od.idProduct = ? and o.status != 'Pendiente';";
+                "where od.idProduct = ? and o.status = 'Pendiente';";
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -197,7 +197,7 @@ public class ProductDao extends BaseDao {
             pstmt.setInt(1, producto.getIdProduct());
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                producto.setPosibleEliminar(rs.next());
+                producto.setPosibleEliminar(!rs.next());
             }
 
         } catch (SQLException e) {
