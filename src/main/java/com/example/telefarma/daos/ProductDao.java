@@ -195,7 +195,6 @@ public class ProductDao extends BaseDao {
     }
 
     public boolean registrarProducto(BProduct producto) { //retorna falso si surge una excepcion
-
         String sql = "insert into telefarma.product (idPharmacy,name,description,stock,price,requiresPrescription)\n" +
                 "values (?,?,?,?,?,?)";
 
