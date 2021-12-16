@@ -31,13 +31,12 @@
             <div class="card-header my-5"></div>
             <!--Resultados de búsqueda-->
             <div class="container">
-                <% if (listaProductosBusqueda.size() != 0) { %>
+                <% if (listaProductosBusqueda.size() != 0 ) { %>
                 <div class="album pb-2">
                     <!--Título-->
                     <div class="row mb-3">
                         <% if (busqueda.equals("")) { %>
-                        <h4 class="pb-2 border-bottom d-flex justify-content-start dist-name">Mostrando todos los
-                            productos</h4>
+                        <h4 class="pb-2 border-bottom d-flex justify-content-start dist-name">Mostrando todos los productos</h4>
                         <% } else { %>
                         <h4 class="pb-2 border-bottom d-flex justify-content-start dist-name">Resultados de
                             "<%= busqueda %>"</h4>
@@ -47,45 +46,43 @@
                     <div class="container">
                         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
                             <%--Loop de productos--%>
-                            <% for (BProduct producto : listaProductosBusqueda) { %>
-                            <div class="col">
-                                <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProduct()%>'"
-                                     class="card card-producto">
-                                    <div class="img-producto">
-                                        <img src="${pageContext.request.contextPath}/Image?idProduct=<%= producto.getIdProduct() %>"
-                                             class="card-img-top mb-1" alt="producto"
-                                             aria-label="Producto">
-                                    </div>
-                                    <div class="card-body d-flex flex-column">
-                                        <div class="mt-auto">
+                            <% for (BProduct producto : listaProductosBusqueda) {%>
+                                <div class="col">
+                                    <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProduct()%>'"
+                                         class="card card-producto">
+                                        <div class="img-producto">
+                                            <img src="${pageContext.request.contextPath}/Image?idProduct=<%= producto.getIdProduct() %>"
+                                                 class="card-img-top mb-1" alt="producto"
+                                                 aria-label="Producto">
+                                        </div>
+                                        <div class="card-body d-flex flex-column">
+                                            <div class="mt-auto">
 
-                                            <div class="d-flex row-producto">
-                                                <%= producto.getName()%>
-                                            </div>
-                                            <div class="d-flex row-f-d">
-                                                <%=producto.getPharmacy().getName().toUpperCase()%>
-                                                - <%=producto.getPharmacy().getDistrict().getName().toUpperCase()%>
-                                            </div>
-                                            <div class="d-flex gray5 opensans justify-content-center">
-                                                <%= producto.getStock()%> disponibles
-                                            </div>
-                                            <div class="d-flex row-precio">
-                                                S/<%= producto.getPrice()%>
+                                                <div class="d-flex row-producto">
+                                                    <%= producto.getName()%>
+                                                </div>
+                                                <div class="d-flex row-f-d">
+                                                    <%=producto.getPharmacy().getName().toUpperCase()%> - <%=producto.getPharmacy().getDistrict().getName().toUpperCase()%>
+                                                </div>
+                                                <div class="d-flex gray5 opensans justify-content-center">
+                                                    <%= producto.getStock()%> disponibles
+                                                </div>
+                                                <div class="d-flex row-precio">
+                                                    S/<%= producto.getPrice()%>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             <% } %>
                         </div>
                     </div>
                 </div>
-                <%
-                } else {
+                <%}else{
                 %>
                 <jsp:include page="/includes/noResultados.jsp"/>
                 <%
-                    }
+                }
                 %>
             </div>
             <!--Paginación-->

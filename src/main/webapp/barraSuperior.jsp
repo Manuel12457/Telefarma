@@ -24,7 +24,7 @@
                 <div class="input-group">
                     <div style="width:40%">
                         <input type="search" name="busqueda" class="form-control readex-15" placeholder="<%=busquedaPlaceholder%>"
-                               value="<%=busqueda%>"/>
+                               value="<%=busqueda.replace("�","ñ")%>"/>
                     </div>
                     <button role="button" class="btn btn-tele border-start-1 input-group-text">
                         <i class="fas fa-search"></i>

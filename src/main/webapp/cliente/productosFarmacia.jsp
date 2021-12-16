@@ -57,9 +57,7 @@
                         <h6><i class="fas fa-map-marker-alt fa-xs"></i>&nbsp;&nbsp;<%= farmacia.getAddress() %>
                         </h6>
                     </div>
-                    <%
-                        if (listaProductos.size()!=0){
-                    %>
+
                     <!--Titulo-->
                     <div class="row mb-3">
                         <% if (busqueda.equals("")) { %>
@@ -67,12 +65,10 @@
                             disponibles</h4>
                         <% } else { %>
                         <h4 class="pb-2 border-bottom d-flex justify-content-start dist-name">Resultados de
-                            "<%= busqueda %>"</h4>
+                            "<%= busqueda.replace("�","ñ") %>"</h4>
                         <% } %>
                     </div>
-                    <%
-                        }
-                    %>
+
                 </div>
                 <!--Productos-->
                 <div class="container">
