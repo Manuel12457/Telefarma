@@ -37,6 +37,7 @@
             <!--Carrito-->
             <div class="container pb-5 mt-2 mt-md-3">
                 <%
+                int prodConReceta = 0;
                 if (tamanoCarrito>0){
                 %>
                 <form method="POST"
@@ -109,26 +110,14 @@
                                                 <span class="cart-precio-tag"><i class="fas fa-tags"></i> Subtotal:</span>
                                                 <span class="cart-subtotal-<%=cont%> cart-precio ms-sm-2 ms-0 "></span>
                                             </div>
-                                            <%
-                                                if (producto.getRequierePrescripcion()) {
-                                            %>
-                                            <div class="mt-3">
-                                            <span class="cart-precio">
-                                                Receta:
-                                                <input class="form-control readex-15 form-control-sm custom-file-control"
-                                                       type="file" value="<%=producto.getReceta()%>"
-                                                       id="conReceta" accept="image/png, image/gif, image/jpeg"
-                                                       <%--Descomentar para probar--%> <%--onchange="guardarCambios('<%=request.getContextPath()%>')"--%>
-                                                       name="receta<%=i%>-<%=j%>" required>
-                                            </span>
-                                            </div>
-                                            <%} else {%>
-                                            <input class="form-control form-control-sm custom-file-control" type="file"
-                                                   id="sinReceta" accept="image/png, image/gif, image/jpeg"
-                                                   name="receta<%=i%>-<%=j%>" hidden>
+
+                                            <% if (producto.getRequierePrescripcion()) {
+                                                    prodConReceta += 1;%>
+                                                <span class="text-danger"><i class="fas fa-exclamation-triangle"></i> <b>Requiere receta</b></span>
                                             <%}%>
                                         </div>
                                     </div>
+
                                     <!--Bloque 2-->
                                     <div class="pt-sm-0 pt-2 pe-md-3 pe-0 mx-sm-0 mx-auto text-sm-left text-center"
                                          style="max-width: 10rem;">
@@ -219,13 +208,70 @@
                                     <span class="cart-total" style="font-size: 20px"></span>
                                 </div>
                                 <!--Boton pedir-->
-                                <button class="btn w-100 h-45px btn-rectangle-out" type="submit" <%=listaCarrito.size() == 0 ? "disabled" : ""%>>
-                                    Realizar pedido
-                                </button>
+                                <%if(prodConReceta>0){%>
+                                    <button class="btn w-100 h-45px btn-rectangle-out" type="button" data-bs-toggle="modal" data-bs-target="#subirRecetas">
+                                        Realizar pedido
+                                    </button>
+                                <%}else{%>
+                                    <button class="btn w-100 h-45px btn-rectangle-out" type="submit" <%=listaCarrito.size() == 0 ? "disabled" : ""%>>
+                                        Realizar pedido
+                                    </button>
+                                <%}%>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Modal para las Recetas -->
+                    <div class="modal fade" id="subirRecetas" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header cart-header" style="border: 0; border-radius: 0;">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Subir recetas</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <span>Algunos de sus productos requieren una receta, súbalas para continuar con el pedido</span>
+
+                                    <%
+                                    for (int i = 0; i < listaCarrito.size(); i++) {
+                                        DtoPharmacy farmacia = listaFarmacias.get(i);
+                                        ArrayList<DtoProductoCarrito> listaProductos = listaCarrito.get(farmacia);
+                                    %>
+                                    <h4><b><%=farmacia.getName()%></b></h4>
+                                    <%
+                                        for (int j = 0; j < listaProductos.size(); j++) {
+                                            DtoProductoCarrito producto = listaProductos.get(j);
+                                            if (producto.getRequierePrescripcion()){ %>
+
+                                                <div class="mt-3">
+                                                    <span class="cart-precio"> <%=producto.getName()%>
+                                                        <input class="form-control readex-15 form-control-sm custom-file-control"
+                                                               type="file" value="<%=producto.getReceta()%>"
+                                                               id="conReceta" accept="image/png, image/gif, image/jpeg"
+                                                               name="receta<%=i%>-<%=j%>" required>
+                                                    </span>
+                                                </div>
+
+                                            <%} else {%>
+                                                <input class="form-control form-control-sm custom-file-control" type="file"
+                                                       id="sinReceta" accept="image/png, image/gif, image/jpeg"
+                                                       name="receta<%=i%>-<%=j%>" hidden>
+                                            <%}
+                                        }
+                                    }%>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-tele">Realizar Pedido</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </form>
+
+                <!--Carrito Vacio-->
                 <%
                 }else{
                 %>

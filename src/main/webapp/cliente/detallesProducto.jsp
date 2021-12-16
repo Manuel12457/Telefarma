@@ -93,7 +93,7 @@
                                             <i class="fas fa-plus fa-xs"></i>
                                     </button>
                                     <button type="submit" class="mx-4 btn btn-rectangle-out h-100">
-                                        <i class="fas fa-shopping-cart"></i> Añadir al carrito
+                                        <span><i class="fas fa-cart-plus"></i> Añadir al carrito </span>
                                     </button>
                                 </div>
                             </form>
