@@ -156,7 +156,6 @@ public class ProductDao extends BaseDao {
 
     public ArrayList<DtoProductoVisualizacion> listaDtoProductosFarmacia(int pagina, String busqueda,
                                                                          int idFarmacia, int limite) {
-
         ArrayList<DtoProductoVisualizacion> listaProductos = new ArrayList<>();
 
         String sql = "select p.idProduct, p.name, p.description, p.stock, p.price, p.requiresPrescription from product p\n" +
@@ -186,26 +185,7 @@ public class ProductDao extends BaseDao {
         return listaProductos;
     }
 
-    public void agregarposibleEliminar(DtoProductoVisualizacion producto) {
-        String sql = "select od.idProduct, o.idOrder from orderdetails od\n" +
-                "inner join orders o on (od.idOrder = o.idOrder)\n" +
-                "where od.idProduct = ? and o.status = 'Pendiente';";
-
-        try (Connection conn = this.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setInt(1, producto.getIdProduct());
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-                producto.setPosibleEliminar(!rs.next());
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean registrarProducto(BProduct producto) { //retorna falso si surge una excepcion
+    public boolean registrarProducto(BProduct producto) {
         String sql = "insert into telefarma.product (idPharmacy,name,description,stock,price,requiresPrescription)\n" +
                 "values (?,?,?,?,?,?)";
 
@@ -327,4 +307,40 @@ public class ProductDao extends BaseDao {
 
     }
 
+    public ArrayList<BProduct> buscarProductoPorSintoma(int pagina, int limite, String sintoma, int idPharmacy) {
+        ArrayList<BProduct> lista = new ArrayList<>();
+
+        String sql = "SELECT f.name,f.idDistrict,d.name,p.idProduct,p.name,stock,price FROM product p\n" +
+                "inner join pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
+                "inner join district d on (f.idDistrict=d.idDistrict)\n" +
+                "WHERE MATCH (p.name, p.description) AGAINST (? IN BOOLEAN MODE) > 0.1\n";
+
+        sql = idPharmacy != -1 ? (sql + "and p.idPharmacy = " + idPharmacy + "\n") : sql;
+        sql = sql + "order by MATCH (p.name, p.description) AGAINST (? IN BOOLEAN MODE) desc, p.name desc\n";
+        sql = (limite != -1) ? (sql + "limit " + (limite * pagina) + "," + limite + ";") : sql;
+
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, '"' + sintoma.trim() + '"' + " @20");
+            pstmt.setString(2, '"' + sintoma.trim() + '"' + " @20");
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    BProduct productoBuscador = new BProduct();
+                    productoBuscador.setPharmacy(new BPharmacy(rs.getString(1), new BDistrict(rs.getInt(2), rs.getString(3))));
+                    productoBuscador.setIdProduct(rs.getInt(4));
+                    productoBuscador.setName(rs.getString(5));
+                    productoBuscador.setStock(rs.getInt(6));
+                    productoBuscador.setPrice(rs.getDouble(7));
+                    lista.add(productoBuscador);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
 }

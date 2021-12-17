@@ -1,8 +1,9 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" language="java" %>
 <head>
     <link rel="shortcut icon" href="<%=request.getContextPath()%>/res/img/favicon.ico" type="image/x-icon">
     <link rel="icon" href="<%=request.getContextPath()%>/res/img/favicon.ico" type="image/x-icon">
     <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title><%= request.getParameter("title") %></title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/bootstrap/css/bootstrap.min.css"

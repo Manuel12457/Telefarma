@@ -8,6 +8,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 @WebServlet(name = "AdminServlet", value = "/AdminServlet")
@@ -95,6 +96,7 @@ public class AdminServlet extends HttpServlet {
         SessionDao sessionDao = new SessionDao();
 
         int idPharmacy;
+        ArrayList<String> errorList = new ArrayList<>();
         String dominio = "http://localhost:8080/";
         boolean correoExiste, rucExiste, longitudRUCValida, rucIsNum, rucValido;
         ArrayList<BDistrict> listaDistritos = districtDao.listarDistritos();
@@ -133,7 +135,6 @@ public class AdminServlet extends HttpServlet {
                     }
                     response.sendRedirect(request.getContextPath() + "/AdminServlet");
                 } else {
-                    ArrayList<String> errorList = new ArrayList<>();
                     if (correoExiste) errorList.add("El correo ingresado ya está registrado.");
                     if (rucExiste) errorList.add("El RUC ingresado ya está registrado.");
                     if (!rucIsNum) errorList.add("El RUC debe ser un número.");
@@ -149,7 +150,7 @@ public class AdminServlet extends HttpServlet {
                 break;
 
             case "buscar":
-                String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda").trim();
+                String busqueda = request.getParameter("busqueda") == null ? "" : new String(request.getParameter("busqueda").trim().getBytes(StandardCharsets.UTF_8));
                 response.sendRedirect(request.getContextPath() + "/AdminServlet?busqueda=" + busqueda);
                 break;
 
@@ -214,7 +215,6 @@ public class AdminServlet extends HttpServlet {
                     }
                     response.sendRedirect(request.getContextPath() + "/AdminServlet");
                 } else {
-                    ArrayList<String> errorList = new ArrayList<>();
                     if (correoExiste) errorList.add("El correo ingresado ya está registrado.");
                     if (rucExiste) errorList.add("El RUC ingresado ya está registrado.");
                     if (!rucIsNum) errorList.add("El RUC debe ser un número.");

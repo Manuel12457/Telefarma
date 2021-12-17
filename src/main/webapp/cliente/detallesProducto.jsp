@@ -1,14 +1,18 @@
-<%@ page import="com.example.telefarma.servlets.ClientServlet" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" language="java" %>
 <jsp:useBean id="producto" scope="request" type="com.example.telefarma.beans.BProduct"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="tipoBusqueda" scope="request" type="java.lang.String"/>
 
 <!DOCTYPE html>
 <html lang="en">
     <jsp:include page="/includes/head.jsp">
         <jsp:param name="title" value="Telefarma - Buscar Producto"/>
     </jsp:include>
+    <head>
+        <link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/res/magiczoomplus/magiczoomplus.css"/>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/res/magiczoomplus/magiczoomplus.js"></script>
+    </head>
 
     <body>
         <%String nombreCliente = sesion.getName() + " " + sesion.getLastName();%>
@@ -17,6 +21,7 @@
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
             <jsp:param name="servletBusqueda" value="ClientServlet?action=buscarProduct"/>
             <jsp:param name="busquedaPlaceholder" value="Busca un producto"/>
+            <jsp:param name="tipoBusqueda" value="<%=tipoBusqueda%>"/>
             <jsp:param name="tamanoCarrito" value="<%=tamanoCarrito%>"/>
         </jsp:include>
         <!--Contenido-->
@@ -29,9 +34,8 @@
                      style="border-radius: 0.45rem; align-items: center;">
                     <!--Imagen del producto-->
                     <div class="col-md-5">
-                        <div class="row text-center">
-                            <img src="${pageContext.request.contextPath}/Image?idProduct=<%=producto.getIdProduct()%>"
-                                 class="img-detalles">
+                        <div class="row text-center overflow-hidden" >
+                            <a href="${pageContext.request.contextPath}/Image?idProduct=<%=producto.getIdProduct()%>" class="MagicZoom"><img src="${pageContext.request.contextPath}/Image?idProduct=<%=producto.getIdProduct()%>" style="max-width: 100%;" /></a>
                         </div>
                     </div>
                     <!--Info del producto-->
@@ -41,7 +45,8 @@
                         </div>
                         <!--Farmacia-->
                         <div class="farmacia-detalles">
-                            <a class="a-gray text-decoration-none" href="<%=request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%=producto.getPharmacy().getIdPharmacy()%>">
+                            <a class="a-gray text-decoration-none opensans"
+                               href="<%=request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%=producto.getPharmacy().getIdPharmacy()%>">
                                 <%=producto.getPharmacy().getName().toUpperCase()%>
                             </a>
                         </div>
@@ -81,16 +86,16 @@
                                   action="<%=request.getContextPath()%>/ClientServlet?action=addToCart&idProduct=<%=producto.getIdProduct()%>">
                                 <div class="d-flex h-45px mt-4">
                                     <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
-                                                class="btn btn-tele" id="menos" type="button">
+                                            class="btn btn-tele" id="menos" type="button">
                                         <i class="fas fa-minus fa-xs"></i>
                                     </button>
                                     <input class="form-control border-start-0 border-end-0 text-center readex-15"
-                                               type="number" style="width:46px;" id="quantity"
-                                               name="quantity"
-                                               value="1" min="1" max="<%=producto.getStock()%>"/>
+                                           type="number" style="width:46px;" id="quantity"
+                                           name="quantity"
+                                           value="1" min="1" max="<%=producto.getStock()%>"/>
                                     <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
-                                                class="btn btn-tele" id="mas" type="button">
-                                            <i class="fas fa-plus fa-xs"></i>
+                                            class="btn btn-tele" id="mas" type="button">
+                                        <i class="fas fa-plus fa-xs"></i>
                                     </button>
                                     <button type="submit" class="mx-4 btn btn-rectangle-out h-100">
                                         <span><i class="fas fa-cart-plus"></i> Añadir al carrito </span>
@@ -129,7 +134,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </main>
 
