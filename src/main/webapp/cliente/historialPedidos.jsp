@@ -11,8 +11,6 @@
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <%
     String nombreCliente = sesion.getName();
-    LocalDateTime now = LocalDateTime.now().plus(Duration.parse("PT30M"));
-    String dateNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "T" + now.format(DateTimeFormatter.ofPattern("HH:mm"));
 %>
 
 <!DOCTYPE html>
@@ -41,14 +39,35 @@
                                 <form class="mb-4" method="post"
                                       action="<%=request.getContextPath()%>/ClientServlet?action=buscarHistorial">
                                     <div class="input-group justify-content-center">
-                                        <div class="form-outline" style="width: 36%">
-                                            <input type="date" name="busqueda" min="<%=dateNow%>"
-                                                   class="readex-15" style="max-width: 180px;"
-                                                   value="<%=busqueda%>">
+                                        <div class="form-check form-check-inline">
+                                            <label class="form-check-label">
+                                                Filtrar por fecha de emisión:
+                                            </label>
                                         </div>
-                                        <button role="button" class="btn btn-tele border-start-1">
-                                            <i class="fas fa-search"></i>
-                                        </button>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="filtro" id="sinfiltro" value="" <%=busqueda.equals("") ? "checked" : ""%> onchange='this.form.submit();'>
+                                            <label class="form-check-label" for="sinfiltro">
+                                                Sin filtro
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="filtro" id="filtrohoy" value="1" <%=busqueda.equals("1") ? "checked" : ""%> onchange='this.form.submit();'>
+                                            <label class="form-check-label" for="filtrohoy">
+                                                Hoy
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="filtro" id="filtrosemana" value="2" <%=busqueda.equals("2") ? "checked" : ""%> onchange='this.form.submit();'>
+                                            <label class="form-check-label" for="filtrosemana">
+                                                Última semana
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="filtro" id="filtromes" value="3" <%=busqueda.equals("3") ? "checked" : ""%> onchange='this.form.submit();'>
+                                            <label class="form-check-label" for="filtromes">
+                                                Último mes
+                                            </label>
+                                        </div>
                                     </div>
                                 </form>
                                 <%

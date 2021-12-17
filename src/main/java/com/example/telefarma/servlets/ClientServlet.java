@@ -108,11 +108,13 @@ public class ClientServlet extends HttpServlet {
                 int limite = 9;
                 int paginaHistorial = pagina;
 
+                String filtro = request.getParameter("filtro") == null ? "" : request.getParameter("filtro");
+                System.out.println("Filtro en doGet: " + filtro);
                 ArrayList<BOrders> listaOrdenes = new ArrayList<>();
 
-                if (ordersDao.listarOrdenes(0,-1,busqueda,idClient).size() != 0) {
-                    while (listaOrdenes.size() == 0 && paginaHistorial < 10) {
-                        listaOrdenes = ordersDao.listarOrdenes(paginaHistorial, limite, busqueda, idClient);
+                if (ordersDao.listarOrdenes(0,-1,filtro,idClient).size() != 0) {
+                    while (listaOrdenes.size() == 0) {
+                        listaOrdenes = ordersDao.listarOrdenes(paginaHistorial, limite, filtro, idClient);
                         paginaHistorial = paginaHistorial + 1;
                     }
                 }
@@ -123,12 +125,13 @@ public class ClientServlet extends HttpServlet {
                 }
 
                 request.setAttribute("listaOrdenes", listaOrdenes);
+                request.setAttribute("busqueda", filtro);
 
-                pagTotales=(int) Math.ceil((double) ordersDao.listarOrdenes(0, -1, busqueda, idClient).size() / limite);
+                pagTotales=(int) Math.ceil((double) ordersDao.listarOrdenes(0, -1, filtro, idClient).size() / limite);
                 request.setAttribute("pagTotales", pagTotales);
 
                 if (pagina>=pagTotales && pagTotales>0){
-                    response.sendRedirect(request.getContextPath()+"/ClientServlet?action=historial&busqueda="+busqueda+"&pagina="+(pagTotales-1));
+                    response.sendRedirect(request.getContextPath()+"/ClientServlet?action=historial&busqueda="+filtro+"&pagina="+(pagTotales-1));
                     return;
                 }
 
@@ -248,6 +251,7 @@ public class ClientServlet extends HttpServlet {
         int idClient = client.getIdClient();
         int i, j;
         String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda").trim();
+        String filtro = request.getParameter("filtro") == null ? "" : request.getParameter("filtro");
 
         switch (request.getParameter("action")) {
 
@@ -308,7 +312,8 @@ public class ClientServlet extends HttpServlet {
                 break;
 
             case "buscarHistorial":
-                response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial&busqueda=" + busqueda);
+                System.out.println("Filtro en doPost: " + filtro);
+                response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial&filtro=" + filtro);
                 break;
 
             case "buscarProductosDeFarmacia":
