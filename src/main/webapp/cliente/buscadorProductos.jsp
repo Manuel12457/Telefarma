@@ -1,5 +1,5 @@
 <%@ page import="com.example.telefarma.beans.BProduct" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" language="java" %>
 <jsp:useBean id="listaProductosBusqueda" scope="request"
              type="java.util.ArrayList<com.example.telefarma.beans.BProduct>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
@@ -7,6 +7,7 @@
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String"/>
+<jsp:useBean id="tipoBusqueda" scope="request" type="java.lang.String"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,6 +23,7 @@
             <jsp:param name="nombre" value="<%=a%>"/>
             <jsp:param name="servletBusqueda" value="ClientServlet?action=buscarProduct"/>
             <jsp:param name="busquedaPlaceholder" value="Busca un producto"/>
+            <jsp:param name="tipoBusqueda" value="<%=tipoBusqueda%>"/>
             <jsp:param name="tamanoCarrito" value="<%=tamanoCarrito%>"/>
         </jsp:include>
 
@@ -40,7 +42,7 @@
                             productos</h4>
                         <% } else { %>
                         <h4 class="pb-2 border-bottom d-flex justify-content-start dist-name">Resultados de
-                            "<%= busqueda.replace("�", "ñ") %>"</h4>
+                            "<%= busqueda %>"</h4>
                         <% } %>
                     </div>
                     <!--Productos-->
@@ -58,7 +60,6 @@
                                     </div>
                                     <div class="card-body d-flex flex-column">
                                         <div class="mt-auto">
-
                                             <div class="d-flex row-producto">
                                                 <%= producto.getName()%>
                                             </div>
@@ -89,9 +90,7 @@
                 %>
             </div>
             <!--Paginación-->
-            <%
-                String servlet = "/ClientServlet?action=buscarProducto&busqueda=" + busqueda + "&";
-            %>
+            <% String servlet = "/ClientServlet?action=buscarProducto&busqueda=" + busqueda + "&tipoBusqueda=" + tipoBusqueda + "&"; %>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>

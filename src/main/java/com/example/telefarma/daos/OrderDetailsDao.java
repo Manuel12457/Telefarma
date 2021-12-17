@@ -1,10 +1,9 @@
 package com.example.telefarma.daos;
 
+import com.example.telefarma.dtos.DtoProductoVisualizacion;
+
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class OrderDetailsDao extends BaseDao {
 
@@ -27,6 +26,25 @@ public class OrderDetailsDao extends BaseDao {
         return false;
     }
 
+    public void agregarposibleEliminar(DtoProductoVisualizacion producto) {
+        String sql = "select od.idProduct, o.idOrder from orderdetails od\n" +
+                "inner join orders o on (od.idOrder = o.idOrder)\n" +
+                "where od.idProduct = ? and o.status = 'Pendiente';";
+
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, producto.getIdProduct());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                producto.setPosibleEliminar(!rs.next());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean agregarReceta(String idOrder, int idProduct, InputStream receta) {
 
         String sql = "update orderdetails set prescription = ? \n" +
@@ -44,6 +62,5 @@ public class OrderDetailsDao extends BaseDao {
         }
         return false;
     }
-
 
 }

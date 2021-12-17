@@ -12,8 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,11 +24,10 @@ public class ClientServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setCharacterEncoding("UTF-8");
         request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession();
-
         BClient client = (BClient) session.getAttribute("sesion");
 
         OrdersDao ordersDao = new OrdersDao();
@@ -43,8 +41,10 @@ public class ClientServlet extends HttpServlet {
         int limiteFarmacias, pagTotales, limiteProductos;
         int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
         request.setAttribute("pagActual", pagina);
-        String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda").replace("�","ñ");
+        String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
         request.setAttribute("busqueda", busqueda);
+        String tipoBusqueda = request.getParameter("tipoBusqueda") == null ? "product" : request.getParameter("tipoBusqueda");
+        request.setAttribute("tipoBusqueda", tipoBusqueda);
         int idProduct;
         int idClient = client.getIdClient();
 
@@ -69,7 +69,7 @@ public class ClientServlet extends HttpServlet {
                 ArrayList<ArrayList<BPharmacy>> listaFarmacias = new ArrayList<>();
                 HashMap<Integer, Integer> mostrarBotonVerMas = new HashMap<>();
 
-                int idDistritoFiltrado = request.getParameter("idDistrito") == null ? 0 : Integer.parseInt(request.getParameter("idDistrito")) ;
+                int idDistritoFiltrado = request.getParameter("idDistrito") == null ? 0 : Integer.parseInt(request.getParameter("idDistrito"));
 
                 if (idDistritoFiltrado == 0) {
                     for (BDistrict distrito : distritos) {
@@ -91,12 +91,12 @@ public class ClientServlet extends HttpServlet {
                 request.setAttribute("distritosFiltrado", listaDistritosFiltro);
                 request.setAttribute("idDistritoFil", idDistritoFiltrado);
 
-                pagTotales=(int) Math.ceil((double) districtDao.listarDistritosCliente(0, -1, idClient).size() / limiteDistritos);
+                pagTotales = (int) Math.ceil((double) districtDao.listarDistritosCliente(0, -1, idClient).size() / limiteDistritos);
                 request.setAttribute("pagTotales", pagTotales);
                 request.setAttribute("estadoOrden", estadoOrden);
 
-                if (pagina>=pagTotales && pagTotales>0){
-                    response.sendRedirect(request.getContextPath()+"/ClientServlet?action=mostrarFarmacias&pagina="+(pagTotales-1));
+                if (pagina >= pagTotales && pagTotales > 0) {
+                    response.sendRedirect(request.getContextPath() + "/ClientServlet?action=mostrarFarmacias&pagina=" + (pagTotales - 1));
                     return;
                 }
 
@@ -109,8 +109,7 @@ public class ClientServlet extends HttpServlet {
                 int paginaHistorial = pagina;
 
                 ArrayList<BOrders> listaOrdenes = new ArrayList<>();
-
-                if (ordersDao.listarOrdenes(0,-1,busqueda,idClient).size() != 0) {
+                if (ordersDao.listarOrdenes(0, -1, busqueda, idClient).size() != 0) {
                     while (listaOrdenes.size() == 0 && paginaHistorial < 10) {
                         listaOrdenes = ordersDao.listarOrdenes(paginaHistorial, limite, busqueda, idClient);
                         paginaHistorial = paginaHistorial + 1;
@@ -121,14 +120,13 @@ public class ClientServlet extends HttpServlet {
                     ordersDao.agregarOrderDetails(orden);
                     ordersDao.agregarTimeDiff(orden);
                 }
-
                 request.setAttribute("listaOrdenes", listaOrdenes);
 
-                pagTotales=(int) Math.ceil((double) ordersDao.listarOrdenes(0, -1, busqueda, idClient).size() / limite);
+                pagTotales = (int) Math.ceil((double) ordersDao.listarOrdenes(0, -1, busqueda, idClient).size() / limite);
                 request.setAttribute("pagTotales", pagTotales);
 
-                if (pagina>=pagTotales && pagTotales>0){
-                    response.sendRedirect(request.getContextPath()+"/ClientServlet?action=historial&busqueda="+busqueda+"&pagina="+(pagTotales-1));
+                if (pagina >= pagTotales && pagTotales > 0) {
+                    response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial&busqueda=" + busqueda + "&pagina=" + (pagTotales - 1));
                     return;
                 }
 
@@ -140,12 +138,19 @@ public class ClientServlet extends HttpServlet {
                 limiteProductos = 16;
                 int idPharmacy = Integer.parseInt(request.getParameter("idPharmacy"));
                 request.setAttribute("idPharmacy", idPharmacy);
-                request.setAttribute("listaProductos", productDao.listarProductosPorFarmacia(pagina, limiteProductos, busqueda, idPharmacy));
+                ArrayList<BProduct> listaProductos = null;
+                if (tipoBusqueda.equals("product")) {
+                    listaProductos = productDao.listarProductosPorFarmacia(pagina, limiteProductos, busqueda, idPharmacy);
+                    pagTotales = (int) Math.ceil((double) productDao.listarProductosPorFarmacia(0, -1, busqueda, idPharmacy).size() / limiteProductos);
+                } else { //symptom
+                    listaProductos = productDao.buscarProductoPorSintoma(pagina, limiteProductos, busqueda, idPharmacy);
+                    pagTotales = (int) Math.ceil((double) productDao.buscarProductoPorSintoma(0, -1, busqueda, idPharmacy).size() / limiteProductos);
+                }
+                request.setAttribute("listaProductos", listaProductos);
                 request.setAttribute("farmacia", pharmacyDao.obtenerFarmaciaPorId(idPharmacy));
-                pagTotales = (int) Math.ceil((double) productDao.listarProductosPorFarmacia(0, -1, busqueda, idPharmacy).size() / limiteProductos);
                 request.setAttribute("pagTotales", pagTotales);
-                if (pagina>=pagTotales && pagTotales>0){
-                    response.sendRedirect(request.getContextPath()+"/ClientServlet?action=verFarmacia&busqueda="+busqueda+"&idPharmacy="+idPharmacy+"&pagina="+(pagTotales-1));
+                if (pagina >= pagTotales && pagTotales > 0) {
+                    response.sendRedirect(request.getContextPath() + "/ClientServlet?action=verFarmacia&busqueda=" + busqueda + "&idPharmacy=" + idPharmacy + "&pagina=" + (pagTotales - 1));
                     return;
                 }
 
@@ -155,14 +160,19 @@ public class ClientServlet extends HttpServlet {
 
             case "buscarProducto":
                 limiteProductos = 16;
-
-                pagTotales = (int) Math.ceil((double) productDao.cantidadProductos(busqueda) / limiteProductos);
+                if (tipoBusqueda.equals("product")) {
+                    listaProductos = productDao.listarProductosBusqueda(pagina, limiteProductos, busqueda, idClient);
+                    pagTotales = (int) Math.ceil((double) productDao.cantidadProductos(busqueda) / limiteProductos);
+                } else { //symptom
+                    listaProductos = productDao.buscarProductoPorSintoma(pagina, limiteProductos, busqueda, -1);
+                    pagTotales = (int) Math.ceil((double) productDao.buscarProductoPorSintoma(0, -1, busqueda, -1).size() / limiteProductos);
+                }
+                request.setAttribute("listaProductosBusqueda", listaProductos);
                 request.setAttribute("pagTotales", pagTotales);
-                if (pagina>=pagTotales && pagTotales>0){
-                    response.sendRedirect(request.getContextPath()+"/ClientServlet?action=buscarProducto&busqueda="+busqueda+"&pagina="+(pagTotales-1));
+                if (pagina >= pagTotales && pagTotales > 0) {
+                    response.sendRedirect(request.getContextPath() + "/ClientServlet?action=buscarProducto&busqueda=" + busqueda + "&pagina=" + (pagTotales - 1));
                     return;
                 }
-                request.setAttribute("listaProductosBusqueda", productDao.listarProductosBusqueda(pagina, limiteProductos, busqueda, idClient));
 
                 view = request.getRequestDispatcher("/cliente/buscadorProductos.jsp");
                 view.forward(request, response);
@@ -187,8 +197,8 @@ public class ClientServlet extends HttpServlet {
                 pagTotales = (int) Math.ceil((double) pharmacyDao.listarFarmaciasPorDistrito(0, -1, busqueda, 0, idDistrict).size() / limiteFarmacias);
                 request.setAttribute("pagTotales", pagTotales);
 
-                if (pagina>=pagTotales && pagTotales>0){
-                    response.sendRedirect(request.getContextPath()+"/ClientServlet?action=verFarmaciasDistrito&district="+idDistrict+"&pagina="+(pagTotales-1));
+                if (pagina >= pagTotales && pagTotales > 0) {
+                    response.sendRedirect(request.getContextPath() + "/ClientServlet?action=verFarmaciasDistrito&district=" + idDistrict + "&pagina=" + (pagTotales - 1));
                     return;
                 }
 
@@ -234,8 +244,9 @@ public class ClientServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setCharacterEncoding("UTF-8");
         request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 
         HttpSession session = request.getSession();
         BClient client = (BClient) request.getSession().getAttribute("sesion");
@@ -247,7 +258,8 @@ public class ClientServlet extends HttpServlet {
 
         int idClient = client.getIdClient();
         int i, j;
-        String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda").trim();
+        String busqueda = request.getParameter("busqueda") == null ? "" : new String(request.getParameter("busqueda").getBytes(StandardCharsets.UTF_8));
+        String tipoBusqueda = request.getParameter("tipoBusqueda") == null ? "" : request.getParameter("tipoBusqueda").trim();
 
         switch (request.getParameter("action")) {
 
@@ -313,11 +325,11 @@ public class ClientServlet extends HttpServlet {
 
             case "buscarProductosDeFarmacia":
                 int idPharmacy = Integer.parseInt(request.getParameter("idPharmacy"));
-                response.sendRedirect(request.getContextPath() + "/ClientServlet?action=verFarmacia&busqueda=" + busqueda + "&idPharmacy=" + idPharmacy);
+                response.sendRedirect(request.getContextPath() + "/ClientServlet?action=verFarmacia&busqueda=" + busqueda + "&idPharmacy=" + idPharmacy + "&tipoBusqueda=" + tipoBusqueda);
                 break;
 
             case "buscarProduct":
-                response.sendRedirect(request.getContextPath() + "/ClientServlet?action=buscarProducto&busqueda=" + busqueda);
+                response.sendRedirect(request.getContextPath() + "/ClientServlet?action=buscarProducto&busqueda=" + busqueda + "&tipoBusqueda=" + tipoBusqueda);
                 break;
 
             case "addToCart":
@@ -445,7 +457,7 @@ public class ClientServlet extends HttpServlet {
                     ordersDao.cancelarPedido(idOrder, idClient);
 
                     //
-                    ArrayList<BOrders> orden = ordersDao.listarOrdenes(0,-1,idOrder,idClient);
+                    ArrayList<BOrders> orden = ordersDao.listarOrdenes(0, -1, idOrder, idClient);
                     ordersDao.agregarOrderDetails(orden.get(0));
                     for (BOrderDetails orderDetails : orden.get(0).getListaDetails()) {
                         BProduct product = productDao.obtenerProductoPorId(orderDetails.getIdProduct());
@@ -460,14 +472,14 @@ public class ClientServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial");
                 break;
             case "filtroDistrito":
-                if(!request.getParameter("idDistrict").equals("")){
-                    try{
+                if (!request.getParameter("idDistrict").equals("")) {
+                    try {
                         int idDistritoFiltrado = request.getParameter("idDistrict") == null ? 0 : Integer.parseInt(request.getParameter("idDistrict"));
-                        response.sendRedirect(request.getContextPath() + "/ClientServlet?action=verFarmaciasDistrito&district="+idDistritoFiltrado);
-                    }catch (Exception e){
+                        response.sendRedirect(request.getContextPath() + "/ClientServlet?action=verFarmaciasDistrito&district=" + idDistritoFiltrado);
+                    } catch (Exception e) {
                         response.sendRedirect(request.getContextPath() + "/ClientServlet");
                     }
-                }else{
+                } else {
                     response.sendRedirect(request.getContextPath() + "/ClientServlet");
                 }
                 break;

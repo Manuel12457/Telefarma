@@ -22,17 +22,15 @@ public class PharmacyFilter implements Filter {
         String rol = (String) request.getSession().getAttribute("rol");
 
         if (rol == null) {
-            response.sendRedirect(request.getContextPath()+"/");
+            response.sendRedirect(request.getContextPath() + "/");
         } else {
-            if (rol.equals("client")) {
-                response.sendRedirect(request.getContextPath() + "/ClientServlet");
-            } else if (rol.equals("pharmacy")) {
+            if (rol.equals("pharmacy")) {
                 response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
                 response.setHeader("Pragma", "no-cache");
                 response.setDateHeader("Expires", 0);
                 chain.doFilter(request, response);
-            } else if (rol.equals("admin")) {
-                response.sendRedirect(request.getContextPath() + "/AdminServlet");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/");
             }
         }
 

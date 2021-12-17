@@ -24,17 +24,15 @@ public class AdminFilter implements Filter {
         String rol = (String) request.getSession().getAttribute("rol");
 
         if (rol == null) {
-            response.sendRedirect(request.getContextPath()+"/");
+            response.sendRedirect(request.getContextPath() + "/");
         } else {
-            if (rol.equals("client")) {
-                response.sendRedirect(request.getContextPath() + "/ClientServlet");
-            } else if (rol.equals("pharmacy")) {
-                response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
-            } else if (rol.equals("admin")) {
+            if (rol.equals("admin")) {
                 response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
                 response.setHeader("Pragma", "no-cache");
                 response.setDateHeader("Expires", 0);
                 chain.doFilter(request, response);
+            } else {
+                response.sendRedirect(request.getContextPath() + "/");
             }
         }
 

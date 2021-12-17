@@ -90,8 +90,8 @@ public class SessionServlet extends HttpServlet {
 
             case "registrar":
                 BClient client = new BClient();
-                client.setName(request.getParameter("nombre"));
-                client.setLastName(request.getParameter("apellido"));
+                client.setName(request.getParameter("nombre").trim());
+                client.setLastName(request.getParameter("apellido").trim());
                 client.setDistrict(new BDistrict(Integer.parseInt(request.getParameter("distrito"))));
                 client.setDni(request.getParameter("dni"));
                 client.setMail(request.getParameter("email"));

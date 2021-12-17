@@ -7,6 +7,7 @@
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="idPharmacy" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String" class="java.lang.String"/>
+<jsp:useBean id="tipoBusqueda" scope="request" type="java.lang.String"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
 <%
@@ -28,6 +29,7 @@
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
             <jsp:param name="servletBusqueda" value="<%=servletBusqueda%>"/>
+            <jsp:param name="tipoBusqueda" value="<%=tipoBusqueda%>"/>
             <jsp:param name="busquedaPlaceholder" value="<%=busquedaPlaceholder%>"/>
             <jsp:param name="tamanoCarrito" value="<%=tamanoCarrito%>"/>
         </jsp:include>
@@ -65,7 +67,7 @@
                             disponibles</h4>
                         <% } else { %>
                         <h4 class="pb-2 border-bottom d-flex justify-content-start dist-name">Resultados de
-                            "<%= busqueda.replace("�","ñ") %>"</h4>
+                            "<%= busqueda %>"</h4>
                         <% } %>
                     </div>
 
@@ -115,7 +117,7 @@
                 </div>
             </div>
             <!--Paginación-->
-            <%String servlet = "/ClientServlet?action=verFarmacia&busqueda=" + busqueda + "&idPharmacy=" + idPharmacy + "&";%>
+            <% String servlet = "/ClientServlet?action=verFarmacia&busqueda=" + busqueda + "&tipoBusqueda=" + tipoBusqueda + "&idPharmacy=" + idPharmacy + "&"; %>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>

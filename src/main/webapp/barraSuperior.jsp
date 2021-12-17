@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" language="java" %>
 <%
     String tipoUsuario = request.getParameter("tipoUsuario");
     String nombre = request.getParameter("nombre");
@@ -6,15 +6,16 @@
     String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
     String busquedaPlaceholder = request.getParameter("busquedaPlaceholder");
     String tamanoCarrito = request.getParameter("tamanoCarrito");
+    String tipoBusqueda = request.getParameter("tipoBusqueda") == null ? "product" : request.getParameter("tipoBusqueda");
 %>
-
 
 <!--Cabecera Principal cliente-->
 <nav class="navbar navbar-expand-md fixed-top shadow-sm justify-content-center bg-white">
     <div class="row w-100 align-items-center pe-sm-4 ps-0 my-2">
         <!--Logo telefarma-->
         <div class="col-md-3 col-sm-5 col-6 d-flex justify-content-center ps-xxl-2 ps-xl-5 ps-lg-4 ps-md-5 ps-2">
-            <a class="navbar-brand py-0" href="${pageContext.request.contextPath}/ClientServlet" style="width: 70%; height: 70%">
+            <a class="navbar-brand py-0" href="${pageContext.request.contextPath}/ClientServlet"
+               style="width: 70%; height: 70%">
                 <img src="<%=request.getContextPath()%>/res/img/telefarma.svg" alt="TeleFarma">
             </a>
         </div>
@@ -22,9 +23,15 @@
         <div class="col-md-7 d-none d-md-block ps-0"> <!--desaparece en menores a medium-->
             <form method="post" action="<%=request.getContextPath()%>/<%=servletBusqueda%>">
                 <div class="input-group">
+                    <select class="btn-tele px-2 rounded-start border-2 sct-tele" name="tipoBusqueda">
+                        <option value="product" <%=tipoBusqueda.equals("product") ? "selected" : ""%>>Producto</option>
+                        <option value="symptom" <%=tipoBusqueda.equals("symptom") ? "selected" : ""%>>Síntomas</option>
+                    </select>
                     <div style="width:40%">
-                        <input type="search" name="busqueda" class="form-control readex-15" placeholder="<%=busquedaPlaceholder%>"
-                               value="<%=busqueda.replace("�","ñ")%>"/>
+                        <input type="search" name="busqueda"
+                               class="form-control readex-15 rounded-0 border-end-0 border-start-0"
+                               placeholder="<%=busquedaPlaceholder%>"
+                               value="<%=busqueda%>"/>
                     </div>
                     <button role="button" class="btn btn-tele border-start-1 input-group-text">
                         <i class="fas fa-search"></i>
@@ -35,11 +42,12 @@
         <!--Carrito-->
         <div class="col-md-1 col-sm-2 col-2 ms-sm-auto ms-auto d-flex justify-content-end">
             <%if (tipoUsuario.equals("cliente")) {%>
-            <a class="btn btn-tele-inverso" role="button" href="<%=request.getContextPath()%>/ClientServlet?action=verCarrito">
+            <a class="btn btn-tele-inverso" role="button"
+               href="<%=request.getContextPath()%>/ClientServlet?action=verCarrito">
                 <div style="font-size: 0.60rem"> <!--para cambios más precisos del tamaño-->
                     <i class="fas fa-shopping-cart fa-3x"></i>
                     <span class="badge-cart"
-                    style="-moz-border-radius: 9px; border-radius: 9px; font-size: 14px; font-weight: bolder; border-left: outset; background: rgb(235 90 58); color: #fff; padding: 0 5px; vertical-align: top; margin-left: -10px;">
+                          style="-moz-border-radius: 9px; border-radius: 9px; font-size: 14px; font-weight: bolder; border-left: outset; background: rgb(235 90 58); color: #fff; padding: 0 5px; vertical-align: top; margin-left: -10px;">
                         <%=tamanoCarrito%>
                     </span>
                 </div>
@@ -84,7 +92,8 @@
                     <%if (tipoUsuario.equals("cliente")) {%>
                     <div class="mb-3">
                         <div class="p-2">
-                            <a href="<%=request.getContextPath()%>/ClientServlet?action=editarForm" class="a-gray text-decoration-none">
+                            <a href="<%=request.getContextPath()%>/ClientServlet?action=editarForm"
+                               class="a-gray text-decoration-none">
                                 <span><i class="fas fa-user-edit"></i></span>
                                 <span>Editar usuario</span>
                             </a>
