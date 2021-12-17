@@ -86,24 +86,20 @@
                     }
                 %>
                 <!--Filtrado por Distrito-->
-                <div class="row align-items-center">
-                    <form method="post" action="<%=request.getContextPath()%>/ClientServlet?action=filtroDistrito">
-                        <div class="col">
-                            <label class="form-label" for="farmaDistrict">Filtrar por distrito</label>
+                <div class="text-end mb-2">
+                    <form class="row px-5 align-items-center" method="post" action="<%=request.getContextPath()%>/ClientServlet?action=filtroDistrito">
+                        <div class="col" style="width: fit-content;">
+                            <label class="gray-heebo gray5" for="farmaDistrict">Filtrar por distrito</label>
                         </div>
-                        <div class="col">
-                            <select class="form-select" name="distrito" id="farmaDistrict">
+                        <div style="width: fit-content;padding: revert;">
+                            <select class="form-select readex-15" name="idDistrict" id="farmaDistrict" style="max-width: 300px;"
+                                    onchange='this.form.submit();'>
                                 <option value="" <%=idDistritoFil == 0 ? "selected" : ""%>><%="Sin filtro"%></option>
                                 <% for (BDistrict distrito : distritosFiltrado) { %>
                                 <option value="<%=distrito.getIdDistrict()%>" <%=idDistritoFil == distrito.getIdDistrict() ? "selected" : ""%>><%=distrito.getName()%>
                                 </option>
                                 <% } %>
                             </select>
-                        </div>
-                        <div class="col">
-                            <div class="row row-cols-3 justify-content-center">
-                                <input class="btn btn-tele" type="submit" id="" value="Filtrar"/>
-                            </div>
                         </div>
                     </form>
                 </div>

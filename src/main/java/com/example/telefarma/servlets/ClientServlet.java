@@ -48,6 +48,7 @@ public class ClientServlet extends HttpServlet {
         int idProduct;
         int idClient = client.getIdClient();
 
+        ArrayList<BDistrict> listaDistritosFiltro;
         HashMap<DtoPharmacy, ArrayList<DtoProductoCarrito>> listaCarrito = (HashMap<DtoPharmacy, ArrayList<DtoProductoCarrito>>) session.getAttribute("listaCarrito");
         ArrayList<DtoPharmacy> farmacias = new ArrayList<>(listaCarrito.keySet());
 
@@ -86,7 +87,7 @@ public class ClientServlet extends HttpServlet {
                 request.setAttribute("listaFarmacias", listaFarmacias);
                 request.setAttribute("hashMostrarBoton", mostrarBotonVerMas);
 
-                ArrayList<BDistrict> listaDistritosFiltro = districtDao.listarDistritos();
+                listaDistritosFiltro = districtDao.listarDistritos();
                 request.setAttribute("distritosFiltrado", listaDistritosFiltro);
                 request.setAttribute("idDistritoFil", idDistritoFiltrado);
 
@@ -143,7 +144,6 @@ public class ClientServlet extends HttpServlet {
                 request.setAttribute("farmacia", pharmacyDao.obtenerFarmaciaPorId(idPharmacy));
                 pagTotales = (int) Math.ceil((double) productDao.listarProductosPorFarmacia(0, -1, busqueda, idPharmacy).size() / limiteProductos);
                 request.setAttribute("pagTotales", pagTotales);
-
                 if (pagina>=pagTotales && pagTotales>0){
                     response.sendRedirect(request.getContextPath()+"/ClientServlet?action=verFarmacia&busqueda="+busqueda+"&idPharmacy="+idPharmacy+"&pagina="+(pagTotales-1));
                     return;
@@ -158,7 +158,6 @@ public class ClientServlet extends HttpServlet {
 
                 pagTotales = (int) Math.ceil((double) productDao.cantidadProductos(busqueda) / limiteProductos);
                 request.setAttribute("pagTotales", pagTotales);
-
                 if (pagina>=pagTotales && pagTotales>0){
                     response.sendRedirect(request.getContextPath()+"/ClientServlet?action=buscarProducto&busqueda="+busqueda+"&pagina="+(pagTotales-1));
                     return;
@@ -181,6 +180,8 @@ public class ClientServlet extends HttpServlet {
             case "verFarmaciasDistrito":
                 limiteFarmacias = 9;
                 int idDistrict = Integer.parseInt(request.getParameter("district"));
+                listaDistritosFiltro = districtDao.listarDistritos();
+                request.setAttribute("distritosFiltrado", listaDistritosFiltro);
                 request.setAttribute("district", districtDao.obtenerDistritoPorId(idDistrict));
                 request.setAttribute("listaFarmaciasDistrito", pharmacyDao.listarFarmaciasPorDistrito(pagina, limiteFarmacias, busqueda, 0, idDistrict));
                 pagTotales = (int) Math.ceil((double) pharmacyDao.listarFarmaciasPorDistrito(0, -1, busqueda, 0, idDistrict).size() / limiteFarmacias);
@@ -247,7 +248,6 @@ public class ClientServlet extends HttpServlet {
         int idClient = client.getIdClient();
         int i, j;
         String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda").trim();
-
 
         switch (request.getParameter("action")) {
 
@@ -460,8 +460,16 @@ public class ClientServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial");
                 break;
             case "filtroDistrito":
-                int idDistritoFiltrado = request.getParameter("distrito").equals("") || request.getParameter("distrito") == null ? 0 : Integer.parseInt(request.getParameter("distrito"));
-                response.sendRedirect(request.getContextPath() + "/ClientServlet?idDistrito=" + idDistritoFiltrado);
+                if(!request.getParameter("idDistrict").equals("")){
+                    try{
+                        int idDistritoFiltrado = request.getParameter("idDistrict") == null ? 0 : Integer.parseInt(request.getParameter("idDistrict"));
+                        response.sendRedirect(request.getContextPath() + "/ClientServlet?action=verFarmaciasDistrito&district="+idDistritoFiltrado);
+                    }catch (Exception e){
+                        response.sendRedirect(request.getContextPath() + "/ClientServlet");
+                    }
+                }else{
+                    response.sendRedirect(request.getContextPath() + "/ClientServlet");
+                }
                 break;
         }
     }

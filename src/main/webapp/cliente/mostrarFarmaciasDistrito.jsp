@@ -1,4 +1,5 @@
 <%@ page import="com.example.telefarma.beans.BPharmacy" %>
+<%@ page import="com.example.telefarma.beans.BDistrict" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaFarmaciasDistrito" scope="request"
              type="java.util.ArrayList<com.example.telefarma.beans.BPharmacy>"/>
@@ -8,6 +9,7 @@
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String" class="java.lang.String"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="distritosFiltrado" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BDistrict>"/>
 <%
     String servletBusqueda = "ClientServlet?action=buscarFarmaciaDeDistrito&district=" + district.getIdDistrict() + "&";
     String busquedaPlaceholder = "Busca una farmacia en " + district.getName();
@@ -36,6 +38,24 @@
             <div class="card-header my-5"></div>
             <!--Catálogo-->
             <div class="container">
+                <!--Filtrado por Distrito-->
+                <div class="text-end mb-2">
+                    <form class="row px-5 align-items-center" method="post" action="<%=request.getContextPath()%>/ClientServlet?action=filtroDistrito">
+                        <div class="col" style="width: fit-content;">
+                            <label class="gray-heebo gray5" for="farmaDistrict">Filtrar por distrito</label>
+                        </div>
+                        <div style="width: fit-content;padding: revert;">
+                            <select class="form-select readex-15" name="idDistrict" id="farmaDistrict" style="max-width: 300px;"
+                                    onchange='this.form.submit();'>
+                                <option value="" <%=district.getIdDistrict() == 0 ? "selected" : ""%>><%="Sin filtro"%></option>
+                                <% for (BDistrict distrito : distritosFiltrado) { %>
+                                <option value="<%=distrito.getIdDistrict()%>" <%=district.getIdDistrict() == distrito.getIdDistrict() ? "selected" : ""%>><%=distrito.getName()%>
+                                </option>
+                                <% } %>
+                            </select>
+                        </div>
+                    </form>
+                </div>
                 <div class="row">
                     <div class="container px-5 pb-2" id="custom-cards-san-juan">
                         <!--Nombre distrito-->
