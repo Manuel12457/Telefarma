@@ -104,12 +104,14 @@
                 </div>
             </div>
             <!--Paginación-->
-            <%String servlet = "/ClientServlet?action=verFarmaciasDistrito&busqueda=" + busqueda + "&district=" + district.getIdDistrict() + "&";%>
+            <%if (!(listaFarmaciasDistrito.size() < 9 && pagActual == 0)) {
+                String servlet = "/ClientServlet?action=verFarmaciasDistrito&busqueda=" + busqueda + "&district=" + district.getIdDistrict() + "&";%>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
                 <jsp:param name="servlet" value="<%=servlet%>"/>
             </jsp:include>
+            <%}%>
         </main>
 
         <!--JS-->

@@ -5,6 +5,9 @@ import com.example.telefarma.beans.BOrderDetails;
 import com.example.telefarma.beans.BOrders;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class OrdersDao extends BaseDao {
@@ -55,18 +58,95 @@ public class OrdersDao extends BaseDao {
 
             try (ResultSet rs = pstmt.executeQuery();) {
                 while (rs.next()) {
-                    String[] fechaOrden = rs.getString(3).split("\\s+");
-                    if (busqueda.equals("") || fechaOrden[0].equals(busqueda)) {
-                        BOrders clientOrders = new BOrders();
-                        clientOrders.setIdOrder(rs.getString(1));
-                        clientOrders.setFarmaciaAsociada(rs.getString(2));
-                        String dtOrden = rs.getString(3);
-                        clientOrders.setFechaOrden(dtOrden.substring(0, 10) + " - " + dtOrden.substring(11, 16));
-                        String dtRecojo = rs.getString(4);
-                        clientOrders.setFechaRecojo(dtRecojo.substring(0, 10) + " - " + dtRecojo.substring(11, 16));
-                        clientOrders.setTotal(rs.getDouble(5));
-                        clientOrders.setEstado(rs.getString(6));
-                        listaOrdenes.add(clientOrders);
+
+                    BOrders clientOrders = new BOrders();
+                    String dtOrden;
+                    String dtRecojo;
+                    String[] fechaOrden = new String[2];
+                    LocalDate fechaActualLD = java.time.LocalDate.now();
+                    String fechaActual = fechaActualLD.toString();
+                    switch (busqueda) {
+                        case "":
+                            clientOrders.setIdOrder(rs.getString(1));
+                            clientOrders.setFarmaciaAsociada(rs.getString(2));
+                            dtOrden = rs.getString(3);
+                            clientOrders.setFechaOrden(dtOrden.substring(0, 10) + " - " + dtOrden.substring(11, 16));
+                            dtRecojo = rs.getString(4);
+                            clientOrders.setFechaRecojo(dtRecojo.substring(0, 10) + " - " + dtRecojo.substring(11, 16));
+                            clientOrders.setTotal(rs.getDouble(5));
+                            clientOrders.setEstado(rs.getString(6));
+                            listaOrdenes.add(clientOrders);
+                            break;
+                        case "1":
+                            fechaOrden = rs.getString(3).split("\\s+");
+
+                            System.out.println("Caso 1");
+                            System.out.println("FechaActual: " + fechaActual);
+                            System.out.println("FechaOrden: " + fechaOrden[0]);
+
+                            System.out.println(fechaOrden[0].equals(fechaActual));
+
+                            if (fechaOrden[0].equals(fechaActual)) {
+                                clientOrders.setIdOrder(rs.getString(1));
+                                clientOrders.setFarmaciaAsociada(rs.getString(2));
+                                dtOrden = rs.getString(3);
+                                clientOrders.setFechaOrden(dtOrden.substring(0, 10) + " - " + dtOrden.substring(11, 16));
+                                dtRecojo = rs.getString(4);
+                                clientOrders.setFechaRecojo(dtRecojo.substring(0, 10) + " - " + dtRecojo.substring(11, 16));
+                                clientOrders.setTotal(rs.getDouble(5));
+                                clientOrders.setEstado(rs.getString(6));
+                                listaOrdenes.add(clientOrders);
+                            }
+                            break;
+                        case "2":
+                            fechaOrden = rs.getString(3).split("\\s+");
+                            LocalDate fechaOrdenLD = LocalDate.parse(fechaOrden[0]);
+                            LocalDate semanaPasadaLD = java.time.LocalDate.now().minusDays(7);
+
+                            System.out.println("Caso 2");
+                            System.out.println("SemanaPasada: " + semanaPasadaLD);
+                            System.out.println("FechaOrden: " + fechaOrdenLD);
+
+                            System.out.println(fechaOrdenLD.isBefore(java.time.LocalDate.now()));
+                            System.out.println(fechaOrdenLD.isAfter(semanaPasadaLD));
+
+                            if ((fechaOrdenLD.isBefore(fechaActualLD) || fechaOrdenLD.isEqual(fechaActualLD)) && fechaOrdenLD.isAfter(semanaPasadaLD)) {
+                                clientOrders.setIdOrder(rs.getString(1));
+                                clientOrders.setFarmaciaAsociada(rs.getString(2));
+                                dtOrden = rs.getString(3);
+                                clientOrders.setFechaOrden(dtOrden.substring(0, 10) + " - " + dtOrden.substring(11, 16));
+                                dtRecojo = rs.getString(4);
+                                clientOrders.setFechaRecojo(dtRecojo.substring(0, 10) + " - " + dtRecojo.substring(11, 16));
+                                clientOrders.setTotal(rs.getDouble(5));
+                                clientOrders.setEstado(rs.getString(6));
+                                listaOrdenes.add(clientOrders);
+                            }
+                            break;
+                        case "3":
+                            fechaOrden = rs.getString(3).split("\\s+");
+                            LocalDate fechaOrdenLD3 = LocalDate.parse(fechaOrden[0]);
+                            LocalDate mesPasadoLD3 = java.time.LocalDate.now().minusDays(30);
+
+                            System.out.println("Caso 2");
+                            System.out.println("MesPasada: " + mesPasadoLD3);
+                            System.out.println("FechaOrden: " + fechaOrdenLD3);
+
+                            System.out.println(fechaOrdenLD3.isBefore(java.time.LocalDate.now()));
+                            System.out.println(fechaOrdenLD3.isAfter(mesPasadoLD3));
+                            if ((fechaOrdenLD3.isBefore(fechaActualLD) || fechaOrdenLD3.isEqual(fechaActualLD)) && fechaOrdenLD3.isAfter(mesPasadoLD3)) {
+                                clientOrders.setIdOrder(rs.getString(1));
+                                clientOrders.setFarmaciaAsociada(rs.getString(2));
+                                dtOrden = rs.getString(3);
+                                clientOrders.setFechaOrden(dtOrden.substring(0, 10) + " - " + dtOrden.substring(11, 16));
+                                dtRecojo = rs.getString(4);
+                                clientOrders.setFechaRecojo(dtRecojo.substring(0, 10) + " - " + dtRecojo.substring(11, 16));
+                                clientOrders.setTotal(rs.getDouble(5));
+                                clientOrders.setEstado(rs.getString(6));
+                                listaOrdenes.add(clientOrders);
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
             }
