@@ -9,6 +9,10 @@
     <jsp:include page="/includes/head.jsp">
         <jsp:param name="title" value="Telefarma - Buscar Producto"/>
     </jsp:include>
+    <head>
+        <link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/res/magiczoomplus/magiczoomplus.css"/>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/res/magiczoomplus/magiczoomplus.js"></script>
+    </head>
 
     <body>
         <%String nombreCliente = sesion.getName() + " " + sesion.getLastName();%>
@@ -30,9 +34,8 @@
                      style="border-radius: 0.45rem; align-items: center;">
                     <!--Imagen del producto-->
                     <div class="col-md-5">
-                        <div class="row text-center">
-                            <img src="${pageContext.request.contextPath}/Image?idProduct=<%=producto.getIdProduct()%>"
-                                 class="img-detalles">
+                        <div class="row text-center overflow-hidden" >
+                            <a href="${pageContext.request.contextPath}/Image?idProduct=<%=producto.getIdProduct()%>" class="MagicZoom"><img src="${pageContext.request.contextPath}/Image?idProduct=<%=producto.getIdProduct()%>" style="max-width: 100%;" /></a>
                         </div>
                     </div>
                     <!--Info del producto-->
@@ -42,7 +45,7 @@
                         </div>
                         <!--Farmacia-->
                         <div class="farmacia-detalles">
-                            <a class="a-gray text-decoration-none"
+                            <a class="a-gray text-decoration-none opensans"
                                href="<%=request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%=producto.getPharmacy().getIdPharmacy()%>">
                                 <%=producto.getPharmacy().getName().toUpperCase()%>
                             </a>

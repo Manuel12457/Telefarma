@@ -45,7 +45,7 @@
                             <label class="gray-heebo gray5" for="farmaDistrict">Filtrar por distrito</label>
                         </div>
                         <div style="width: fit-content;padding: revert;">
-                            <select class="form-select readex-15" name="idDistrict" id="farmaDistrict" style="max-width: 300px;"
+                            <select class="form-select readex-15 gray5" name="idDistrict" id="farmaDistrict" style="max-width: 300px;"
                                     onchange='this.form.submit();'>
                                 <option value="" <%=district.getIdDistrict() == 0 ? "selected" : ""%>><%="Sin filtro"%></option>
                                 <% for (BDistrict distrito : distritosFiltrado) { %>
