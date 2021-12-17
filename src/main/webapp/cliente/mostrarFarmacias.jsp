@@ -176,11 +176,13 @@
 
             </div>
             <!--Paginación-->
+            <%if (!(pagTotales == 1)) {%>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
                 <jsp:param name="servlet" value="/ClientServlet?action=mostrarFarmacias&"/>
             </jsp:include>
+            <%}%>
         </main>
 
         <!--JS-->

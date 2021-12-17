@@ -110,7 +110,7 @@ public class ClientServlet extends HttpServlet {
                 int limite = 9;
                 int paginaHistorial = pagina;
 
-                String filtro = request.getParameter("filtro") == null ? "" : request.getParameter("filtro");
+                String filtro = request.getSession().getAttribute("filtro") == null ? "" : (String) request.getSession().getAttribute("filtro");
                 System.out.println("Filtro en doGet: " + filtro);
                 ArrayList<BOrders> listaOrdenes = new ArrayList<>();
 
@@ -126,6 +126,7 @@ public class ClientServlet extends HttpServlet {
                     ordersDao.agregarTimeDiff(orden);
                 }
                 request.setAttribute("listaOrdenes", listaOrdenes);
+                request.getSession().setAttribute("busqueda", filtro);
 
                 pagTotales=(int) Math.ceil((double) ordersDao.listarOrdenes(0, -1, filtro, idClient).size() / limite);
                 request.setAttribute("pagTotales", pagTotales);
@@ -327,7 +328,8 @@ public class ClientServlet extends HttpServlet {
 
             case "buscarHistorial":
                 System.out.println("Filtro en doPost: " + filtro);
-                response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial&filtro=" + filtro);
+                request.getSession().setAttribute("filtro", filtro);
+                response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial");
                 break;
 
             case "buscarProductosDeFarmacia":
