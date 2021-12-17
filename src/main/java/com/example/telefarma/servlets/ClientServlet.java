@@ -108,7 +108,7 @@ public class ClientServlet extends HttpServlet {
                 int limite = 9;
                 int paginaHistorial = pagina;
 
-                String filtro = request.getParameter("filtro") == null ? "" : request.getParameter("filtro");
+                String filtro = (String) request.getSession().getAttribute("filtro") == null ? "" : (String) request.getSession().getAttribute("filtro");
                 System.out.println("Filtro en doGet: " + filtro);
                 ArrayList<BOrders> listaOrdenes = new ArrayList<>();
 
@@ -125,7 +125,7 @@ public class ClientServlet extends HttpServlet {
                 }
 
                 request.setAttribute("listaOrdenes", listaOrdenes);
-                request.setAttribute("busqueda", filtro);
+                request.getSession().setAttribute("busqueda", filtro);
 
                 pagTotales=(int) Math.ceil((double) ordersDao.listarOrdenes(0, -1, filtro, idClient).size() / limite);
                 request.setAttribute("pagTotales", pagTotales);
@@ -146,6 +146,7 @@ public class ClientServlet extends HttpServlet {
                 request.setAttribute("listaProductos", productDao.listarProductosPorFarmacia(pagina, limiteProductos, busqueda, idPharmacy));
                 request.setAttribute("farmacia", pharmacyDao.obtenerFarmaciaPorId(idPharmacy));
                 pagTotales = (int) Math.ceil((double) productDao.listarProductosPorFarmacia(0, -1, busqueda, idPharmacy).size() / limiteProductos);
+                System.out.println("Paginas totales: " + pagTotales);
                 request.setAttribute("pagTotales", pagTotales);
                 if (pagina>=pagTotales && pagTotales>0){
                     response.sendRedirect(request.getContextPath()+"/ClientServlet?action=verFarmacia&busqueda="+busqueda+"&idPharmacy="+idPharmacy+"&pagina="+(pagTotales-1));
@@ -188,6 +189,7 @@ public class ClientServlet extends HttpServlet {
                 request.setAttribute("district", districtDao.obtenerDistritoPorId(idDistrict));
                 request.setAttribute("listaFarmaciasDistrito", pharmacyDao.listarFarmaciasPorDistrito(pagina, limiteFarmacias, busqueda, 0, idDistrict));
                 pagTotales = (int) Math.ceil((double) pharmacyDao.listarFarmaciasPorDistrito(0, -1, busqueda, 0, idDistrict).size() / limiteFarmacias);
+                System.out.println("Paginas totales: " + pagTotales);
                 request.setAttribute("pagTotales", pagTotales);
 
                 if (pagina>=pagTotales && pagTotales>0){
@@ -313,7 +315,8 @@ public class ClientServlet extends HttpServlet {
 
             case "buscarHistorial":
                 System.out.println("Filtro en doPost: " + filtro);
-                response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial&filtro=" + filtro);
+                request.getSession().setAttribute("filtro", filtro);
+                response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial");
                 break;
 
             case "buscarProductosDeFarmacia":

@@ -7,7 +7,7 @@
 <jsp:useBean id="listaOrdenes" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BOrders>"/>
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="busqueda" scope="request" type="java.lang.String"/>
+<jsp:useBean id="busqueda" scope="session" type="java.lang.String" class="java.lang.String"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <%
     String nombreCliente = sesion.getName();
@@ -216,11 +216,13 @@
                                 %>
                             </div>
                             <!--Paginación-->
+                            <%if (!(pagTotales == 1)) {%>
                             <jsp:include page="../paginacion.jsp">
                                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
                                 <jsp:param name="servlet" value="/ClientServlet?action=historial&"/>
                             </jsp:include>
+                            <%}%>
                         </div>
                     </div>
                 </div>

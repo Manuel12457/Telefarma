@@ -115,12 +115,14 @@
                 </div>
             </div>
             <!--Paginación-->
-            <%String servlet = "/ClientServlet?action=verFarmacia&busqueda=" + busqueda + "&idPharmacy=" + idPharmacy + "&";%>
+            <%if (!(pagTotales == 1)) {
+                String servlet = "/ClientServlet?action=verFarmacia&busqueda=" + busqueda + "&idPharmacy=" + idPharmacy + "&";%>
             <jsp:include page="../paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
                 <jsp:param name="servlet" value="<%=servlet%>"/>
             </jsp:include>
+            <%}%>
         </main>
 
         <!--JS-->
