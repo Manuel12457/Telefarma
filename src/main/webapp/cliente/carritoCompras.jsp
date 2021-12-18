@@ -4,6 +4,7 @@
 <%@ page import="com.example.telefarma.dtos.DtoPharmacy" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.example.telefarma.dtos.DtoProductoCarrito" %>
+<%@ page import="com.example.telefarma.beans.BProduct" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
@@ -37,8 +38,8 @@
             <!--Carrito-->
             <div class="container pb-5 mt-2 mt-md-3">
                 <%
-                int prodConReceta = 0;
-                if (tamanoCarrito>0){
+                    int prodConReceta = 0;
+                    if (tamanoCarrito > 0) {
                 %>
                 <form method="POST"
                       action="<%=request.getContextPath()%>/ClientServlet?action=registrarPedido&idClient=<%=sesion.getIdClient()%>>"
@@ -59,7 +60,7 @@
                                     <div class="col d-flex">
                                         <span>
                                             <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%=farmacia.getIdPharmacy()%>"
-                                            class="a-white text-decoration-none">
+                                               class="a-white text-decoration-none">
                                                 <%=farmacia.getName()%>
                                             </a>
                                         </span>
@@ -107,13 +108,14 @@
                                             <div>
                                                 <input value="<%=producto.getIdProduct()%>"
                                                        name="idProducto<%=i%>-<%=j%>" hidden>
-                                                <span class="cart-precio-tag"><i class="fas fa-tags"></i> Subtotal:</span>
+                                                <span class="cart-precio-tag"><i
+                                                        class="fas fa-tags"></i> Subtotal:</span>
                                                 <span class="cart-subtotal-<%=cont%> cart-precio ms-sm-2 ms-0 "></span>
                                             </div>
-
                                             <% if (producto.getRequierePrescripcion()) {
-                                                    prodConReceta += 1;%>
-                                                <span class="text-danger"><i class="fas fa-exclamation-triangle"></i> <b>Requiere receta</b></span>
+                                                prodConReceta += 1;%>
+                                            <span class="text-danger mt-1"><i
+                                                    class="fas fa-exclamation-triangle"></i> <b>Requiere receta</b></span>
                                             <%}%>
                                         </div>
                                     </div>
@@ -155,7 +157,7 @@
                                     }
                                 %>
                             </div>
-                            <%}%>
+                            <% } %>
                         </div>
 
                         <!--Costo total-->
@@ -172,7 +174,7 @@
                                         %>
                                         <thead>
                                             <tr>
-                                                <th class="cart-th" colspan="4" >
+                                                <th class="cart-th" colspan="4">
                                                     <%=farmacia.getName()%>
                                                 </th>
                                             </tr>
@@ -184,7 +186,7 @@
                                         </thead>
                                         <tbody>
                                             <%
-                                                    for (DtoProductoCarrito producto : listaCarrito.get(farmacia)) {
+                                                for (DtoProductoCarrito producto : listaCarrito.get(farmacia)) {
                                             %>
                                             <tr id="item-resumen-<%=cont%>">
                                                 <td class="cart-quantity-resumen text-center">
@@ -208,61 +210,75 @@
                                     <span class="cart-total" style="font-size: 20px"></span>
                                 </div>
                                 <!--Boton pedir-->
-                                <%if(prodConReceta>0){%>
-                                    <button class="btn w-100 h-45px btn-rectangle-out" type="button" data-bs-toggle="modal" data-bs-target="#subirRecetas">
-                                        Realizar pedido
-                                    </button>
-                                <%}else{%>
-                                    <button class="btn w-100 h-45px btn-rectangle-out" type="submit" <%=listaCarrito.size() == 0 ? "disabled" : ""%>>
-                                        Realizar pedido
-                                    </button>
+                                <% if (prodConReceta > 0) { %>
+                                <button class="btn w-100 h-45px btn-rectangle-out" type="button" data-bs-toggle="modal"
+                                        data-bs-target="#subirRecetas">
+                                    Realizar pedido
+                                </button>
+                                <%} else {%>
+                                <button class="btn w-100 h-45px btn-rectangle-out"
+                                        type="submit" <%=listaCarrito.size() == 0 ? "disabled" : ""%>>
+                                    Realizar pedido
+                                </button>
                                 <%}%>
                             </div>
                         </div>
                     </div>
 
                     <!-- Modal para las Recetas -->
-                    <div class="modal fade" id="subirRecetas" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal fade" id="subirRecetas" data-bs-backdrop="static" data-bs-keyboard="false"
+                         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                            <div class="modal-content">
-                                <div class="modal-header cart-header" style="border: 0; border-radius: 0;">
+                            <div class="modal-content border-0">
+                                <div class="modal-header bg-tele border-0 text-white">
                                     <h5 class="modal-title" id="staticBackdropLabel">Subir recetas</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-
-                                    <span>Algunos de sus productos requieren una receta, súbalas para continuar con el pedido</span>
-
+                                    <span>Hay productos que requieren receta, súbalas para continuar con el pedido:</span>
                                     <%
-                                    for (int i = 0; i < listaCarrito.size(); i++) {
-                                        DtoPharmacy farmacia = listaFarmacias.get(i);
-                                        ArrayList<DtoProductoCarrito> listaProductos = listaCarrito.get(farmacia);
+                                        boolean hayProductosConReceta = false;
+                                        for (int i = 0; i < listaCarrito.size(); i++) {
+                                            DtoPharmacy farmacia = listaFarmacias.get(i);
+                                            ArrayList<DtoProductoCarrito> listaProductos = listaCarrito.get(farmacia);
+                                            for (BProduct product : listaProductos) {
+                                                if (product.getRequierePrescripcion()) {
+                                                    hayProductosConReceta = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (hayProductosConReceta) {
                                     %>
-                                    <h4><b><%=farmacia.getName()%></b></h4>
+                                    <h4 class="mt-3"><b><%= farmacia.getName() %>
+                                    </b></h4>
                                     <%
                                         for (int j = 0; j < listaProductos.size(); j++) {
                                             DtoProductoCarrito producto = listaProductos.get(j);
-                                            if (producto.getRequierePrescripcion()){ %>
-
-                                                <div class="mt-3">
+                                            if (producto.getRequierePrescripcion()) {
+                                    %>
+                                    <div class="mt-1">
                                                     <span class="cart-precio"> <%=producto.getName()%>
                                                         <input class="form-control readex-15 form-control-sm custom-file-control"
                                                                type="file" value="<%=producto.getReceta()%>"
                                                                id="conReceta" accept="image/png, image/gif, image/jpeg"
                                                                name="receta<%=i%>-<%=j%>" required>
                                                     </span>
-                                                </div>
-
-                                            <%} else {%>
-                                                <input class="form-control form-control-sm custom-file-control" type="file"
-                                                       id="sinReceta" accept="image/png, image/gif, image/jpeg"
-                                                       name="receta<%=i%>-<%=j%>" hidden>
-                                            <%}
+                                    </div>
+                                    <% } else { %>
+                                    <input class="form-control form-control-sm custom-file-control" type="file"
+                                           id="sinReceta" accept="image/png, image/gif, image/jpeg"
+                                           name="receta<%=i%>-<%=j%>" hidden>
+                                    <%
+                                                    }
+                                                }
+                                            }
                                         }
-                                    }%>
+                                    %>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar
+                                    </button>
                                     <button type="submit" class="btn btn-tele">Realizar Pedido</button>
                                 </div>
                             </div>
@@ -273,14 +289,15 @@
 
                 <!--Carrito Vacio-->
                 <%
-                }else{
+                } else {
                 %>
                 <div class="row">
                     <div class="col-md-9 col-xl-8">
                         <div class="col w-100 h-100 text-center">
                             <div class="w-75 div-nr">
                                 <div class="div-nr">
-                                    <img style="max-width: 100%; width: auto; height:100%; max-height: 500px;" src="<%=request.getContextPath()%>/res/img/vacio.png" alt="Vacio">
+                                    <img style="max-width: 100%; width: auto; height:100%; max-height: 500px;"
+                                         src="<%=request.getContextPath()%>/res/img/vacio.png" alt="Vacio">
                                 </div>
                                 <div class="div-nr">
                                     Tu carrito está vacío
@@ -309,7 +326,7 @@
                     </div>
                 </div>
                 <%
-                }
+                    }
                 %>
             </div>
         </main>

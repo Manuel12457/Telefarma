@@ -23,21 +23,23 @@
         <div class="col-md-7 d-none d-md-block ps-0"> <!--desaparece en menores a medium-->
             <form method="post" action="<%=request.getContextPath()%>/<%=servletBusqueda%>">
                 <div class="input-group">
-
                     <div style="width:40%">
                         <input type="search" name="busqueda"
-                               class="form-control readex-15 rounded-start"
-                               style="border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: none !important;"
+                               class="form-control readex-15 rounded-start border-end-0"
                                placeholder="<%=busquedaPlaceholder%>"
                                value="<%=busqueda%>"/>
                     </div>
-                    <%if (tipoUsuario.equals("cliente")&&!servletBusqueda.contains("verFarmaciasDistrito")) {%>
-                    <select class="btn-tele px-2 rounded-0 sct-tele readex-15" name="tipoBusqueda" style="border-right: none;border-left: none !important;border-left: none !important;">
-                        <option value="product" <%=tipoBusqueda.equals("product") ? "selected" : ""%>>Por Nombre</option>
-                        <option value="symptom" <%=tipoBusqueda.equals("symptom") ? "selected" : ""%>>Por Síntomas</option>
+                    <%if (tipoUsuario.equals("cliente") && !servletBusqueda.contains("verFarmaciasDistrito")) {%>
+                    <select class="btn-tele px-2 rounded-0 sct-tele readex-15 border-end-0 border-start-0"
+                            name="tipoBusqueda">
+                        <option value="product" <%=tipoBusqueda.equals("product") ? "selected" : ""%>>Por Nombre
+                        </option>
+                        <option value="symptom" <%=tipoBusqueda.equals("symptom") ? "selected" : ""%>>Por Síntomas
+                        </option>
                     </select>
                     <%}%>
-                    <button role="button" class="btn btn-tele rounded-end sct-tele input-group-text" style="border: 1px solid #ced4da !important; border-left: none !important">
+                    <button role="button" class="btn btn-tele rounded-end sct-tele input-group-text"
+                            style="border: 1px solid #ced4da !important; border-left: none !important">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>

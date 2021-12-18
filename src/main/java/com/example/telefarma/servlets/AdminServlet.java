@@ -10,6 +10,8 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 @WebServlet(name = "AdminServlet", value = "/AdminServlet")
 public class AdminServlet extends HttpServlet {
@@ -128,7 +130,20 @@ public class AdminServlet extends HttpServlet {
                     if (pharmacyDao.registrarFarmacia(f.getRUC(), f.getName(), f.getMail(), f.getAddress(), f.getDistrict().getIdDistrict())) {
                         request.getSession().setAttribute("actionResult", "Farmacia registrada exitosamente.");
                         request.getSession().setAttribute("actionResultBoolean", true);
-                        MailServlet.sendMail(f.getMail(), "Registro de Farmacia", MailServlet.pharmacyRegMssg(f, dominio + request.getContextPath()));
+
+                        String token = UUID.randomUUID().toString().replace("-", "Z");
+                        while (sessionDao.tokenRepetido(token)) {
+                            token = UUID.randomUUID().toString().replace("-", "Z");
+                        }
+                        HashMap<Integer, String> hm = sessionDao.validarCorreo(f.getMail());
+                        int idFarma = 0;
+                        for (int id : hm.keySet()) {
+                            idFarma = id;
+                        }
+                        String rol = hm.get(idFarma);
+                        sessionDao.loadToken(token, rol, idFarma);
+                        MailServlet.sendMail(f.getMail(), "Registro de Farmacia", MailServlet.pharmacyRegMssg(f, dominio + request.getContextPath(), rol, token));
+
                     } else {
                         request.getSession().setAttribute("actionResult", "Hubo un problema con el registro de la farmacia");
                         request.getSession().setAttribute("actionResultBoolean", false);

@@ -907,3 +907,8 @@ strong.detalles-str{
     margin-left:auto;
     margin-right:auto;
 }
+
+/*Select*/
+.sct-tele:focus {
+    outline: none;
+}

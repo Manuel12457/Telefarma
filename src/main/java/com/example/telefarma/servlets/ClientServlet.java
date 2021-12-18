@@ -12,8 +12,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -114,7 +112,7 @@ public class ClientServlet extends HttpServlet {
                 System.out.println("Filtro en doGet: " + filtro);
                 ArrayList<BOrders> listaOrdenes = new ArrayList<>();
 
-                if (ordersDao.listarOrdenes(0,-1,filtro,idClient).size() != 0) {
+                if (ordersDao.listarOrdenes(0, -1, filtro, idClient).size() != 0) {
                     while (listaOrdenes.size() == 0) {
                         listaOrdenes = ordersDao.listarOrdenes(paginaHistorial, limite, filtro, idClient);
                         paginaHistorial = paginaHistorial + 1;
@@ -128,11 +126,11 @@ public class ClientServlet extends HttpServlet {
                 request.setAttribute("listaOrdenes", listaOrdenes);
                 request.getSession().setAttribute("busqueda", filtro);
 
-                pagTotales=(int) Math.ceil((double) ordersDao.listarOrdenes(0, -1, filtro, idClient).size() / limite);
+                pagTotales = (int) Math.ceil((double) ordersDao.listarOrdenes(0, -1, filtro, idClient).size() / limite);
                 request.setAttribute("pagTotales", pagTotales);
 
-                if (pagina>=pagTotales && pagTotales>0){
-                    response.sendRedirect(request.getContextPath()+"/ClientServlet?action=historial&busqueda="+filtro+"&pagina="+(pagTotales-1));
+                if (pagina >= pagTotales && pagTotales > 0) {
+                    response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial&busqueda=" + filtro + "&pagina=" + (pagTotales - 1));
                     return;
                 }
 
@@ -245,6 +243,10 @@ public class ClientServlet extends HttpServlet {
                 view = request.getRequestDispatcher("/cliente/editarCliente.jsp");
                 view.forward(request, response);
                 break;
+
+            default:
+                response.sendRedirect(request.getContextPath() + "/");
+                break;
         }
     }
 
@@ -327,7 +329,6 @@ public class ClientServlet extends HttpServlet {
                 break;
 
             case "buscarHistorial":
-                System.out.println("Filtro en doPost: " + filtro);
                 request.getSession().setAttribute("filtro", filtro);
                 response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial");
                 break;

@@ -49,7 +49,7 @@ public class MailServlet {
         return message;
     }
 
-    public static String pharmacyRegMssg(BPharmacy pharmacy, String dominio) {
+    public static String pharmacyRegMssg(BPharmacy pharmacy, String dominio, String rol, String token) {
         DistrictDao districtDao = new DistrictDao();
         return "La farmacia <i><strong>" + pharmacy.getName() + "</strong></i> se ha registrado correctamente:" +
                 "<br><br><i>&nbsp; &nbsp; Email</i>:&nbsp; &nbsp; &nbsp; &nbsp; " +
@@ -60,8 +60,8 @@ public class MailServlet {
                 districtDao.obtenerDistritoPorId(pharmacy.getDistrict().getIdDistrict()).getName() +
                 "<br><i>&nbsp; &nbsp; RUC</i>:&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;" +
                 pharmacy.getRUC() +
-                "<br><br><a href='" + dominio + "/'>" +
-                "Ingresa</a> para poder añadir productos al catálogo.";
+                "<br><br><i><a href='" + dominio + "/?action=cambiarContrasenha&rol=" + rol + "&token=" + token +
+                "'>Ingresa acá para configurar tu contraseña.</a></i>";
     }
 
     public static String pharmacyEditMssg(BPharmacy pharmacy) {

@@ -107,6 +107,10 @@ public class PharmacyServlet extends HttpServlet {
                 view = request.getRequestDispatcher("/farmacia/editarProducto.jsp");
                 view.forward(request, response);
                 break;
+
+            default:
+                response.sendRedirect(request.getContextPath() + "/");
+                break;
         }
     }
 
