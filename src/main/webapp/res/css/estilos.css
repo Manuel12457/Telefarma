@@ -799,7 +799,7 @@ strong.detalles-str{
 }
 
 .responsive-form {
-    width: 50%;
+    width: 60%;
 }
 
 @media screen and (max-width: 992px) {
@@ -918,7 +918,7 @@ strong.detalles-str{
     position: relative !important;
     border: 0 !important;
     display: inline-block !important;
-    width: 11rem !important;
+    width: 10rem !important;
     height: auto !important;
     outline: none !important;
     vertical-align: middle !important;
@@ -931,12 +931,12 @@ strong.detalles-str{
     position: absolute;
     inset: 0;
     margin-left: 1.85rem;
-    color: #333333;
+    color: #5b5b5b;
     line-height: 1.6;
     text-align: center;
     transition: all 0.4s ease-in-out;
     width: fit-content;
-    padding: 0.9rem 0 0.9rem 2.625rem;
+    padding: 0.9rem 0 0.9rem 2.0rem;
     margin-top: -0.125rem;
 }
 

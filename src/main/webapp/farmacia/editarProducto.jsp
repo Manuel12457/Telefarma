@@ -12,7 +12,7 @@
 
     <body>
         <%--Cabecera de farmacia--%>
-        <jsp:include page="../barraSuperior.jsp">
+        <jsp:include page="../includes/barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="farmacia"/>
             <jsp:param name="nombre" value="<%=sesion.getName()%>"/>
             <jsp:param name="servletBusqueda" value="PharmacyServlet?action=buscarProducto&"/>

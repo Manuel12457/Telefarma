@@ -14,7 +14,7 @@
 
     <body>
         <%--Cabecera de farmacia--%>
-        <jsp:include page="../barraSuperior.jsp">
+        <jsp:include page="../includes/barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="farmacia"/>
             <jsp:param name="nombre" value="<%=sesion.getName()%>"/>
             <jsp:param name="servletBusqueda" value="PharmacyServlet?action=buscarPedido&"/>
@@ -176,14 +176,17 @@
             }else{
             %>
             <div class="container">
-                <jsp:include page="/includes/noResultados.jsp"/>
+                <jsp:include page="/includes/noResultados.jsp">
+                    <jsp:param name="noRes1" value="Acá se mostrarán los pedidos de la farmacia"/>
+                    <jsp:param name="noRes2" value="Ten pacienca, ya llegarán :)"/>
+                </jsp:include>
             </div>
             <%
                 }
             %>
             <!--Paginación-->
             <%if (!(pagTotales == 1)) {%>
-            <jsp:include page="../paginacion.jsp">
+            <jsp:include page="../includes/paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
                 <jsp:param name="servlet" value="/PharmacyServlet?action=buscarPedido&"/>

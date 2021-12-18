@@ -408,11 +408,9 @@ public class ClientServlet extends HttpServlet {
                         int idProducto = Integer.parseInt(request.getParameter("idProducto" + i + "-" + j));
                         int cantidad = Integer.parseInt(request.getParameter("cantidad" + i + "-" + j));
 
-                        //
                         BProduct product = productDao.obtenerProductoPorId(idProducto);
                         product.setStock(product.getStock() - cantidad);
                         productDao.editarProducto(product);
-                        //
 
                         if (cantidad == 0) {
                             response.sendRedirect(request.getContextPath() + "/ClientServlet?orden=ne");

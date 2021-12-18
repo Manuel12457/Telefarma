@@ -16,7 +16,7 @@
 
     <body>
         <%String nombreCliente = sesion.getName() + " " + sesion.getLastName();%>
-        <jsp:include page="../barraSuperior.jsp">
+        <jsp:include page="../includes/barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
             <jsp:param name="servletBusqueda" value="ClientServlet?action=buscarProduct"/>

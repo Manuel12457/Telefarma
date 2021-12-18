@@ -83,6 +83,10 @@ public class AdminServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/AdminServlet?edicion=ne");
                     break;
                 }
+
+            default:
+                response.sendRedirect(request.getContextPath() + "/");
+                break;
         }
     }
 

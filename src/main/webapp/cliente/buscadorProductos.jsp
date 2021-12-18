@@ -18,7 +18,7 @@
     <body>
         <!--Barra de Navegación Superior-->
         <%String a = sesion.getName() + " " + sesion.getLastName();%>
-        <jsp:include page="../barraSuperior.jsp">
+        <jsp:include page="../includes/barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=a%>"/>
             <jsp:param name="servletBusqueda" value="ClientServlet?action=buscarProduct"/>
@@ -84,7 +84,9 @@
                 <%
                 } else {
                 %>
-                <jsp:include page="/includes/noResultados.jsp"/>
+                <jsp:include page="/includes/noResultados.jsp">
+                    <jsp:param name="noRes2" value="Prueba buscando otro producto"/>
+                </jsp:include>
                 <%
                     }
                 %>
@@ -92,7 +94,7 @@
             <!--Paginación-->
             <%if (!(pagTotales == 1)) {
                 String servlet = "/ClientServlet?action=buscarProducto&busqueda=" + busqueda + "&tipoBusqueda=" + tipoBusqueda + "&"; %>
-            <jsp:include page="../paginacion.jsp">
+            <jsp:include page="../includes/paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
                 <jsp:param name="servlet" value="<%=servlet%>"/>

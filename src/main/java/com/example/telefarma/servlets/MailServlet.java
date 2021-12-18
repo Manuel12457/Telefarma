@@ -92,8 +92,8 @@ public class MailServlet {
     public static String clientRegMssg(BClient client, String dominio) {
         DistrictDao districtDao = new DistrictDao();
         return "Hola, <strong>" + client.getName() + "</strong>" +
-                "<br><br>!Te has registrado exitosamente en Telefarma¡" +
-                "<br>Desde nuestra plataforma podrás pedir todos los medicamentos que necesites." +
+                "<br><br>¡Te has registrado exitosamente en Telefarma!" +
+                "<br><br>Desde nuestra plataforma podrás pedir todos los medicamentos que necesites." +
                 "<br><br><a href='" + dominio + "/'>" +
                 "Ingresa</a> y mira las farmacias en "
                 + districtDao.obtenerDistritoPorId(client.getDistrict().getIdDistrict()).getName() + ".";

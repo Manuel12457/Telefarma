@@ -12,7 +12,7 @@
     <body class="user-menu">
 
         <%String nombreCliente = sesion.getName();%>
-        <jsp:include page="../barraLateral.jsp">
+        <jsp:include page="../includes/barraLateral.jsp">
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
         </jsp:include>
 

@@ -21,7 +21,7 @@
     <body>
         <!--Barra de Navegación Superior-->
         <%String nombreCliente = sesion.getName() + " " + sesion.getLastName();%>
-        <jsp:include page="../barraSuperior.jsp">
+        <jsp:include page="../includes/barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
             <jsp:param name="servletBusqueda" value="ClientServlet?action=buscarProduct"/>
@@ -86,15 +86,17 @@
                     }
                 %>
                 <!--Filtrado por Distrito-->
-                <div class="text-end mb-2">
-                    <form class="row px-5 align-items-center" method="post" action="<%=request.getContextPath()%>/ClientServlet?action=filtroDistrito">
+                <div class="text-end mb-2 mb-lg-0">
+                    <form class="row px-5 align-items-center" method="post"
+                          action="<%=request.getContextPath()%>/ClientServlet?action=filtroDistrito">
                         <div class="col" style="width: fit-content;">
                             <label class="gray-heebo gray5" for="farmaDistrict">Filtrar por distrito</label>
                         </div>
                         <div style="width: fit-content;padding: revert;">
-                            <select class="form-select readex-15 gray5" name="idDistrict" id="farmaDistrict" style="max-width: 300px;"
-                                    onchange='this.form.submit();'>
-                                <option value="" <%=idDistritoFil == 0 ? "selected" : ""%>><%="Sin filtro"%></option>
+                            <select class="form-select readex-15 gray5" name="idDistrict" id="farmaDistrict"
+                                    style="max-width: 300px;" onchange="this.form.submit();">
+                                <option value="" <%=idDistritoFil == 0 ? "selected" : ""%>><%="Sin filtro"%>
+                                </option>
                                 <% for (BDistrict distrito : distritosFiltrado) { %>
                                 <option value="<%=distrito.getIdDistrict()%>" <%=idDistritoFil == distrito.getIdDistrict() ? "selected" : ""%>><%=distrito.getName()%>
                                 </option>
@@ -158,19 +160,23 @@
                             %>
                         </div>
                         <!--Boton ver más-->
-                        <%if (hashMostrarBoton.containsKey(listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict())) {
-                            if (hashMostrarBoton.get(listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict()) == 1) {
+                        <%
+                            if (hashMostrarBoton.containsKey(listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict())) {
+                                if (hashMostrarBoton.get(listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict()) == 1) {
                         %>
                         <div class="d-flex justify-content-end">
-                            <a class="btn-ver-mas" href="<%=request.getContextPath()%>/ClientServlet?action=verFarmaciasDistrito&district=<%=listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict()%>">
+                            <a class="btn-ver-mas"
+                               href="<%=request.getContextPath()%>/ClientServlet?action=verFarmaciasDistrito&district=<%=listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict()%>">
                                 <span class="circle-ver-mas">
                                     <span class="icon-ver-mas arrow-ver-mas"></span>
                                 </span>
                                 <div class="text-ver-mas">Ver más</div>
                             </a>
                         </div>
-                        <%}
-                        }%>
+                        <%
+                                }
+                            }
+                        %>
                     </div>
                 </div>
                 <%
@@ -180,13 +186,13 @@
 
             </div>
             <!--Paginación-->
-            <%if (!(pagTotales == 1)) {%>
-            <jsp:include page="../paginacion.jsp">
+            <% if (!(pagTotales == 1)) { %>
+            <jsp:include page="../includes/paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
                 <jsp:param name="servlet" value="/ClientServlet?action=mostrarFarmacias&"/>
             </jsp:include>
-            <%}%>
+            <% } %>
         </main>
 
         <!--JS-->

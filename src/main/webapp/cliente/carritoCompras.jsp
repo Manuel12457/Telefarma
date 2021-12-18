@@ -23,7 +23,7 @@
     <body>
         <!--Cabecera Principal cliente-->
         <%String nombreCliente = sesion.getName() + " " + sesion.getLastName();%>
-        <jsp:include page="../barraSuperior.jsp">
+        <jsp:include page="../includes/barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
             <jsp:param name="servletBusqueda" value="ClientServlet?action=buscarProduct"/>
@@ -50,7 +50,7 @@
                             <!--Items de la farmacia 1-->
                             <%
                                 int cont = 0;
-                                ArrayList<DtoPharmacy> listaFarmacias = new ArrayList<DtoPharmacy>(listaCarrito.keySet());
+                                ArrayList<DtoPharmacy> listaFarmacias = new ArrayList<>(listaCarrito.keySet());
                                 for (int i = 0; i < listaFarmacias.size(); i++) {
                                     DtoPharmacy farmacia = listaFarmacias.get(i);
                             %>
@@ -238,10 +238,10 @@
                                 <div class="modal-body">
                                     <span>Hay productos que requieren receta, súbalas para continuar con el pedido:</span>
                                     <%
-                                        boolean hayProductosConReceta = false;
                                         for (int i = 0; i < listaCarrito.size(); i++) {
                                             DtoPharmacy farmacia = listaFarmacias.get(i);
                                             ArrayList<DtoProductoCarrito> listaProductos = listaCarrito.get(farmacia);
+                                            boolean hayProductosConReceta = false;
                                             for (BProduct product : listaProductos) {
                                                 if (product.getRequierePrescripcion()) {
                                                     hayProductosConReceta = true;
@@ -250,9 +250,9 @@
                                             }
                                             if (hayProductosConReceta) {
                                     %>
-                                    <h4 class="mt-3"><b><%= farmacia.getName() %>
-                                    </b></h4>
+                                    <h4 class="mt-3"><b><%= farmacia.getName() %> </b></h4>
                                     <%
+                                        }
                                         for (int j = 0; j < listaProductos.size(); j++) {
                                             DtoProductoCarrito producto = listaProductos.get(j);
                                             if (producto.getRequierePrescripcion()) {
@@ -273,7 +273,6 @@
                                                     }
                                                 }
                                             }
-                                        }
                                     %>
                                 </div>
                                 <div class="modal-footer">

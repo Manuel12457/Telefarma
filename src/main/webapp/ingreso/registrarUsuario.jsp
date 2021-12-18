@@ -1,12 +1,8 @@
 <%@ page import="com.example.telefarma.beans.BDistrict" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaDistritos" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BDistrict>"/>
 <jsp:useBean id="cliente" scope="request" type="com.example.telefarma.beans.BClient"/>
-<jsp:useBean id="errContrasenha" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="errDNI" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="errMail" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="errDNINum" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="errDNILong" scope="request" type="java.lang.Integer"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -31,9 +27,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <input class="form-control mb-3" type="text" name="nombre"
-                                                   placeholder="Nombre"
+                                                   placeholder="Nombre" maxlength="45"
                                                    value="<%=cliente.getName() == null ? "" : cliente.getName()%>"
-                                                   maxlength="45"
                                                    required>
                                         </div>
                                         <div class="col-md-6">
@@ -46,19 +41,15 @@
                                     <div class="row">
                                         <div class="col-md-5 mb-3">
                                             <input class="form-control" aria-describedby="validationServer03Feedback"
-                                                   type="text" name="dni" placeholder="DNI"
+                                                   type="text" name="dni" placeholder="DNI" maxlength="8"
                                                    value="<%=cliente.getDni() == null ? "" : cliente.getDni()%>"
-                                                   maxlength="8" required>
+                                                   required>
                                         </div>
                                         <div class="col-md-7 mb-3">
                                             <select class="form-select" name="distrito" id="farmaDistrict" required>
-                                                <% if (cliente.getDistrict() != null && cliente.getDistrict().getIdDistrict() != 0) { %>
-                                                <option value="0" selected>Seleccione su distrito</option>
-                                                <% } else { %>
-                                                <option value="0">Seleccione su distrito</option>
-                                                <% }
-                                                    for (BDistrict distrito : listaDistritos) {%>
-                                                <option value="<%=distrito.getIdDistrict()%>" <%=cliente.getDistrict() != null ? (cliente.getDistrict().getIdDistrict() == distrito.getIdDistrict() ? "selected" : "") : ""%> ><%=distrito.getName()%>
+                                                <option value="0" <%=(cliente.getDistrict() != null && cliente.getDistrict().getIdDistrict() == 0) ? "selected" : ""%>>Seleccione su distrito</option>
+                                                <% for (BDistrict distrito : listaDistritos) { %>
+                                                <option value="<%=distrito.getIdDistrict()%>" <%=(cliente.getDistrict() != null && cliente.getDistrict().getIdDistrict() == distrito.getIdDistrict()) ? "selected" : ""%>><%=distrito.getName()%>
                                                 </option>
                                                 <% } %>
                                             </select>
@@ -81,61 +72,26 @@
                                                maxlength="60" required>
                                     </div>
                                     <div class="mb-3">
-                                        <button class="btn btn-tele d-block w-100" type="submit"
-                                                style="background: var(--bs-orange); border-color: var(--bs-orange)">
+                                        <button class="btn btn-tele d-block w-100" type="submit">
                                             <strong>Registrarse</strong>
                                         </button>
                                     </div>
-
                                     <br>
-                                    <%if (errContrasenha == 1) {%>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        Las contraseñas ingresadas no coinciden
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
-                                    </div>
+                                    <%--Alertas--%>
                                     <%
-                                        }
-                                        if (errMail == 1) {
+                                        if (request.getSession().getAttribute("errorList") != null) {
+                                            for (String msg : (ArrayList<String>) request.getSession().getAttribute("errorList")) {
                                     %>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        El correo ingresado ya ha sido registrado
+                                        <%=msg%>
                                         <button type="button" class="btn-close" data-bs-dismiss="alert"
                                                 aria-label="Close"></button>
                                     </div>
                                     <%
-                                        }
-                                        if (errDNI == 1) {
-                                    %>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        El DNI ingresado ya ha sido registrado
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <%
-                                    } else {
-                                        if (errDNINum == 1) {
-                                    %>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        El DNI debe contener únicamente números
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <%
-                                    } else {
-                                        if (errDNILong == 1) {
-                                    %>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        El DNI debe contener 8 números
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <%
-                                                }
                                             }
+                                            request.getSession().removeAttribute("errorList");
                                         }
                                     %>
-
                                 </form>
                                 <a class="text-center a-login" href="<%=request.getContextPath()%>/">¿Ya tiene una
                                     cuenta? Inicie sesión</a>

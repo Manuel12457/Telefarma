@@ -18,8 +18,9 @@ public class SessionDao extends BaseDao {
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
             pstmt.setString(1, dni);
+
             try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) return true;
+                return rs.next();
             }
 
         } catch (SQLException e) {
@@ -47,7 +48,7 @@ public class SessionDao extends BaseDao {
             pstmt.setString(3,correo);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) return true;
+                return rs.next();
             }
 
         } catch (SQLException e) {
@@ -57,7 +58,7 @@ public class SessionDao extends BaseDao {
         return false;
     }
 
-    public String registrarUsuario(BClient client) {
+    public boolean registrarUsuario(BClient client) {
         String sql = "insert into client (name,lastName,DNI,password,mail,idDistrict)\n" +
                 "values (?,?,?,?,?,?);";
 
@@ -74,10 +75,10 @@ public class SessionDao extends BaseDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return "ne";
+            return false;
         }
 
-        return "e";
+        return true;
     }
 
     public void cambiarPassword(String token, String rol, String password) {

@@ -24,7 +24,7 @@
     <body>
         <!--Barra de Navegación Superior-->
         <% String nombreCliente = sesion.getName() + " " + sesion.getLastName(); %>
-        <jsp:include page="../barraSuperior.jsp">
+        <jsp:include page="../includes/barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
             <jsp:param name="servletBusqueda" value="<%=servletBusqueda%>"/>
@@ -40,14 +40,17 @@
             <div class="container">
                 <!--Filtrado por Distrito-->
                 <div class="text-end mb-2">
-                    <form class="row px-5 align-items-center" method="post" action="<%=request.getContextPath()%>/ClientServlet?action=filtroDistrito">
+                    <form class="row px-5 align-items-center" method="post"
+                          action="<%=request.getContextPath()%>/ClientServlet?action=filtroDistrito">
                         <div class="col" style="width: fit-content;">
                             <label class="gray-heebo gray5" for="farmaDistrict">Filtrar por distrito</label>
                         </div>
                         <div style="width: fit-content;padding: revert;">
-                            <select class="form-select readex-15 gray5" name="idDistrict" id="farmaDistrict" style="max-width: 300px;"
+                            <select class="form-select readex-15 gray5" name="idDistrict" id="farmaDistrict"
+                                    style="max-width: 300px;"
                                     onchange='this.form.submit();'>
-                                <option value="" <%=district.getIdDistrict() == 0 ? "selected" : ""%>><%="Sin filtro"%></option>
+                                <option value="" <%=district.getIdDistrict() == 0 ? "selected" : ""%>><%="Sin filtro"%>
+                                </option>
                                 <% for (BDistrict distrito : distritosFiltrado) { %>
                                 <option value="<%=distrito.getIdDistrict()%>" <%=district.getIdDistrict() == distrito.getIdDistrict() ? "selected" : ""%>><%=distrito.getName()%>
                                 </option>
@@ -62,7 +65,7 @@
                         <h4 class="dist-name" style="font-size: 28px;"><%= district.getName() %>
                         </h4>
                         <%
-                            if (listaFarmaciasDistrito.size()!=0){
+                            if (listaFarmaciasDistrito.size() != 0) {
                         %>
                         <!--Farmacias-->
                         <div class="row row-cols-1 row-cols-lg-3 g-4 py-3">
@@ -94,19 +97,24 @@
                             %>
                         </div>
                         <%
-                        }else{
+                        } else {
                         %>
-                        <jsp:include page="/includes/noResultados.jsp"/>
+                        <jsp:include page="/includes/noResultados.jsp">
+                            <jsp:param name="noRes1" value="Aún no hay farmacias registradas en este distrito :("/>
+                            <jsp:param name="noRes2" value="Prueba buscando otro distrito"/>
+                        </jsp:include>
                         <%
-                        }
+                            }
                         %>
                     </div>
                 </div>
             </div>
             <!--Paginación !(listaFarmaciasDistrito.size() < 9 && pagActual == 0) -->
-            <%if (!(pagTotales == 1)) {
-                String servlet = "/ClientServlet?action=verFarmaciasDistrito&busqueda=" + busqueda + "&district=" + district.getIdDistrict() + "&";%>
-            <jsp:include page="../paginacion.jsp">
+            <%
+                if (!(pagTotales == 1)) {
+                    String servlet = "/ClientServlet?action=verFarmaciasDistrito&busqueda=" + busqueda + "&district=" + district.getIdDistrict() + "&";
+            %>
+            <jsp:include page="../includes/paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
                 <jsp:param name="servlet" value="<%=servlet%>"/>

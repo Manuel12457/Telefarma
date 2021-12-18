@@ -25,7 +25,7 @@
     <body>
         <!--Barra de Navegación Superior-->
         <%String nombreCliente = sesion.getName() + " " + sesion.getLastName();%>
-        <jsp:include page="../barraSuperior.jsp">
+        <jsp:include page="../includes/barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="cliente"/>
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
             <jsp:param name="servletBusqueda" value="<%=servletBusqueda%>"/>
@@ -49,7 +49,8 @@
                     </div>
                     <!--Distrito-->
                     <div class="row opensans">
-                        <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmaciasDistrito&district=<%=farmacia.getDistrict().getIdDistrict()%>" class="a-gray text-decoration-none">
+                        <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmaciasDistrito&district=<%=farmacia.getDistrict().getIdDistrict()%>"
+                           class="a-gray text-decoration-none">
                             <h5><%= farmacia.getDistrict().getName().toUpperCase() %>
                             </h5>
                         </a>
@@ -75,12 +76,12 @@
                 <!--Productos-->
                 <div class="container">
                     <%
-                        if (listaProductos.size()!=0){
+                        if (listaProductos.size() != 0) {
                     %>
                     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
                         <%--Loop de productos--%>
                         <% for (BProduct producto : listaProductos) {
-                                if (producto.getStock() > 0) {%>
+                            if (producto.getStock() > 0) {%>
                         <div class="col">
                             <div onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=detallesProducto&idProduct=<%=producto.getIdProduct()%>'"
                                  class="card card-producto">
@@ -92,34 +93,40 @@
                                 <div class="card-body d-flex flex-column">
                                     <div class="mt-auto">
                                         <div class="d-flex row-producto">
-                                                <%= producto.getName()%>
+                                            <%= producto.getName()%>
                                         </div>
                                         <div class="d-flex gray5 opensans justify-content-center">
-                                                <%= producto.getStock()%> disponibles
+                                            <%= producto.getStock()%> disponibles
                                         </div>
                                         <div class="d-flex row-precio">
-                                                S/<%= producto.getPrice()%>
+                                            S/<%= producto.getPrice()%>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <%}
-                                } %>
+                        <%
+                                }
+                            }
+                        %>
                     </div>
                     <%
-                    }else{
+                    } else {
                     %>
-                    <jsp:include page="/includes/noResultados.jsp"/>
+                    <jsp:include page="/includes/noResultados.jsp">
+                        <jsp:param name="noRes2" value="Prueba buscando otro producto"/>
+                    </jsp:include>
                     <%
-                    }
+                        }
                     %>
                 </div>
             </div>
             <!--Paginación-->
-            <%if (!(pagTotales == 1)) {
-                String servlet = "/ClientServlet?action=verFarmacia&busqueda=" + busqueda + "&tipoBusqueda=" + tipoBusqueda + "&idPharmacy=" + idPharmacy + "&"; %>
-            <jsp:include page="../paginacion.jsp">
+            <%
+                if (!(pagTotales == 1)) {
+                    String servlet = "/ClientServlet?action=verFarmacia&busqueda=" + busqueda + "&tipoBusqueda=" + tipoBusqueda + "&idPharmacy=" + idPharmacy + "&";
+            %>
+            <jsp:include page="../includes/paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
                 <jsp:param name="servlet" value="<%=servlet%>"/>

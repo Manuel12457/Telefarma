@@ -14,7 +14,7 @@
     <body>
         <%--Cabecera de admin--%>
         <%String admin = "Admin " + sesion.getIdAdmin();%>
-        <jsp:include page="../barraSuperior.jsp">
+        <jsp:include page="../includes/barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="admin"/>
             <jsp:param name="nombre" value="<%=admin%>"/>
             <jsp:param name="servletBusqueda" value="AdminServlet?action=buscar"/>

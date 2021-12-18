@@ -16,7 +16,7 @@
     <body>
         <%--Cabecera de admin--%>
         <%String admin = "Admin " + sesion.getIdAdmin();%>
-        <jsp:include page="../barraSuperior.jsp">
+        <jsp:include page="../includes/barraSuperior.jsp">
             <jsp:param name="tipoUsuario" value="admin"/>
             <jsp:param name="nombre" value="<%=admin%>"/>
             <jsp:param name="servletBusqueda" value="AdminServlet?action=buscar"/>
@@ -130,7 +130,9 @@
                 <%      }
                     } else {
                 %>
-                <jsp:include page="/includes/noResultados.jsp"/>
+                <jsp:include page="/includes/noResultados.jsp">
+                    <jsp:param name="noRes2" value="Prueba buscando otra farmacia"/>
+                </jsp:include>
                 <% } %>
             </div>
         </main>
@@ -239,7 +241,7 @@
             String servlet = "/AdminServlet?busqueda=" + busqueda + "&";
         %>
             <%if (!(pagTotales == 1)) {%>
-        <jsp:include page="../paginacion.jsp">
+        <jsp:include page="../includes/paginacion.jsp">
             <jsp:param name="pagActual" value="<%=pagActual%>"/>
             <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
             <jsp:param name="servlet" value="<%=servlet%>"/>

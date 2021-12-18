@@ -71,7 +71,7 @@ public class SessionServlet extends HttpServlet {
                 break;
             case "logout":
                 request.getSession().invalidate();
-                response.sendRedirect(request.getContextPath()+"/");
+                response.sendRedirect(request.getContextPath() + "/");
                 break;
         }
     }
@@ -87,48 +87,55 @@ public class SessionServlet extends HttpServlet {
 
         RequestDispatcher view;
         switch (accion) {
-
             case "registrar":
                 BClient client = new BClient();
                 client.setName(request.getParameter("nombre").trim());
                 client.setLastName(request.getParameter("apellido").trim());
                 client.setDistrict(new BDistrict(Integer.parseInt(request.getParameter("distrito"))));
                 client.setDni(request.getParameter("dni"));
-                client.setMail(request.getParameter("email"));
+                client.setMail(request.getParameter("email").trim());
                 String contrasenha = request.getParameter("password");
                 String contrasenhaC = request.getParameter("passwordC");
 
+                ArrayList<String> errorList = new ArrayList<>();
                 boolean contrasenhasCoinciden = contrasenha.equals(contrasenhaC);
                 boolean dniRepetido = s.dniExiste(client.getDni());
                 boolean mailRepetido = s.correoExiste(client.getMail());
-                boolean dniLongitud = client.getDni().length() == 8;
-
+                boolean distritoValido = client.getDistrict().getIdDistrict() != 0;
+                boolean dniLongitud = false;
                 boolean dniNumero = false;
                 try {
                     int rucNum = Integer.parseInt(client.getDni());
                     dniNumero = true;
+                    dniLongitud = client.getDni().length() == 8;
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
 
-                if (contrasenhasCoinciden && !dniRepetido && !mailRepetido && dniNumero && dniLongitud) {
+                if (contrasenhasCoinciden && distritoValido && !dniRepetido && !mailRepetido && dniNumero && dniLongitud) {
                     String md5pass = DigestUtils.md5Hex(contrasenha);
                     client.setPassword(md5pass);
-                    String err = s.registrarUsuario(client);
-                    MailServlet.sendMail(client.getMail(), "Bienvenido a Telefarma", MailServlet.clientRegMssg(client, dominio + request.getContextPath()));
-                    view = request.getRequestDispatcher("/ingreso/registroExitoso.jsp");
+                    if (s.registrarUsuario(client)) {
+                        MailServlet.sendMail(client.getMail(), "Bienvenido a Telefarma", MailServlet.clientRegMssg(client, dominio + request.getContextPath()));
+                        view = request.getRequestDispatcher("/ingreso/registroExitoso.jsp");
+                    } else {
+                        errorList.add("Hubo un error inesperado. Vuelve a intentarlo por favor.");
+                        view = request.getRequestDispatcher("/ingreso/registrarUsuario.jsp");
+                    }
                 } else {
-                    request.setAttribute("errContrasenha", contrasenhasCoinciden ? 0 : 1);
-                    request.setAttribute("errDNI", !dniRepetido ? 0 : 1);
-                    request.setAttribute("errMail", !mailRepetido ? 0 : 1);
-                    request.setAttribute("errDNINum", dniNumero ? 0 : 1);
-                    request.setAttribute("errDNILong", dniLongitud ? 0 : 1);
+                    if (!contrasenhasCoinciden) errorList.add("Las constraseñas deben coincidir.");
+                    if (!distritoValido) errorList.add("Debe seleccionar un distrito.");
+                    if (dniRepetido) errorList.add("El DNI ingresado ya está registrado.");
+                    if (mailRepetido) errorList.add("El correo ingresado ya está registrado.");
+                    if (!dniNumero) errorList.add("El DNI debe ser un número.");
+                    if (!dniLongitud) errorList.add("El DNI debe tener 8 dígitos.");
 
                     DistrictDao districtDao = new DistrictDao();
                     request.setAttribute("cliente", client);
                     request.setAttribute("listaDistritos", districtDao.listarDistritos());
                     view = request.getRequestDispatcher("/ingreso/registrarUsuario.jsp");
                 }
+                request.getSession().setAttribute("errorList", errorList);
                 view.forward(request, response);
                 break;
 
@@ -206,6 +213,9 @@ public class SessionServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/");
                 }
                 break;
+
+            default:
+                response.sendRedirect(request.getContextPath() + "/");
         }
     }
 }
