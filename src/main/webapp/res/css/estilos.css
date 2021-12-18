@@ -912,3 +912,83 @@ strong.detalles-str{
 .sct-tele:focus {
     outline: none;
 }
+
+/*Boton animado*/
+.btn-ver-mas{
+    position: relative !important;
+    border: 0 !important;
+    display: inline-block !important;
+    width: 11rem !important;
+    height: auto !important;
+    outline: none !important;
+    vertical-align: middle !important;
+    background: transparent !important;
+}
+
+.text-ver-mas{
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    position: absolute;
+    inset: 0;
+    margin-left: 1.85rem;
+    color: #333333;
+    line-height: 1.6;
+    text-align: center;
+    transition: all 0.4s ease-in-out;
+    width: fit-content;
+    padding: 0.9rem 0 0.9rem 2.625rem;
+    margin-top: -0.125rem;
+}
+
+.circle-ver-mas{
+    position: relative;
+    display: block;
+    margin: 0;
+    width: 3rem;
+    height: 3rem;
+    background: #f57f00;
+    border-radius: 1.625rem;
+    transition: all 0.4s ease-in-out;
+}
+
+.icon-ver-mas{
+    position: absolute;
+    top:0;
+    bottom: 0;
+    margin: auto;
+    background: white;
+}
+
+.arrow-ver-mas{
+    left: 1.125rem;
+    width: 1.125rem;
+    height: 0.125rem;
+    background: none;
+    transition: all 0.4s ease-in-out;
+}
+
+.arrow-ver-mas::before{
+    content: "";
+    position: absolute;
+    top: -0.3rem;
+    right: 0.625rem;
+    width: 0.625rem;
+    height: 0.625rem;
+    border-top: 0.125rem solid white;
+    border-right: 0.125rem solid white;
+    transform: rotate(45deg);
+}
+
+a:hover .circle-ver-mas{
+    width: 100%;
+}
+
+a:hover .arrow-ver-mas{
+    transform: translateX(1rem);
+}
+
+a:hover .text-ver-mas{
+    color: white;
+}
+
+

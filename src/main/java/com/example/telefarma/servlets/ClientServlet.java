@@ -444,8 +444,10 @@ public class ClientServlet extends HttpServlet {
                 break;
 
             case "editar":
+
                 BClient clientE = new BClient();
-                clientE.setIdClient(Integer.parseInt(request.getParameter("id")));
+                System.out.println(client.getIdClient());
+                clientE.setIdClient(client.getIdClient());
                 clientE.setName(request.getParameter("nombre").trim());
                 clientE.setLastName(request.getParameter("apellido").trim());
                 clientE.setDistrict(new BDistrict(Integer.parseInt(request.getParameter("distrito"))));

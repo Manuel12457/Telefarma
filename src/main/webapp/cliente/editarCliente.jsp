@@ -32,20 +32,19 @@
                                     <!--Datos a editar-->
                                     <form method="POST"
                                           action="<%=request.getContextPath()%>/ClientServlet?action=editar">
-                                        <input class="form-control mt-3 readex-15" type="text" name="id" hidden
-                                               value="<%=sesion.getIdClient()%>">
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <label class="form-label mt-3" for="nombre">Nombre</label>
                                                 <input class="form-control readex-15" type="text" name="nombre" id="nombre"
                                                        placeholder="Nombre" value="<%=sesion.getName()%>"
-                                                       required>
+                                                       maxlength="45" pattern="^[a-zA-Z\u00C0-\u00FF ]+$" required="required">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label mt-3" for="apellido">Apellido</label>
                                                 <input class="form-control readex-15" type="text" name="apellido"
                                                        placeholder="Apellido" id="apellido"
-                                                       value="<%=sesion.getLastName()%>" required>
+                                                       maxlength="45" pattern="^[a-zA-Z\u00C0-\u00FF ]+$"
+                                                       value="<%=sesion.getLastName()%>" required="required">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -53,7 +52,7 @@
                                                 <div class="form-outline">
                                                     <label class="form-label" for="farmaDistrict">Distrito</label>
                                                     <select class="form-select readex-15" name="distrito" id="farmaDistrict"
-                                                            required>
+                                                            required="required">
                                                         <% for (BDistrict distrito : listaDistritos) { %>
                                                         <option value="<%=distrito.getIdDistrict()%>" <%=sesion.getDistrict().getIdDistrict()==distrito.getIdDistrict() ? "selected" : ""%> ><%=distrito.getName()%>
                                                         </option>

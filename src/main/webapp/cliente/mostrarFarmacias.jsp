@@ -162,8 +162,12 @@
                             if (hashMostrarBoton.get(listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict()) == 1) {
                         %>
                         <div class="d-flex justify-content-end">
-                            <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmaciasDistrito&district=<%=listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict()%>"
-                               class="btn btn-tele" role="button">Ver más</a>
+                            <a class="btn-ver-mas" href="<%=request.getContextPath()%>/ClientServlet?action=verFarmaciasDistrito&district=<%=listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict()%>">
+                                <span class="circle-ver-mas">
+                                    <span class="icon-ver-mas arrow-ver-mas"></span>
+                                </span>
+                                <div class="text-ver-mas">Ver más</div>
+                            </a>
                         </div>
                         <%}
                         }%>
