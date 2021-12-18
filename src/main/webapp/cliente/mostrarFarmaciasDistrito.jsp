@@ -111,7 +111,6 @@
             </div>
             <!--Paginación !(listaFarmaciasDistrito.size() < 9 && pagActual == 0) -->
             <%
-                if (!(pagTotales == 1)) {
                     String servlet = "/ClientServlet?action=verFarmaciasDistrito&busqueda=" + busqueda + "&district=" + district.getIdDistrict() + "&";
             %>
             <jsp:include page="../includes/paginacion.jsp">
@@ -119,7 +118,6 @@
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
                 <jsp:param name="servlet" value="<%=servlet%>"/>
             </jsp:include>
-            <%}%>
         </main>
 
         <!--JS-->

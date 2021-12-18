@@ -172,7 +172,7 @@
             </div>
 
             <!--Paginación-->
-            <%if (!(pagTotales == 1)) {
+            <%
                 String servlet = "/PharmacyServlet?action=buscarProducto&busqueda=" + busqueda + "&";
             %>
             <jsp:include page="../includes/paginacion.jsp">
@@ -180,7 +180,6 @@
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
                 <jsp:param name="servlet" value="<%=servlet%>"/>
             </jsp:include>
-            <%}%>
 
             <!--Modal eliminar producto: Producto pendiente para pedido-->
             <div class="modal fade" id="productoEnOrden" tabindex="-1" aria-labelledby="err_eliminar"

@@ -39,7 +39,13 @@ public class ClientServlet extends HttpServlet {
         String estadoOrden = request.getParameter("orden") == null ? "" : request.getParameter("orden");
 
         int limiteFarmacias, pagTotales, limiteProductos;
-        int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
+        int pagina;
+        try {
+            pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
+        }catch (Exception e){
+            pagina=0;
+        }
+
         request.setAttribute("pagActual", pagina);
         String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
         request.setAttribute("busqueda", busqueda);
@@ -233,6 +239,25 @@ public class ClientServlet extends HttpServlet {
                 break;
 
             case "verCarrito":
+                for (DtoPharmacy f : farmacias){
+                    int k=0;
+                    for (DtoProductoCarrito pCarrito : listaCarrito.get(f)){
+                        BProduct product = productDao.obtenerProductoPorId(pCarrito.getIdProduct());
+                        if(product.getStock()>0){
+                            if(product.getStock()<pCarrito.getCantidad()){
+                                pCarrito.setCantidad(product.getStock());
+                                request.getSession().setAttribute("info", "Ha habido un cambio en la disponibilidad de los productos");
+                            }
+                        }else{
+                            listaCarrito.get(f).remove(k);
+                            if (listaCarrito.get(f).size() == 0) listaCarrito.remove(f);
+                            request.getSession().setAttribute("info", "Ha habido un cambio en la disponibilidad de los productos");
+                        }
+                        k++;
+                    }
+                }
+                request.getSession().setAttribute("listaCarrito", listaCarrito);
+
                 view = request.getRequestDispatcher("/cliente/carritoCompras.jsp");
                 view.forward(request, response);
                 break;
@@ -397,17 +422,19 @@ public class ClientServlet extends HttpServlet {
 
                 String exito = "e";
                 i = 0;
+                ArrayList<String> idOrders = new ArrayList<>();
                 while (request.getParameter("idFarmacia" + i) != null) {
                     String pickUpDate = request.getParameter("pickUpDate" + i);
 
                     String idOrder = ordersDao.generarOrden(idClient, pickUpDate);
-
+                    idOrders.add(idOrder);
                     j = 0;
                     while (request.getParameter("idProducto" + i + "-" + j) != null) {
                         int idProducto = Integer.parseInt(request.getParameter("idProducto" + i + "-" + j));
                         int cantidad = Integer.parseInt(request.getParameter("cantidad" + i + "-" + j));
                         if (cantidad == 0) {
-                            response.sendRedirect(request.getContextPath() + "/ClientServlet?orden=ne");
+                            exito="ne";
+                            break;
                         }
 
                         BProduct product = productDao.obtenerProductoPorId(idProducto);
@@ -418,6 +445,7 @@ public class ClientServlet extends HttpServlet {
 
                             if (!orderDetailsDao.agregarOrderDetails(idOrder, idProducto, cantidad)) {
                                 exito = "ne";
+                                break;
                             }
 
                             Part recetaPart = request.getPart("receta" + i + "-" + j);
@@ -426,6 +454,7 @@ public class ClientServlet extends HttpServlet {
                                 InputStream recetaStream = recetaPart.getInputStream();
                                 if (!orderDetailsDao.agregarReceta(idOrder, idProducto, recetaStream)) {
                                     exito = "ne";
+                                    break;
                                 }
                             } else {
                                 orderDetailsDao.agregarReceta(idOrder, idProducto, null);
@@ -436,10 +465,20 @@ public class ClientServlet extends HttpServlet {
                         }
                         j++;
                     }
+
+                    if(exito.equals("ne")){
+                        for(String id: idOrders){
+                            orderDetailsDao.borrarDetails(id);
+                            ordersDao.borrarOrden(id);
+                        }
+                        break;
+                    }
                     i++;
                 }
 
-                session.setAttribute("listaCarrito", new HashMap<DtoPharmacy, ArrayList<DtoProductoCarrito>>());
+                if(exito.equals("e")){
+                    session.setAttribute("listaCarrito", new HashMap<DtoPharmacy, ArrayList<DtoProductoCarrito>>());
+                }
                 session.setAttribute("orden", exito);
 
                 response.sendRedirect(request.getContextPath() + "/ClientServlet");
@@ -471,9 +510,11 @@ public class ClientServlet extends HttpServlet {
                     ordersDao.cancelarPedido(idOrder, idClient);
 
                     //
-                    ArrayList<BOrders> orden = ordersDao.listarOrdenes(0, -1, idOrder, idClient);
-                    ordersDao.agregarOrderDetails(orden.get(0));
-                    for (BOrderDetails orderDetails : orden.get(0).getListaDetails()) {
+                    BOrders order = new BOrders();
+                    order.setIdOrder(idOrder);
+                    ordersDao.agregarOrderDetails(order);
+                    for (BOrderDetails orderDetails : order.getListaDetails()) {
+                        System.out.println(orderDetails.getProducto()+" "+orderDetails.getQuantity());
                         BProduct product = productDao.obtenerProductoPorId(orderDetails.getIdProduct());
                         product.setStock(product.getStock() + orderDetails.getQuantity());
                         productDao.editarProducto(product);

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    String noRes1 = request.getParameter("noRes1") == null ? "Ups... No encontramos resultados para tu búsqueda :(" : request.getParameter("mPrincipal");
+    String noRes1 = request.getParameter("noRes1") == null ? "Ups... No encontramos resultados para tu búsqueda :(" : request.getParameter("noRes1");
     String noRes2 = request.getParameter("noRes2") == null ? "Prueba buscando otro término" : request.getParameter("noRes2");
 %>
 

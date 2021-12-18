@@ -64,3 +64,10 @@ function updateCart() {
     total = Math.round(total * 100) / 100
     document.getElementsByClassName("cart-total")[0].innerText = " S/" + total
 }
+
+function readReceta(input) {
+    if(input.files[0].size > 4000000){
+        alert("El archivo es muy grande");
+        input.value = "";
+    }
+}

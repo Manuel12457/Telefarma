@@ -63,4 +63,18 @@ public class OrderDetailsDao extends BaseDao {
         return false;
     }
 
+    public void borrarDetails(String idOrder){
+        String sql = "delete from orderdetails where idOrder = ? ;";
+
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, idOrder);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

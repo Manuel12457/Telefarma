@@ -76,7 +76,7 @@
                                             <label for="formFile" class="form-label">Imagen
                                                 Referencial</label>
                                             <div class="text-center mt-2 mb-3">
-                                                <img src="<%=request.getContextPath()%>/res/img/0010-0577_556884879.jpg"
+                                                <img src="<%=request.getContextPath()%>/res/img/no-imagen.jpg"
                                                      class="img-thumbnail" id="imagenPreview" width="120px"
                                                      height="120px" alt="imagen de producto">
                                             </div>

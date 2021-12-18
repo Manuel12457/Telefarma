@@ -185,13 +185,11 @@
                 }
             %>
             <!--Paginación-->
-            <%if (!(pagTotales == 1)) {%>
             <jsp:include page="../includes/paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
                 <jsp:param name="servlet" value="/PharmacyServlet?action=buscarPedido&"/>
             </jsp:include>
-            <%}%>
         </main>
 
         <!--JS-->

@@ -26,7 +26,7 @@
                     <div style="width:40%">
                         <input type="search" name="busqueda"
                                class="form-control readex-15 rounded-start border-end-0"
-                               placeholder="<%=busquedaPlaceholder%>"
+                               placeholder="<%=busquedaPlaceholder%>" pattern="^[a-zA-Z0-9\u00C0-\u00FF ]+$"
                                value="<%=busqueda%>"/>
                     </div>
                     <%if (tipoUsuario.equals("cliente") && !servletBusqueda.contains("verFarmaciasDistrito")) {%>

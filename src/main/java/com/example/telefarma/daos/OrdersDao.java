@@ -320,4 +320,18 @@ public class OrdersDao extends BaseDao {
 
     }
 
+    public void borrarOrden(String idOrder){
+        String sql = "delete from orders where idOrder = ? ;";
+
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, idOrder);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

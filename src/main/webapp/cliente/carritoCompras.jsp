@@ -38,6 +38,20 @@
             <!--Carrito-->
             <div class="container pb-5 mt-2 mt-md-3">
                 <%
+                    String alertMssg = (String) session.getAttribute("info");
+                    if (alertMssg != null) {
+                %>
+                <div class="alert alert-info alert-dismissible fade show mt-lg-3 heebo-500"
+                     role="alert">
+                    <%=alertMssg%>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                            aria-label="Close"></button>
+                </div>
+                <%
+                        session.removeAttribute("info");
+                    }
+                %>
+                <%
                     int prodConReceta = 0;
                     if (tamanoCarrito > 0) {
                 %>
@@ -262,7 +276,8 @@
                                                         <input class="form-control readex-15 form-control-sm custom-file-control"
                                                                type="file" value="<%=producto.getReceta()%>"
                                                                id="conReceta" accept="image/png, image/gif, image/jpeg"
-                                                               name="receta<%=i%>-<%=j%>" required>
+                                                               name="receta<%=i%>-<%=j%>" required
+                                                               onchange="readReceta(this);">
                                                     </span>
                                     </div>
                                     <% } else { %>

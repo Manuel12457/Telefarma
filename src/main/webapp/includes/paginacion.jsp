@@ -8,9 +8,8 @@
         int pagActual=Integer.parseInt(request.getParameter("pagActual"));
         int pagTotales=Integer.parseInt(request.getParameter("pagTotales"));
         String servlet = request.getParameter("servlet");
-        if(pagTotales>0){
+        if(pagTotales>1){
         %>
-
         <div class="container">
             <div class="d-flex justify-content-center my-3">
                 <nav aria-label="paginacion_productos">
@@ -73,6 +72,10 @@
                 </nav>
             </div>
         </div>
+        <%
+        }else{
+        %>
+        <br>
         <%
         }
         %>
