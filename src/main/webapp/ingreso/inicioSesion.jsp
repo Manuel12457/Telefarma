@@ -31,7 +31,7 @@
                                             <!--Correo-->
                                             <div class="form-outline mb-4">
                                                 <input class="form-control form-control-lg readex-15" type="email" name="email"
-                                                       placeholder="Correo">
+                                                       placeholder="Correo" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
                                             </div>
                                             <!--Password-->
                                             <div class="form-outline mb-4">

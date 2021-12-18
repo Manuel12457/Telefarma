@@ -43,14 +43,14 @@
                     request.getSession().removeAttribute("actionResult");
                     request.getSession().removeAttribute("actionResultBoolean");
                 %>
-                <div class="row">
+                <div class="row gray-heebo">
                     <h3 class="text-dark">Farmacias registradas</h3>
                 </div>
                 <!--Loop de farmacias-->
                 <% for (ArrayList<BPharmacy> listaFarmaciasDistrito : listaFarmacias) { %>
                 <div class="row">
                     <div class="container px-5 py-2" id="custom-cards-san-miguel">
-                        <h4 class="pb-2 border-bottom"
+                        <h4 class="pb-2 border-bottom dist-name"
                             style="color: #f57f00"><%= listaFarmaciasDistrito.get(0).getDistrict().getName() %>
                         </h4>
                         <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-3">

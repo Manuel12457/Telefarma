@@ -29,7 +29,7 @@
                     <div class="card-header card-header-tele">
                         <h4 class="my-2">Editar farmacia</h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body gray-heebo">
                         <div class="container" style="width: 85%">
                             <div class="row my-4">
                                 <form method="POST" action="<%=request.getContextPath()%>/AdminServlet?action=editar">
@@ -39,14 +39,15 @@
                                         <div class="col-md-6">
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaName">Nombre</label>
-                                                <input type="text" name="nombre" id="farmaName" class="form-control"
-                                                       value="<%=farmacia.getName()%>" maxlength="50" required/>
+                                                <input type="text" name="nombre" id="farmaName" class="form-control readex-15"
+                                                       value="<%=farmacia.getName()%>"
+                                                       pattern="^[a-zA-Z0-9\u00C0-\u00FF&+-.' ]+$" required="required" maxlength="50"/>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaMail">Correo</label>
-                                                <input type="email" name="correo" id="farmaMail" class="form-control"
+                                                <input type="email" name="correo" id="farmaMail" class="form-control readex-15"
                                                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                                        value="<%=farmacia.getMail()%>" maxlength="70" required/>
                                             </div>
@@ -57,14 +58,15 @@
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaDireccion">Dirección</label>
                                                 <input type="text" name="direccion" id="farmaDireccion"
-                                                       class="form-control"
-                                                       value="<%=farmacia.getAddress()%>" maxlength="100" required/>
+                                                       class="form-control readex-15"
+                                                       value="<%=farmacia.getAddress()%>"
+                                                       pattern="^[a-zA-Z0-9\u00C0-\u00FF#-.° ]+$" required="required" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaDistrict">Distrito</label>
-                                                <select class="form-select" name="distrito" id="farmaDistrict" required>
+                                                <select class="form-select readex-15" name="distrito" id="farmaDistrict" required>
                                                     <% for (BDistrict distrito : listaDistritos) { %>
                                                     <option value="<%=distrito.getIdDistrict()%>" <%=farmacia.getDistrict().getIdDistrict() == distrito.getIdDistrict() ? "selected" : ""%>><%=distrito.getName()%>
                                                     </option>
@@ -77,18 +79,15 @@
                                         <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
                                                 <label class="form-label" for="farmaRUC">RUC</label>
-                                                <input type="number" name="ruc" id="farmaRUC" class="form-control"
-                                                       minlength="11"
+                                                <input type="number" name="ruc" id="farmaRUC" class="form-control readex-15"
+                                                       minlength="11" disabled
                                                        value="<%=farmacia.getRUC()%>" maxlength="11" required/>
-                                                <div class="form-text ps-1">
-                                                    El RUC únicamente debe contener 11 números
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-center">
                                         <a role="button" href="<%=request.getContextPath()%>/AdminServlet"
-                                           class="btn btn-light mx-2">Cancelar</a>
+                                           class="btn btn-light mx-2 rubik-500 gray5">Cancelar</a>
                                         <input class="btn btn-tele" type="submit" id="" value="Editar farmacia"/>
                                     </div>
                                     <br>

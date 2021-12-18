@@ -201,7 +201,7 @@ public class AdminServlet extends HttpServlet {
                 break;
 
             case "editar":
-                f.setRUC(request.getParameter("ruc"));
+
                 f.setName(request.getParameter("nombre").trim());
                 f.setMail(request.getParameter("correo"));
                 f.setAddress(request.getParameter("direccion").trim());
@@ -209,7 +209,7 @@ public class AdminServlet extends HttpServlet {
                 f.setIdPharmacy(Integer.parseInt(request.getParameter("id")));
 
                 BPharmacy fa = pharmacyDao.obtenerFarmaciaPorId(f.getIdPharmacy());
-
+                f.setRUC(fa.getRUC());
                 correoExiste = !f.getMail().equals(fa.getMail()) && sessionDao.correoExiste(f.getMail());
                 rucExiste = !f.getRUC().equals(fa.getRUC()) && pharmacyDao.existeRUC(f.getRUC());
                 longitudRUCValida = f.getRUC().length() == 11;

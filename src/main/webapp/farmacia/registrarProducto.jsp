@@ -25,7 +25,7 @@
                     <div class="card-header card-header-tele">
                         <h4 class="my-2">Registrar Producto</h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body gray-heebo">
                         <div class="container" style="width: 85%">
                             <div class="row my-4">
                                 <form method="POST"
@@ -35,8 +35,8 @@
                                         <div class="col-md-6 mb-1">
                                             <div class="form-outline mb-4">
                                                 <label class="form-label" for="productName">Nombre</label>
-                                                <input type="text" name="nombre" id="productName" class="form-control"
-                                                       maxlength="80" required="required"
+                                                <input type="text" name="nombre" id="productName" class="form-control readex-15"
+                                                       maxlength="80" required="required" pattern="^[a-zA-Z0-9\u00C0-\u00FF&+-.'%/ ]+$"
                                                        placeholder="Ingrese nombre del producto"/>
                                             </div>
                                             <div class="row mb-4">
@@ -44,7 +44,7 @@
                                                     <div class="form-outline">
                                                         <label class="form-label" for="productStock">Stock</label>
                                                         <input type="number" step="1" name="stock" id="productStock"
-                                                               class="form-control" min="1" max="10000"
+                                                               class="form-control readex-15" min="1" max="10000"
                                                                required="required"/>
                                                     </div>
                                                 </div>
@@ -52,7 +52,7 @@
                                                     <div class="form-outline">
                                                         <label class="form-label" for="productPrice">Precio</label>
                                                         <input type="number" step="0.01" name="precio" id="productPrice"
-                                                               class="form-control" min="0.01" max="999.99"
+                                                               class="form-control readex-15" min="0.01" max="999.99"
                                                                required="required"/>
                                                     </div>
                                                 </div>
@@ -60,14 +60,14 @@
                                             <div class="d-flex justify-content-start my-3">
                                                 <div class="pb-1">¿Requiere receta?&nbsp;&nbsp;&nbsp;</div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="requiereReceta"
+                                                    <input class="form-check-input readex-15" type="radio" name="requiereReceta"
                                                            id="siReceta" value="true"/>
-                                                    <label class="form-check-label" for="siReceta">Sí</label>
+                                                    <label class="form-check-label readex-15" for="siReceta">Sí</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="requiereReceta"
+                                                    <input class="form-check-input readex-15" type="radio" name="requiereReceta"
                                                            id="noReceta" value="false" checked/>
-                                                    <label class="form-check-label" for="noReceta">No</label>
+                                                    <label class="form-check-label readex-15" for="noReceta">No</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -80,7 +80,7 @@
                                                      class="img-thumbnail" id="imagenPreview" width="120px"
                                                      height="120px" alt="imagen de producto">
                                             </div>
-                                            <input class="form-control" type="file" id="formFile" name="imagenProducto"
+                                            <input class="form-control readex-15" type="file" id="formFile" name="imagenProducto"
                                                    accept="image/png, image/gif, image/jpeg" onchange="readURL(this);">
                                         </div>
                                     </div>

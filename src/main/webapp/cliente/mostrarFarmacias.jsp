@@ -77,7 +77,7 @@
                             }
                         }
                 %>
-                <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
+                <div class="heebo-500 alert <%=alertClass%> alert-dismissible fade show" role="alert">
                     <%=alertMssg%>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
@@ -129,7 +129,7 @@
                     }
                 %>
                 <div class="row">
-                    <div class="container px-5 py-2" id="custom-cards-san-juan">
+                    <div class="container px-5 py-2">
                         <!--Nombre distrito-->
                         <h4 class="dist-name"><%= listaFarmaciasDistrito.get(0).getDistrict().getName() %>
                         </h4>

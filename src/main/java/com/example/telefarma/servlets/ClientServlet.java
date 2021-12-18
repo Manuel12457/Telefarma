@@ -396,7 +396,6 @@ public class ClientServlet extends HttpServlet {
                 OrderDetailsDao orderDetailsDao = new OrderDetailsDao();
 
                 String exito = "e";
-
                 i = 0;
                 while (request.getParameter("idFarmacia" + i) != null) {
                     String pickUpDate = request.getParameter("pickUpDate" + i);
@@ -407,28 +406,33 @@ public class ClientServlet extends HttpServlet {
                     while (request.getParameter("idProducto" + i + "-" + j) != null) {
                         int idProducto = Integer.parseInt(request.getParameter("idProducto" + i + "-" + j));
                         int cantidad = Integer.parseInt(request.getParameter("cantidad" + i + "-" + j));
-
-                        BProduct product = productDao.obtenerProductoPorId(idProducto);
-                        product.setStock(product.getStock() - cantidad);
-                        productDao.editarProducto(product);
-
                         if (cantidad == 0) {
                             response.sendRedirect(request.getContextPath() + "/ClientServlet?orden=ne");
                         }
 
-                        if (!orderDetailsDao.agregarOrderDetails(idOrder, idProducto, cantidad)) {
-                            exito = "ne";
-                        }
+                        BProduct product = productDao.obtenerProductoPorId(idProducto);
+                        if(product.getStock()-cantidad>=0) {
+                            product.setStock(product.getStock() - cantidad);
+                            productDao.editarProducto(product);
 
-                        Part recetaPart = request.getPart("receta" + i + "-" + j);
 
-                        if (recetaPart.getSize() > 0) {
-                            InputStream recetaStream = recetaPart.getInputStream();
-                            if (!orderDetailsDao.agregarReceta(idOrder, idProducto, recetaStream)) {
+                            if (!orderDetailsDao.agregarOrderDetails(idOrder, idProducto, cantidad)) {
                                 exito = "ne";
                             }
-                        } else {
-                            orderDetailsDao.agregarReceta(idOrder, idProducto, null);
+
+                            Part recetaPart = request.getPart("receta" + i + "-" + j);
+
+                            if (recetaPart.getSize() > 0) {
+                                InputStream recetaStream = recetaPart.getInputStream();
+                                if (!orderDetailsDao.agregarReceta(idOrder, idProducto, recetaStream)) {
+                                    exito = "ne";
+                                }
+                            } else {
+                                orderDetailsDao.agregarReceta(idOrder, idProducto, null);
+                            }
+                        }else{
+                            exito = "ne";
+                            break;
                         }
                         j++;
                     }

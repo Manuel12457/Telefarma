@@ -27,7 +27,7 @@
                     <div class="card-header card-header-tele">
                         <h4 class="my-2">Editar Producto</h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body gray-heebo">
                         <div class="container" style="width: 85%">
                             <div class="row my-4">
                                 <form method="POST"
@@ -38,8 +38,8 @@
                                         <div class="col-md-6 mb-1">
                                             <div class="form-outline mb-4">
                                                 <label class="form-label" for="productName">Nombre</label>
-                                                <input type="text" name="nombre" id="productName" class="form-control"
-                                                       value="<%=producto.getName()%>" maxlength="80"
+                                                <input type="text" name="nombre" id="productName" class="form-control readex-15"
+                                                       value="<%=producto.getName()%>" maxlength="80" pattern="^[a-zA-Z0-9\u00C0-\u00FF&+-.'%/ ]+$"
                                                        required="required" placeholder="Ingrese nombre del producto"/>
                                             </div>
                                             <div class="row mb-4">
@@ -47,7 +47,7 @@
                                                     <div class="form-outline">
                                                         <label class="form-label" for="productStock">Stock</label>
                                                         <input type="number" step="1" name="stock" id="productStock"
-                                                               class="form-control"
+                                                               class="form-control readex-15"
                                                                value="<%=producto.getStock()%>"
                                                                min="1" max="10000" required="required" placeholder="0"/>
                                                     </div>
@@ -56,7 +56,7 @@
                                                     <div class="form-outline">
                                                         <label class="form-label" for="productPrice">Precio</label>
                                                         <input type="number" step="0.01" name="precio" id="productPrice"
-                                                               class="form-control"
+                                                               class="form-control readex-15"
                                                                value="<%=producto.getPrice()%>"
                                                                min="0.01" max="999.99" required="required"
                                                                placeholder="Ingrese el precio del producto"/>
@@ -66,16 +66,16 @@
                                             <div class="d-flex justify-content-start my-3">
                                                 <div class="pb-1">¿Requiere receta?&nbsp;&nbsp;&nbsp;</div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="requiereReceta"
+                                                    <input class="form-check-input readex-15" type="radio" name="requiereReceta"
                                                            id="siReceta" value="true"
                                                             <%=producto.getRequierePrescripcion() ? "checked" : ""%>/>
-                                                    <label class="form-check-label" for="siReceta">Sí</label>
+                                                    <label class="form-check-label readex-15" for="siReceta">Sí</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="requiereReceta"
+                                                    <input class="form-check-input readex-15" type="radio" name="requiereReceta"
                                                            id="noReceta" value="false"
                                                             <%=producto.getRequierePrescripcion() ? "" : "checked"%>/>
-                                                    <label class="form-check-label" for="noReceta">No</label>
+                                                    <label class="form-check-label readex-15" for="noReceta">No</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -87,7 +87,7 @@
                                                      class="img-thumbnail" id="imagenPreview" width="120px"
                                                      height="120px" alt="imagen de producto">
                                             </div>
-                                            <input class="form-control" type="file" id="formFile" name="imagenProducto"
+                                            <input class="form-control readex-15" type="file" id="formFile" name="imagenProducto"
                                                    accept="image/png, image/gif, image/jpeg" onchange="readURL(this);"/>
                                         </div>
                                     </div>
@@ -98,7 +98,7 @@
                                                        for="productoDescription">Descripción</label>
                                                 <textarea type="tel" id="productoDescription" name="descripcion"
                                                           maxlength="500" rows="4"
-                                                          class="form-control"><%=producto.getDescription()%>
+                                                          class="form-control readex-15"><%=producto.getDescription()%>
                                                 </textarea>
                                                 <div class="form-text">
                                                     La descripción no puede exceder los 500 caracteres.
@@ -108,7 +108,7 @@
                                     </div>
                                     <div class="d-flex justify-content-center">
                                         <a role="button" href="<%=request.getContextPath()%>/PharmacyServlet"
-                                           class="btn btn-light mx-2">Cancelar</a>
+                                           class="btn btn-light mx-2 gray5 rubik-500">Cancelar</a>
                                         <input class="btn btn-tele mx-2" type="submit" value="Editar producto"/>
                                     </div>
                                 </form>
@@ -122,6 +122,7 @@
 
         <%--JS--%>
         <script src="<%=request.getContextPath()%>/res/bootstrap/js/bootstrap.min.js"></script>
+        <script src="<%=request.getContextPath()%>/res/js/main.js"></script>
     </body>
 </html>
 
