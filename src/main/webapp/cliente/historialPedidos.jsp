@@ -102,8 +102,8 @@
                                                 </td>
                                                 <td>#<%=orden.getIdOrder()%>
                                                 </td>
-                                                <td><%=orden.getFarmaciaAsociada()%>
-                                                </td>
+                                                <td><a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%=orden.getIdFarmacia()%>"
+                                                class="a-gray text-decoration-none opensans"><%=orden.getFarmaciaAsociada()%></a></td>
                                                 <td><%=orden.getFechaRecojo()%>
                                                 </td>
                                                 <td>S/. <%=String.format("%.2f", orden.getTotal())%>

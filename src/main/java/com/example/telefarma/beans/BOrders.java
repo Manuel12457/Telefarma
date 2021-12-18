@@ -10,6 +10,9 @@ public class BOrders {
     private String fechaOrden;
     //Esto sería DTO? :
     private double total;
+    private int idFarmacia;
+
+
     private String farmaciaAsociada;
     private int timeDiff;
 
@@ -95,5 +98,13 @@ public class BOrders {
 
     public void setClient(BClient client) {
         this.client = client;
+    }
+
+    public int getIdFarmacia() {
+        return idFarmacia;
+    }
+
+    public void setIdFarmacia(int idFarmacia) {
+        this.idFarmacia = idFarmacia;
     }
 }
