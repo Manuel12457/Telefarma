@@ -115,7 +115,6 @@ public class ClientServlet extends HttpServlet {
                 int paginaHistorial = pagina;
 
                 String filtro = request.getSession().getAttribute("filtro") == null ? "" : (String) request.getSession().getAttribute("filtro");
-                System.out.println("Filtro en doGet: " + filtro);
                 ArrayList<BOrders> listaOrdenes = new ArrayList<>();
 
                 if (ordersDao.listarOrdenes(0, -1, filtro, idClient).size() != 0) {
