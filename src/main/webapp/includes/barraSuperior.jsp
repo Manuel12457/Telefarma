@@ -29,7 +29,7 @@
                                placeholder="<%=busquedaPlaceholder%>" pattern="^[a-zA-Z0-9\u00C0-\u00FF ]+$"
                                value="<%=busqueda%>"/>
                     </div>
-                    <%if (tipoUsuario.equals("cliente") && !servletBusqueda.contains("verFarmaciasDistrito")) {%>
+                    <%if (tipoUsuario.equals("cliente") && !servletBusqueda.contains("buscarFarmaciaDeDistrito")) {%>
                     <select class="btn-tele px-2 rounded-0 sct-tele readex-15 border-end-0 border-start-0"
                             name="tipoBusqueda">
                         <option value="product" <%=tipoBusqueda.equals("product") ? "selected" : ""%>>Por Nombre
