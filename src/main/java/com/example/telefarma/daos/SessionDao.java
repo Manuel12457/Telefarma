@@ -130,7 +130,7 @@ public class SessionDao extends BaseDao {
 
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();) {
-
+            tokenExpiracion(id,5);
             stmt.executeUpdate(sql);
 
         } catch (SQLException e) {
@@ -301,4 +301,19 @@ public class SessionDao extends BaseDao {
         return farmacia;
     }
 
+    public void tokenExpiracion(int client, int minutes){
+        String sql = "CREATE EVENT delete_token_"+client+"\n" +
+                "ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL "+minutes+" MINUTE\n" +
+                "ON COMPLETION NOT PRESERVE ENABLE\n" +
+                "DO update client set rstPassToken=null WHERE idClient="+client+";";
+
+        try (Connection conn = this.getConnection();
+             Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 }
