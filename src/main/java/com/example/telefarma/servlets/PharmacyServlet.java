@@ -11,6 +11,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -182,7 +183,10 @@ public class PharmacyServlet extends HttpServlet {
                         } else { //no se ha podido actualizar la imagen
                             request.getSession().setAttribute("result", "error2");
                         }
-                    } else { //si no se ha subido imagen se imprime mensaje de exito
+                    } else {//si no se ha subido imagen se imprime mensaje de exito
+                        //Se carga la imagen por defecto desde un host en linea, dado que no se puede poner un blob por default
+                        InputStream input = new URL("https://res.cloudinary.com/ddyonatf7/image/upload/v1639954769/no-imagen_rmfibl.jpg").openStream();
+                        productDao.anadirImagenProducto(idProduct, input);
                         request.getSession().setAttribute("result", "exito1");
                     }
                 } else { //si no se ha podido ingresar la informacion (form ha sido alterado)
