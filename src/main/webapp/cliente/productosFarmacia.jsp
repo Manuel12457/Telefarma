@@ -1,4 +1,5 @@
 <%@ page import="com.example.telefarma.beans.BProduct" %>
+<%@ page import="com.example.telefarma.beans.BDistrict" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="farmacia" scope="request" type="com.example.telefarma.beans.BPharmacy"/>
 <jsp:useBean id="listaProductos" scope="request"
@@ -7,6 +8,8 @@
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="idPharmacy" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String" class="java.lang.String"/>
+<jsp:useBean id="order" scope="request" type="java.lang.String"/>
+<jsp:useBean id="listaDistritos" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BDistrict>"/>
 <jsp:useBean id="tipoBusqueda" scope="request" type="java.lang.String"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
@@ -62,7 +65,7 @@
                     </div>
 
                     <!--Titulo-->
-                    <div class="row mb-3">
+                    <div class="row mb-2">
                         <% if (busqueda.equals("")) { %>
                         <h4 class="pb-2 border-bottom d-flex justify-content-start dist-name">Productos
                             disponibles</h4>
@@ -75,9 +78,44 @@
                 </div>
                 <!--Productos-->
                 <div class="container">
-                    <%
-                        if (listaProductos.size() != 0) {
-                    %>
+                    <% if (listaProductos.size() != 0) { %>
+
+                    <!--Filtro y orden-->
+                    <div class="row mb-3">
+                        <div class="d-flex justify-content-end">
+                            <form class="row mx-2 align-items-center" method="post"
+                                  action="<%=request.getContextPath()%>/ClientServlet?action=buscarProductosDeFarmacia">
+                                <input type="text" name="idPharmacy" value="<%=idPharmacy%>" hidden>
+                                <input type="text" name="busqueda" value="<%=busqueda%>" hidden>
+                                <input type="text" name="tipoBusqueda" value="<%=tipoBusqueda%>" hidden>
+                                <div class="col" style="width: fit-content;">
+                                    <label class="gray-heebo gray5" for="orderBy">Ordenar por</label>
+                                </div>
+                                <div style="width: fit-content;padding: revert;">
+                                    <select class="form-select readex-15 gray5" name="order" id="orderBy"
+                                            style="max-width: 300px;" onchange="this.form.submit();">
+                                        <option value="" <%=order.equals("") ? "selected" : ""%>>
+                                            Seleccionar
+                                        </option>
+                                        <option value="price asc" <%=order.equals("price asc") ? "selected" : ""%>>
+                                            Precio: de Menor a Mayor
+                                        </option>
+                                        <option value="price desc" <%=order.equals("price desc") ? "selected" : ""%>>
+                                            Precio: de Mayor a Menor
+                                        </option>
+                                        <option value="p.name asc" <%=order.equals("p.name asc") ? "selected" : ""%>>
+                                            Nombre: de A a la Z
+                                        </option>
+                                        <option value="p.name desc" <%=order.equals("p.name desc") ? "selected" : ""%>>
+                                            Nombre: de Z a la A
+                                        </option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!--Catálogo-->
                     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
                         <%--Loop de productos--%>
                         <% for (BProduct producto : listaProductos) {
@@ -122,9 +160,7 @@
                 </div>
             </div>
             <!--Paginación-->
-            <%
-                    String servlet = "/ClientServlet?action=verFarmacia&busqueda=" + busqueda + "&tipoBusqueda=" + tipoBusqueda + "&idPharmacy=" + idPharmacy + "&";
-            %>
+            <% String servlet = "/ClientServlet?action=verFarmacia&busqueda=" + busqueda + "&tipoBusqueda=" + tipoBusqueda + "&idPharmacy=" + idPharmacy + "&order=" + order + "&"; %>
             <jsp:include page="../includes/paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>

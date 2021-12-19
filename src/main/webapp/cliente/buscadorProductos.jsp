@@ -1,4 +1,5 @@
 <%@ page import="com.example.telefarma.beans.BProduct" %>
+<%@ page import="com.example.telefarma.beans.BDistrict" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" language="java" %>
 <jsp:useBean id="listaProductosBusqueda" scope="request"
              type="java.util.ArrayList<com.example.telefarma.beans.BProduct>"/>
@@ -7,6 +8,9 @@
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BClient"/>
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="busqueda" scope="request" type="java.lang.String"/>
+<jsp:useBean id="order" scope="request" type="java.lang.String"/>
+<jsp:useBean id="idDistritoFil" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="listaDistritos" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BDistrict>"/>
 <jsp:useBean id="tipoBusqueda" scope="request" type="java.lang.String"/>
 
 <!DOCTYPE html>
@@ -34,6 +38,63 @@
             <!--Resultados de búsqueda-->
             <div class="container">
                 <% if (listaProductosBusqueda.size() != 0) { %>
+
+                <!--Filtro y orden-->
+                <div class="row">
+                    <div class="d-flex justify-content-end">
+                        <form class="row mx-2 align-items-center" method="post"
+                              action="<%=request.getContextPath()%>/ClientServlet?action=buscarProduct">
+                            <input type="text" name="busqueda" value="<%=busqueda%>" hidden>
+                            <input type="text" name="tipoBusqueda" value="<%=tipoBusqueda%>" hidden>
+                            <input type="text" name="idDistrict" value="<%=idDistritoFil%>" hidden>
+                            <div class="col" style="width: fit-content;">
+                                <label class="gray-heebo gray5" for="orderBy">Ordenar por</label>
+                            </div>
+                            <div style="width: fit-content;padding: revert;">
+                                <select class="form-select readex-15 gray5" name="order" id="orderBy"
+                                        style="max-width: 300px;" onchange="this.form.submit();">
+                                    <option value="" <%=order.equals("") ? "selected" : ""%>>
+                                        Seleccionar
+                                    </option>
+                                    <option value="price asc" <%=order.equals("price asc") ? "selected" : ""%>>
+                                        Precio: de Menor a Mayor
+                                    </option>
+                                    <option value="price desc" <%=order.equals("price desc") ? "selected" : ""%>>
+                                        Precio: de Mayor a Menor
+                                    </option>
+                                    <option value="p.name asc" <%=order.equals("p.name asc") ? "selected" : ""%>>
+                                        Nombre: de A a la Z
+                                    </option>
+                                    <option value="p.name desc" <%=order.equals("p.name desc") ? "selected" : ""%>>
+                                        Nombre: de Z a la A
+                                    </option>
+                                </select>
+                            </div>
+                        </form>
+                        <form class="row ms-2 align-items-center" method="post"
+                              action="<%=request.getContextPath()%>/ClientServlet?action=buscarProduct">
+                            <input type="text" name="busqueda" value="<%=busqueda%>" hidden>
+                            <input type="text" name="tipoBusqueda" value="<%=tipoBusqueda%>" hidden>
+                            <input type="text" name="order" value="<%=order%>" hidden>
+                            <div class="col" style="width: fit-content;">
+                                <label class="gray-heebo gray5" for="farmaDistrict">Filtrar por distrito</label>
+                            </div>
+                            <div style="width: fit-content;padding: revert;">
+                                <select class="form-select readex-15 gray5" name="idDistrict" id="farmaDistrict"
+                                        style="max-width: 300px;" onchange="this.form.submit();">
+                                    <option value="-1" <%=idDistritoFil == -1 ? "selected" : ""%>><%="Sin filtro"%>
+                                    </option>
+                                    <% for (BDistrict distrito : listaDistritos) { %>
+                                    <option value="<%=distrito.getIdDistrict()%>" <%=idDistritoFil == distrito.getIdDistrict() ? "selected" : ""%>><%=distrito.getName()%>
+                                    </option>
+                                    <% } %>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!--Catálogo-->
                 <div class="album pb-2">
                     <!--Título-->
                     <div class="row mb-3">
@@ -92,7 +153,7 @@
                 %>
             </div>
             <!--Paginación-->
-                <%String servlet = "/ClientServlet?action=buscarProducto&busqueda=" + busqueda + "&tipoBusqueda=" + tipoBusqueda + "&"; %>
+            <%String servlet = "/ClientServlet?action=buscarProducto&busqueda=" + busqueda + "&tipoBusqueda=" + tipoBusqueda + "&order=" + order + "&idDistrict=" + idDistritoFil + "&"; %>
             <jsp:include page="../includes/paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>

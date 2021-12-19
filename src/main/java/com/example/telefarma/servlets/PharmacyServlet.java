@@ -48,7 +48,7 @@ public class PharmacyServlet extends HttpServlet {
                     orderDetailsDao.agregarposibleEliminar(producto);
                 }
 
-                pagTotales = (int) Math.ceil((double) productDao.cantidadProductos(busqueda, idFarmacia) / limiteProductos);
+                pagTotales = (int) Math.ceil((double) productDao.cantidadProductoPharmacy(busqueda, idFarmacia) / limiteProductos);
                 request.setAttribute("listaProductosBusqueda", listaProductosBusqueda);
                 request.setAttribute("pagActual", pagina);
                 request.setAttribute("pagTotales", pagTotales);

@@ -10,10 +10,12 @@ import java.util.ArrayList;
 
 public class ProductDao extends BaseDao {
 
-    public int cantidadProductos(String busqueda) {
+    public int cantidadProductosClient(String busqueda, int filtroDis) {
         String sql = "select count(*) from product p\n" +
                 "inner join pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
-                "where f.isBanned=0 and p.name like ? and p.stock > 0 ;";
+                "where f.isBanned=0 and p.name like ? and p.stock > 0\n";
+
+        sql = (filtroDis != -1) ? sql + "and f.idDistrict = " + filtroDis + "\n" : sql;
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -33,15 +35,17 @@ public class ProductDao extends BaseDao {
         return 0;
     }
 
-    public ArrayList<BProduct> listarProductosBusqueda(int pagina, int limite, String busqueda, int id) {
+    public ArrayList<BProduct> listarProductosBusqueda(int pagina, int limite, String busqueda, int id, String order, int filtroDis) {
         ArrayList<BProduct> listaProductosBuscador = new ArrayList<>();
 
         String sql = "select f.name,f.idDistrict,d.name,p.idProduct,p.name,stock,price from product p\n" +
                 "inner join pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
                 "inner join district d on (f.idDistrict=d.idDistrict)\n" +
-                "where lower(p.name) like ? and isBanned = 0 and p.stock > 0\n" +
-                "order by f.idDistrict = (select idDistrict from client where idClient = " + id + ") desc, price asc " +
-                "limit " + pagina * limite + "," + limite + ";";
+                "where lower(p.name) like ? and isBanned = 0 and p.stock > 0\n";
+
+        sql = (filtroDis != -1) ? sql + "and f.idDistrict = " + filtroDis + "\n" : sql;
+        sql = (!order.equals("")) ? sql + "order by " + order + "\n" : sql + "order by f.idDistrict = (select idDistrict from client where idClient = " + id + ") desc\n";
+        sql = sql + "limit " + pagina * limite + "," + limite + ";";
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
@@ -98,7 +102,7 @@ public class ProductDao extends BaseDao {
         return producto;
     }
 
-    public int cantidadProductos(String busqueda, int idFarmacia) {
+    public int cantidadProductoPharmacy(String busqueda, int idFarmacia) {
         String sql = "select count(*) from product p " +
                 "inner join pharmacy f on (p.idPharmacy=f.idPharmacy) " +
                 "where lower(p.name) like ? and " +
@@ -121,14 +125,15 @@ public class ProductDao extends BaseDao {
         return 0;
     }
 
-    public ArrayList<BProduct> listarProductosPorFarmacia(int pagina, int limite, String busqueda, int idPharmacy) {
+    public ArrayList<BProduct> listarProductosPorFarmacia(int pagina, int limite, String busqueda, int idPharmacy, String order) {
         ArrayList<BProduct> listaProductos = new ArrayList<>();
 
         String sql = "select p.idProduct,p.name,stock,price from product p\n" +
                 "inner join pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
-                "where lower(p.name) like ? and f.idPharmacy=" + idPharmacy + " and stock > -1\n" +
-                "order by name\n";
+                "where lower(p.name) like ? and f.idPharmacy=" + idPharmacy + " and stock > -1\n";
 
+        sql = idPharmacy != -1 ? (sql + "and p.idPharmacy = " + idPharmacy + "\n") : sql;
+        sql = (!order.equals("")) ? sql + "order by " + order + "\n" : sql + "order by name\n";
         sql = (limite != -1) ? (sql + "limit " + (limite * pagina) + "," + limite + ";") : sql;
 
         try (Connection conn = this.getConnection();
@@ -307,7 +312,7 @@ public class ProductDao extends BaseDao {
 
     }
 
-    public ArrayList<BProduct> buscarProductoPorSintoma(int pagina, int limite, String sintoma, int idPharmacy) {
+    public ArrayList<BProduct> buscarProductoPorSintoma(int pagina, int limite, String sintoma, int idPharmacy, String order, int filtroDis, int id) {
         ArrayList<BProduct> lista = new ArrayList<>();
 
         String sql = "SELECT f.name,f.idDistrict,d.name,p.idProduct,p.name,stock,price FROM product p\n" +
@@ -315,9 +320,13 @@ public class ProductDao extends BaseDao {
                 "inner join district d on (f.idDistrict=d.idDistrict)\n" +
                 "WHERE MATCH (p.name, p.description) AGAINST (? IN BOOLEAN MODE) > 0.1\n";
 
+
+        sql = (filtroDis != -1) ? sql + "and f.idDistrict = " + filtroDis + "\n" : sql;
         sql = idPharmacy != -1 ? (sql + "and p.idPharmacy = " + idPharmacy + "\n") : sql;
-        sql = sql + "order by MATCH (p.name, p.description) AGAINST (? IN BOOLEAN MODE) desc, p.name desc\n";
+        sql = (!order.equals("")) ? sql + "order by " + order + ",\n" : sql + "order by f.idDistrict = (select idDistrict from client where idClient = " + id + ") desc,\n";
+        sql = sql + "MATCH (p.name, p.description) AGAINST (? IN BOOLEAN MODE) desc\n";
         sql = (limite != -1) ? (sql + "limit " + (limite * pagina) + "," + limite + ";") : sql;
+
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
