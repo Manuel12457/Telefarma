@@ -355,7 +355,7 @@ public class ClientServlet extends HttpServlet {
         String tipoBusqueda = request.getParameter("tipoBusqueda") == null ? "" : request.getParameter("tipoBusqueda");
         String filtro = request.getParameter("filtro") == null ? "" : request.getParameter("filtro");
         String orderBy = request.getParameter("order") == null ? "" : request.getParameter("order");
-        int filtroDis = request.getParameter("idDistrict") == null ? -1 : Integer.parseInt(request.getParameter("idDistrict"));
+        int filtroDis = request.getParameter("idDistrict") == null || request.getParameter("idDistrict").equals("") ? -1 : Integer.parseInt(request.getParameter("idDistrict"));
 
         switch (request.getParameter("action")) {
             case "guardarCambios":
