@@ -10,7 +10,6 @@
 <jsp:useBean id="tamanoCarrito" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="hashMostrarBoton" scope="request" type="java.util.HashMap<java.lang.Integer,java.lang.Integer>"/>
 <jsp:useBean id="distritosFiltrado" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BDistrict>"/>
-<jsp:useBean id="idDistritoFil" scope="request" type="java.lang.Integer"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -95,10 +94,10 @@
                         <div style="width: fit-content;padding: revert;">
                             <select class="form-select readex-15 gray5" name="idDistrict" id="farmaDistrict"
                                     style="max-width: 300px;" onchange="this.form.submit();">
-                                <option value="" <%=idDistritoFil == 0 ? "selected" : ""%>><%="Sin filtro"%>
+                                <option value="" selected>Sin filtro
                                 </option>
                                 <% for (BDistrict distrito : distritosFiltrado) { %>
-                                <option value="<%=distrito.getIdDistrict()%>" <%=idDistritoFil == distrito.getIdDistrict() ? "selected" : ""%>><%=distrito.getName()%>
+                                <option value="<%=distrito.getIdDistrict()%>"><%=distrito.getName()%>
                                 </option>
                                 <% } %>
                             </select>
