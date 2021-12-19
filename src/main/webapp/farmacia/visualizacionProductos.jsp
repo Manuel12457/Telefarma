@@ -33,14 +33,9 @@
             <!--Alerta de errores-->
             <%
                 if (result != null) {
-                    String tipoAlerta = "warning";
-                    String mensaje = "";
-                    if (result.startsWith("error")) {
-                        tipoAlerta = "danger";
-                    }
-                    if (result.startsWith("exito")) {
-                        tipoAlerta = "success";
-                    }
+                    String tipoAlerta = "warning", mensaje = "";
+                    if (result.startsWith("error")) tipoAlerta = "danger";
+                    if (result.startsWith("exito")) tipoAlerta = "success";
                     switch (result) {
                         case ("error1"):
                             mensaje = "Ha ocurrido un error en el registro";
@@ -115,7 +110,13 @@
                                 <strong class="detalles-str" style="font-size: 16px">
                                     Disponibles:
                                     <span class="detalles-sp">
-                                        <%=producto.getStock()%>
+                                        <% if (producto.getStock() == 0) { %>
+                                        <span class="text-danger">
+                                            <b>Stock agotado</b>
+                                        </span>
+                                        <% } else { %>
+                                        <%= producto.getStock() %>
+                                        <% } %>
                                     </span>
                                 </strong>
                             </p>
@@ -141,7 +142,7 @@
                         <div class="row mt-3">
                             <div class="col text-center">
                                 <button class="btn-icon-trans btn-tele px-md-0"
-                                        onclick="location.href='<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProduct()%>'" >
+                                        onclick="location.href='<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProduct()%>'">
                                     <span class='text-icon-trans'>Editar</span>
                                     <span class="icon-trans">
                                          <i class="far fa-edit"></i>
@@ -176,9 +177,7 @@
             </div>
 
             <!--Paginación-->
-            <%
-                String servlet = "/PharmacyServlet?action=buscarProducto&busqueda=" + busqueda + "&";
-            %>
+            <% String servlet = "/PharmacyServlet?action=buscarProducto&busqueda=" + busqueda + "&"; %>
             <jsp:include page="../includes/paginacion.jsp">
                 <jsp:param name="pagActual" value="<%=pagActual%>"/>
                 <jsp:param name="pagTotales" value="<%=pagTotales%>"/>
@@ -231,7 +230,7 @@
             </div>
         </main>
 
-        <!--Botón flotante "+" para agregar farmacia-->
+        <!--Botón flotante "+" para agregar producto-->
         <a href="<%=request.getContextPath()%>/PharmacyServlet?action=registrarProducto" class="btn-float"
            title="Registre un producto">
             <i class="fas fa-plus my-float"></i>

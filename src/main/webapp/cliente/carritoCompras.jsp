@@ -128,9 +128,13 @@
                                             </div>
                                             <% if (producto.getRequierePrescripcion()) {
                                                 prodConReceta += 1;%>
-                                            <span class="text-danger mt-1"><i
-                                                    class="fas fa-exclamation-triangle"></i> <b>Requiere receta</b></span>
-                                            <%}%>
+                                            <button class="text-danger mt-1 border-0 bg-white ps-0"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-placement="bottom"
+                                                    title="Se le solicitará adjuntarla al realizar el pedido">
+                                                <i class="fas fa-exclamation-triangle"></i><b> Requiere receta</b>
+                                            </button>
+                                            <% } %>
                                         </div>
                                     </div>
 
@@ -147,11 +151,12 @@
                                                         class="btn btn-tele" id="menos" type="button">
                                                     <i class="fas fa-minus fa-xs"></i>
                                                 </button>
-                                                <input class="cart-quantity form-control border-start-0 border-end-0 text-center readex-15"
+                                                <input class="cart-quantity form-control border-start-0 border-end-0 text-center readex-15 px-0"
                                                        type="number" style="width:46px;" id="contador"
                                                        value="<%=producto.getCantidad()%>" min="1"
                                                        onchange="guardarCambios('<%=request.getContextPath()%>')"
-                                                       max="<%=producto.getStock()%>" name="cantidad<%=i%>-<%=j%>"/>
+                                                       max="<%= producto.getStock() %>" name="cantidad<%=i%>-<%=j%>"
+                                                       required/>
                                                 <button onclick="this.parentNode.querySelector('input[type=number]').stepUp(); guardarCambios('<%=request.getContextPath()%>')"
                                                         class="btn btn-tele" id="mas" type="button">
                                                     <i class="fas fa-plus fa-xs"></i>
@@ -229,12 +234,12 @@
                                         data-bs-target="#subirRecetas">
                                     Realizar pedido
                                 </button>
-                                <%} else {%>
+                                <% } else { %>
                                 <button class="btn w-100 h-45px btn-rectangle-out"
                                         type="submit" <%=listaCarrito.size() == 0 ? "disabled" : ""%>>
                                     Realizar pedido
                                 </button>
-                                <%}%>
+                                <% } %>
                             </div>
                         </div>
                     </div>
@@ -264,7 +269,8 @@
                                             }
                                             if (hayProductosConReceta) {
                                     %>
-                                    <h4 class="mt-3 gray-heebo"><b><%= farmacia.getName() %> </b></h4>
+                                    <h4 class="mt-3 gray-heebo"><b><%= farmacia.getName() %>
+                                    </b></h4>
                                     <%
                                         }
                                         for (int j = 0; j < listaProductos.size(); j++) {
@@ -272,23 +278,24 @@
                                             if (producto.getRequierePrescripcion()) {
                                     %>
                                     <div class="mt-1">
-                                                    <div class="cart-precio my-2">
-                                                        <div class="my-2"><%=producto.getName()%></div>
-                                                        <input class="form-control readex-15 form-control-sm custom-file-control"
-                                                               type="file" value="<%=producto.getReceta()%>"
-                                                               id="conReceta" accept="image/png, image/gif, image/jpeg"
-                                                               name="receta<%=i%>-<%=j%>" required
-                                                               onchange="readReceta(this);">
-                                                    </div>
+                                        <div class="cart-precio my-2">
+                                            <div class="my-2"><%=producto.getName()%>
+                                            </div>
+                                            <input class="form-control readex-15 form-control-sm custom-file-control"
+                                                   type="file" value="<%=producto.getReceta()%>"
+                                                   id="conReceta" accept="image/png, image/gif, image/jpeg"
+                                                   name="receta<%=i%>-<%=j%>" required
+                                                   onchange="readReceta(this);">
+                                        </div>
                                     </div>
                                     <% } else { %>
                                     <input class="form-control form-control-sm custom-file-control" type="file"
                                            id="sinReceta" accept="image/png, image/gif, image/jpeg"
                                            name="receta<%=i%>-<%=j%>" hidden>
                                     <%
-                                                    }
                                                 }
                                             }
+                                        }
                                     %>
                                 </div>
                                 <div class="modal-footer">
@@ -347,7 +354,15 @@
         </main>
 
         <!--JS-->
-        <script src="${pageContext.request.contextPath}/res/bootstrap/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                crossorigin="anonymous"></script>
+        <script>
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        </script>
         <script src="${pageContext.request.contextPath}/res/js/carritoCompras.js"></script>
     </body>
 </html>

@@ -8,11 +8,8 @@ import java.sql.*;
 public class OrderDetailsDao extends BaseDao {
 
     public boolean agregarOrderDetails(String idOrder, int idProduct, int quantity) {
-
         String sql = "insert into orderdetails (idOrder, idProduct, quantity)\n" +
                 "values ('" + idOrder + "'," + idProduct + "," + quantity + ");\n";
-
-        System.out.println(sql);
 
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement()) {
@@ -46,7 +43,6 @@ public class OrderDetailsDao extends BaseDao {
     }
 
     public boolean agregarReceta(String idOrder, int idProduct, InputStream receta) {
-
         String sql = "update orderdetails set prescription = ? \n" +
                 "where idProduct= " + idProduct + " and idOrder='" + idOrder + "';";
 

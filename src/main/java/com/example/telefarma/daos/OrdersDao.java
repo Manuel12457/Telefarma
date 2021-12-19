@@ -58,7 +58,6 @@ public class OrdersDao extends BaseDao {
 
             try (ResultSet rs = pstmt.executeQuery();) {
                 while (rs.next()) {
-
                     BOrders clientOrders = new BOrders();
                     String dtOrden;
                     String dtRecojo;
@@ -141,6 +140,7 @@ public class OrdersDao extends BaseDao {
                                 listaOrdenes.add(clientOrders);
                             }
                             break;
+
                         default:
                     }
                 }
@@ -240,15 +240,14 @@ public class OrdersDao extends BaseDao {
         }
     }
 
-    public void cancelarPedido(String idOrder, int idClient) {
+    public void cancelarPedido(String idOrder) {
         String sql = "update orders set status='Cancelado' " +
-                "where idOrder=? and idClient=? ;";
+                "where idOrder=?;";
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
             pstmt.setString(1, idOrder);
-            pstmt.setInt(2, idClient);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {

@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet(name = "ClientServlet", value = "/ClientServlet")
 @MultipartConfig
@@ -42,8 +43,8 @@ public class ClientServlet extends HttpServlet {
         int pagina;
         try {
             pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
-        }catch (Exception e){
-            pagina=0;
+        } catch (Exception e) {
+            pagina = 0;
         }
 
         request.setAttribute("pagActual", pagina);
@@ -78,8 +79,8 @@ public class ClientServlet extends HttpServlet {
                 int idDistritoFiltrado;
                 try {
                     idDistritoFiltrado = request.getParameter("idDistrito") == null ? 0 : Integer.parseInt(request.getParameter("idDistrito"));
-                }catch (Exception e){
-                    idDistritoFiltrado=0;
+                } catch (Exception e) {
+                    idDistritoFiltrado = 0;
                 }
                 if (idDistritoFiltrado == 0) {
                     for (BDistrict distrito : distritos) {
@@ -152,8 +153,8 @@ public class ClientServlet extends HttpServlet {
                 int idPharmacy;
                 try {
                     idPharmacy = Integer.parseInt(request.getParameter("idPharmacy"));
-                }catch (Exception e){
-                    response.sendRedirect(request.getContextPath()+"/ClientServlet");
+                } catch (Exception e) {
+                    response.sendRedirect(request.getContextPath() + "/ClientServlet");
                     return;
                 }
                 request.setAttribute("idPharmacy", idPharmacy);
@@ -200,17 +201,17 @@ public class ClientServlet extends HttpServlet {
             case "detallesProducto":
                 try {
                     idProduct = Integer.parseInt(request.getParameter("idProduct"));
-                }catch (Exception e){
-                    response.sendRedirect(request.getContextPath()+"/ClientServlet");
+                } catch (Exception e) {
+                    response.sendRedirect(request.getContextPath() + "/ClientServlet");
                     return;
                 }
 
                 BProduct producto = productDao.obtenerProductoPorId(idProduct);
                 if (farmacias.size() > 0) {
                     for (DtoPharmacy f : farmacias) {
-                        if(f.getIdPharmacy()==producto.getPharmacy().getIdPharmacy()){
-                            for (DtoProductoCarrito p : listaCarrito.get(f)){
-                                if(p.getIdProduct()==producto.getIdProduct()){
+                        if (f.getIdPharmacy() == producto.getPharmacy().getIdPharmacy()) {
+                            for (DtoProductoCarrito p : listaCarrito.get(f)) {
+                                if (p.getIdProduct() == producto.getIdProduct()) {
                                     request.getSession().setAttribute("cantidad", p.getCantidad());
                                 }
                             }
@@ -228,8 +229,8 @@ public class ClientServlet extends HttpServlet {
                 int idDistrict;
                 try {
                     idDistrict = Integer.parseInt(request.getParameter("district"));
-                }catch (Exception e){
-                    response.sendRedirect(request.getContextPath()+"/ClientServlet");
+                } catch (Exception e) {
+                    response.sendRedirect(request.getContextPath() + "/ClientServlet");
                     return;
                 }
                 listaDistritosFiltro = districtDao.listarDistritos();
@@ -271,24 +272,46 @@ public class ClientServlet extends HttpServlet {
                 break;
 
             case "verCarrito":
-                for (DtoPharmacy f : farmacias){
-                    int k=0;
-                    for (DtoProductoCarrito pCarrito : listaCarrito.get(f)){
+                HashMap<DtoPharmacy, DtoProductoCarrito> listaRmvProduct = new HashMap<>();
+                for (DtoPharmacy f : farmacias) {
+                    int k = 0;
+                    for (DtoProductoCarrito pCarrito : listaCarrito.get(f)) {
                         BProduct product = productDao.obtenerProductoPorId(pCarrito.getIdProduct());
-                        if(product.getStock()>0){
-                            if(product.getStock()<pCarrito.getCantidad()){
+                        if (product.getStock() > 0) {
+                            if (product.getStock() < pCarrito.getCantidad()) {
                                 pCarrito.setCantidad(product.getStock());
-                                request.getSession().setAttribute("info", "Ha habido un cambio en la disponibilidad de los productos");
+                                pCarrito.setStock(product.getStock());
+                                ArrayList<DtoProductoCarrito> modifiedProductList = listaCarrito.get(f);
+                                modifiedProductList.set(k, pCarrito);
+                                listaCarrito.put(f, modifiedProductList);
+                                request.getSession().setAttribute("info", "Ha cambiado la disponibilidad del stock de los productos.");
                             }
-                        }else{
-                            listaCarrito.get(f).remove(k);
-                            if (listaCarrito.get(f).size() == 0) listaCarrito.remove(f);
-                            request.getSession().setAttribute("info", "Ha habido un cambio en la disponibilidad de los productos");
+                        } else {
+                            listaRmvProduct.put(f, listaCarrito.get(f).get(k));
+                            request.getSession().setAttribute("info", "Ha habido un cambio en la disponibilidad del stock de los productos");
                         }
                         k++;
                     }
                 }
+
+                ArrayList<DtoPharmacy> listaRmvPharmacy = new ArrayList<>();
+                for (Map.Entry<DtoPharmacy, DtoProductoCarrito> entry : listaRmvProduct.entrySet()) {
+                    listaCarrito.get(entry.getKey()).remove(entry.getValue());
+                    if (listaCarrito.get(entry.getKey()).size() == 0) listaRmvPharmacy.add(entry.getKey());
+                }
+                for (DtoPharmacy f : listaRmvPharmacy) {
+                    listaCarrito.remove(f);
+                }
+
                 request.getSession().setAttribute("listaCarrito", listaCarrito);
+                //Se recalcula tamaño para enviarlo despues de los cambios, antes se envía con el valor sin cambios
+                int tamanoCarritoNew = 0;
+                if (listaCarrito.keySet().size() > 0) {
+                    for (DtoPharmacy f : listaCarrito.keySet()) {
+                        tamanoCarritoNew += listaCarrito.get(f).size();
+                    }
+                }
+                request.setAttribute("tamanoCarrito", tamanoCarritoNew);
 
                 view = request.getRequestDispatcher("/cliente/carritoCompras.jsp");
                 view.forward(request, response);
@@ -324,11 +347,10 @@ public class ClientServlet extends HttpServlet {
         int idClient = client.getIdClient();
         int i, j;
         String busqueda = request.getParameter("busqueda") == null ? "" : new String(request.getParameter("busqueda").getBytes(StandardCharsets.UTF_8));
-        String tipoBusqueda = request.getParameter("tipoBusqueda") == null ? "" : request.getParameter("tipoBusqueda").trim();
+        String tipoBusqueda = request.getParameter("tipoBusqueda") == null ? "" : request.getParameter("tipoBusqueda");
         String filtro = request.getParameter("filtro") == null ? "" : request.getParameter("filtro");
 
         switch (request.getParameter("action")) {
-
             case "guardarCambios":
                 i = 0;
                 while (request.getParameter("idFarmacia" + i) != null) {
@@ -336,7 +358,6 @@ public class ClientServlet extends HttpServlet {
                     String pickUpDate = request.getParameter("pickUpDate" + i);
 
                     if (!pickUpDate.equals("")) {
-
                         HashMap<DtoPharmacy, ArrayList<DtoProductoCarrito>> listaCarrito = (HashMap<DtoPharmacy, ArrayList<DtoProductoCarrito>>) session.getAttribute("listaCarrito");
                         ArrayList<DtoPharmacy> listaFarmacias = new ArrayList<>(listaCarrito.keySet());
 
@@ -458,31 +479,28 @@ public class ClientServlet extends HttpServlet {
                 ArrayList<String> idOrders = new ArrayList<>();
                 while (request.getParameter("idFarmacia" + i) != null) {
                     String pickUpDate = request.getParameter("pickUpDate" + i);
-
                     String idOrder = ordersDao.generarOrden(idClient, pickUpDate);
                     idOrders.add(idOrder);
+
                     j = 0;
                     while (request.getParameter("idProducto" + i + "-" + j) != null) {
                         int idProducto = Integer.parseInt(request.getParameter("idProducto" + i + "-" + j));
                         int cantidad = Integer.parseInt(request.getParameter("cantidad" + i + "-" + j));
                         if (cantidad == 0) {
-                            exito="ne";
+                            exito = "ne";
                             break;
                         }
 
                         BProduct product = productDao.obtenerProductoPorId(idProducto);
-                        if(product.getStock()-cantidad>=0) {
+                        if (product.getStock() - cantidad >= 0) {
                             product.setStock(product.getStock() - cantidad);
                             productDao.editarProducto(product);
-
-
                             if (!orderDetailsDao.agregarOrderDetails(idOrder, idProducto, cantidad)) {
                                 exito = "ne";
                                 break;
                             }
 
                             Part recetaPart = request.getPart("receta" + i + "-" + j);
-
                             if (recetaPart.getSize() > 0) {
                                 InputStream recetaStream = recetaPart.getInputStream();
                                 if (!orderDetailsDao.agregarReceta(idOrder, idProducto, recetaStream)) {
@@ -492,15 +510,15 @@ public class ClientServlet extends HttpServlet {
                             } else {
                                 orderDetailsDao.agregarReceta(idOrder, idProducto, null);
                             }
-                        }else{
+                        } else {
                             exito = "ne";
                             break;
                         }
                         j++;
                     }
 
-                    if(exito.equals("ne")){
-                        for(String id: idOrders){
+                    if (exito.equals("ne")) {
+                        for (String id : idOrders) {
                             orderDetailsDao.borrarDetails(id);
                             ordersDao.borrarOrden(id);
                         }
@@ -509,7 +527,7 @@ public class ClientServlet extends HttpServlet {
                     i++;
                 }
 
-                if(exito.equals("e")){
+                if (exito.equals("e")) {
                     session.setAttribute("listaCarrito", new HashMap<DtoPharmacy, ArrayList<DtoProductoCarrito>>());
                 }
                 session.setAttribute("orden", exito);
@@ -518,9 +536,7 @@ public class ClientServlet extends HttpServlet {
                 break;
 
             case "editar":
-
                 BClient clientE = new BClient();
-                System.out.println(client.getIdClient());
                 clientE.setIdClient(client.getIdClient());
                 clientE.setName(request.getParameter("nombre").trim());
                 clientE.setLastName(request.getParameter("apellido").trim());
@@ -540,25 +556,24 @@ public class ClientServlet extends HttpServlet {
             case "cancelarPedido":
                 try {
                     String idOrder = request.getParameter("idOrder");
-                    ordersDao.cancelarPedido(idOrder, idClient);
+                    ordersDao.cancelarPedido(idOrder);
 
-                    //
                     BOrders order = new BOrders();
                     order.setIdOrder(idOrder);
                     ordersDao.agregarOrderDetails(order);
                     for (BOrderDetails orderDetails : order.getListaDetails()) {
-                        System.out.println(orderDetails.getProducto()+" "+orderDetails.getQuantity());
                         BProduct product = productDao.obtenerProductoPorId(orderDetails.getIdProduct());
                         product.setStock(product.getStock() + orderDetails.getQuantity());
                         productDao.editarProducto(product);
                     }
-                    //
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
                 response.sendRedirect(request.getContextPath() + "/ClientServlet?action=historial");
                 break;
+
             case "filtroDistrito":
                 if (!request.getParameter("idDistrict").equals("")) {
                     try {

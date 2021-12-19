@@ -10,13 +10,15 @@
         <jsp:param name="title" value="Telefarma - Buscar Producto"/>
     </jsp:include>
     <head>
-        <link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/res/magiczoomplus/magiczoomplus.css"/>
+        <link type="text/css" rel="stylesheet"
+              href="<%=request.getContextPath()%>/res/magiczoomplus/magiczoomplus.css"/>
         <script type="text/javascript" src="<%=request.getContextPath()%>/res/magiczoomplus/magiczoomplus.js"></script>
     </head>
     <%
         String alertClass = null;
         String alertMssg = null;
-        int cantidad=session.getAttribute("cantidad")==null?0:(Integer) session.getAttribute("cantidad");;
+        int cantidad = session.getAttribute("cantidad") == null ? 0 : (Integer) session.getAttribute("cantidad");
+        ;
         String enCarrito = (String) session.getAttribute("productoEnCarrito");
 
         session.removeAttribute("productoEnCarrito");
@@ -44,8 +46,11 @@
                      style="border-radius: 0.45rem; align-items: center;">
                     <!--Imagen del producto-->
                     <div class="col-md-5">
-                        <div class="row text-center overflow-hidden" >
-                            <a href="${pageContext.request.contextPath}/Image?idProduct=<%=producto.getIdProduct()%>" class="MagicZoom"><img src="${pageContext.request.contextPath}/Image?idProduct=<%=producto.getIdProduct()%>" style="max-width: 100%;" /></a>
+                        <div class="row text-center overflow-hidden">
+                            <a href="${pageContext.request.contextPath}/Image?idProduct=<%=producto.getIdProduct()%>"
+                               class="MagicZoom"><img
+                                    src="${pageContext.request.contextPath}/Image?idProduct=<%=producto.getIdProduct()%>"
+                                    style="max-width: 100%;"/></a>
                         </div>
                     </div>
                     <!--Info del producto-->
@@ -99,16 +104,19 @@
                                             class="btn btn-tele" id="menos" type="button">
                                         <i class="fas fa-minus fa-xs"></i>
                                     </button>
-                                    <input class="form-control border-start-0 border-end-0 text-center readex-15"
-                                           type="number" style="width:46px;" id="quantity"
-                                           name="quantity"
-                                           value="<%=Math.max(cantidad, 1)%>" min="1" max="<%=producto.getStock()%>"/>
+                                    <input class="form-control border-start-0 border-end-0 text-center readex-15 px-0"
+                                           type="number" style="width:46px;" id="quantity" name="quantity"
+                                           value="<%=Math.max(cantidad, 1)%>" min="1" max="<%=producto.getStock()%>"
+                                           required/>
                                     <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
                                             class="btn btn-tele" id="mas" type="button">
                                         <i class="fas fa-plus fa-xs"></i>
                                     </button>
                                     <button type="submit" class="mx-4 btn btn-rectangle-out h-100">
-                                        <span><i class="fas fa-cart-plus"></i> <%=cantidad!=0?"Actualizar ":"Añadir al "%>carrito </span>
+                                        <span>
+                                            <i class="fas fa-cart-plus"></i>
+                                            <%=cantidad != 0 ? "Actualizar " : "Añadir al "%>carrito
+                                        </span>
                                     </button>
                                 </div>
                             </form>
@@ -119,16 +127,16 @@
         </main>
         <%
             if (enCarrito != null && !enCarrito.equals("")) {
-                    switch (enCarrito) {
-                        case "0":
-                            alertClass = "text-success";
-                            alertMssg = "Has agregado este producto a tu carrito";
-                            break;
-                        case "1":
-                            alertClass = "text-info";
-                            alertMssg = "Se actualizó la cantidad del producto";
-                            break;
-                    }
+                switch (enCarrito) {
+                    case "0":
+                        alertClass = "text-success";
+                        alertMssg = "Has agregado este producto a tu carrito";
+                        break;
+                    case "1":
+                        alertClass = "text-info";
+                        alertMssg = "Se actualizó la cantidad del producto";
+                        break;
+                }
         %>
         <!-- Modal para mensajes -->
         <div class="modal fade" id="mensaje" data-bs-backdrop="static" data-bs-keyboard="false"
@@ -146,14 +154,16 @@
                     <div class="modal-body py-0" style="background: #f5f5f5;">
                         <div class="row">
                             <div class="col w-25">
-                                <img class="p-2 border-1" src="${pageContext.request.contextPath}/Image?idProduct=<%=producto.getIdProduct()%>" alt="<%=producto.getName()%>"
-                                style="max-width: 100%; height: auto" >
+                                <img class="p-2 border-1"
+                                     src="${pageContext.request.contextPath}/Image?idProduct=<%=producto.getIdProduct()%>"
+                                     alt="<%=producto.getName()%>"
+                                     style="max-width: 100%; height: auto">
                             </div>
                             <div class="col row-producto w-25" style="font-size: 15px;margin: auto;">
-                                    <%=producto.getName()%>
+                                <%=producto.getName()%>
                             </div>
                             <div class="col row-precio w-25" style="font-size: 16px; margin: auto;">
-                                S/<%=String.format("%.2f",producto.getPrice())%>
+                                S/<%=String.format("%.2f", producto.getPrice())%>
                             </div>
                             <div class="col w-25" style="font-size: 15px;margin: auto;">
                                 <div class="heebo-500 text-center w-100">
@@ -163,38 +173,40 @@
                                     <%=cantidad%>
                                 </div>
                             </div>
-                    </div>
-                    <div class="modal-footer row">
-                        <div class="col w-50 d-flex text-center">
-                            <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%=producto.getPharmacy().getIdPharmacy()%>"
-                                class="btn btn-tele-white w-100 border-1" style="border-radius: 2rem; height: fit-content; flex-direction: column;">
-                                    Ir a <%=producto.getPharmacy().getName()%>
-                            </a>
                         </div>
-                        <div class="col w-50 d-flex text-center">
-                            <a class="btn btn-tele w-100" style="border-radius: 2rem; height: fit-content; flex-direction: column;"
-                            href="<%=request.getContextPath()%>/ClientServlet?action=verCarrito">
-                                Ir a carrito
-                            </a>
+                        <div class="modal-footer row">
+                            <div class="col w-50 d-flex text-center">
+                                <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%=producto.getPharmacy().getIdPharmacy()%>"
+                                   class="btn btn-tele-white w-100 border-1"
+                                   style="border-radius: 2rem; height: fit-content; flex-direction: column;">
+                                    Ir a <%=producto.getPharmacy().getName()%>
+                                </a>
+                            </div>
+                            <div class="col w-50 d-flex text-center">
+                                <a class="btn btn-tele w-100"
+                                   style="border-radius: 2rem; height: fit-content; flex-direction: column;"
+                                   href="<%=request.getContextPath()%>/ClientServlet?action=verCarrito">
+                                    Ir a carrito
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <%
+                <%
             }
         %>
-        <!--JS-->
-        <script src="${pageContext.request.contextPath}/res/bootstrap/js/bootstrap.min.js"></script>
-        <%
+            <!--JS-->
+            <script src="${pageContext.request.contextPath}/res/bootstrap/js/bootstrap.min.js"></script>
+                <%
             if (enCarrito != null && !enCarrito.equals("")) {
         %>
-        <!-- Script para modal -->
-        <script>
+            <!-- Script para modal -->
+            <script>
                 var myModal = new bootstrap.Modal(document.getElementById('mensaje'), {})
                 myModal.show()
-        </script>
-        <%
+            </script>
+                <%
             }
         %>
 
