@@ -35,7 +35,7 @@ public class AdminServlet extends HttpServlet {
         RequestDispatcher view;
         switch (accion) {
             case "":
-                int limitedistritos = 2;
+                int limitedistritos = 3;
                 ArrayList<BDistrict> distritos = districtDao.listarDistritosAdmin(pagina, limitedistritos, busqueda);
                 int pagTotales = (int) Math.ceil((double) districtDao.listarDistritosAdmin(0, -1, busqueda).size() / limitedistritos);
 
@@ -43,20 +43,46 @@ public class AdminServlet extends HttpServlet {
                 request.setAttribute("pagTotales", pagTotales);
                 request.setAttribute("numDistritos", limitedistritos);
                 request.setAttribute("listaDistritosAMostrar", distritos);
+                request.setAttribute("distritosFiltrado", districtDao.listarDistritos());
 
                 ArrayList<ArrayList<BPharmacy>> listaFarmacias = new ArrayList<>();
                 for (BDistrict distrito : distritos) {
-                    ArrayList<BPharmacy> farmaciasAdmin = pharmacyDao.listarFarmaciasPorDistrito(0, -1, busqueda, 1, distrito.getIdDistrict());
+                    ArrayList<BPharmacy> farmaciasAdmin = pharmacyDao.listarFarmaciasPorDistrito(0, 3, busqueda, 1, distrito.getIdDistrict());
                     listaFarmacias.add(farmaciasAdmin);
                 }
                 request.setAttribute("listaFarmacias", listaFarmacias);
 
-                if (pagina>=pagTotales && pagTotales>0){
-                    response.sendRedirect(request.getContextPath()+"/AdminServlet?busqueda="+busqueda+"&pagina="+(pagTotales-1));
+                if (pagina >= pagTotales && pagTotales > 0) {
+                    response.sendRedirect(request.getContextPath() + "/AdminServlet?busqueda=" + busqueda + "&pagina=" + (pagTotales - 1));
                     return;
                 }
 
                 view = request.getRequestDispatcher("/admin/buscadorFarmacias.jsp");
+                view.forward(request, response);
+                break;
+
+            case "verDistrito":
+                int limiteFarmacias = 9;
+                int idDistrict;
+                try {
+                    idDistrict = Integer.parseInt(request.getParameter("district"));
+                } catch (Exception e) {
+                    response.sendRedirect(request.getContextPath() + "/AdminServlet");
+                    break;
+                }
+                request.setAttribute("distritosFiltrado", districtDao.listarDistritos());
+                request.setAttribute("district", districtDao.obtenerDistritoPorId(idDistrict));
+                request.setAttribute("listaFarmaciasDistrito", pharmacyDao.listarFarmaciasPorDistrito(pagina, limiteFarmacias, busqueda, 1, idDistrict));
+                pagTotales = (int) Math.ceil((double) pharmacyDao.listarFarmaciasPorDistrito(0, -1, busqueda, 0, idDistrict).size() / limiteFarmacias);
+                request.setAttribute("pagTotales", pagTotales);
+                request.setAttribute("pagActual", pagina);
+
+                if (pagina >= pagTotales && pagTotales > 0) {
+                    response.sendRedirect(request.getContextPath() + "/AdminServlet?action=verDistrito&district=" + idDistrict + "&pagina=" + (pagTotales - 1));
+                    return;
+                }
+
+                view = request.getRequestDispatcher("/admin/verDistrito.jsp");
                 view.forward(request, response);
                 break;
 
@@ -84,6 +110,10 @@ public class AdminServlet extends HttpServlet {
                     break;
                 }
 
+            case "verEstadisticas":
+                System.out.println("Estadisticas");
+                break;
+
             default:
                 response.sendRedirect(request.getContextPath() + "/");
                 break;
@@ -102,6 +132,7 @@ public class AdminServlet extends HttpServlet {
         SessionDao sessionDao = new SessionDao();
 
         int idPharmacy;
+        String busqueda = request.getParameter("busqueda") == null ? "" : new String(request.getParameter("busqueda").getBytes(StandardCharsets.UTF_8));
         ArrayList<String> errorList = new ArrayList<>();
         String dominio = "http://localhost:8080/";
         boolean correoExiste, rucExiste, longitudRUCValida, rucIsNum, rucValido;
@@ -169,7 +200,6 @@ public class AdminServlet extends HttpServlet {
                 break;
 
             case "buscar":
-                String busqueda = request.getParameter("busqueda") == null ? "" : new String(request.getParameter("busqueda").trim().getBytes(StandardCharsets.UTF_8));
                 response.sendRedirect(request.getContextPath() + "/AdminServlet?busqueda=" + busqueda);
                 break;
 
@@ -245,6 +275,23 @@ public class AdminServlet extends HttpServlet {
 
                     view = request.getRequestDispatcher("/admin/editarFarmacia.jsp");
                     view.forward(request, response);
+                }
+                break;
+
+            case "buscarFarmaciaDeDistrito":
+                response.sendRedirect(request.getContextPath() + "/AdminServlet?action=verDistrito&busqueda=" + busqueda + "&district=" + Integer.parseInt(request.getParameter("district")));
+                break;
+
+            case "filtroDistrito":
+                if (!request.getParameter("idDistrict").equals("")) {
+                    try {
+                        int idDistritoFiltrado = request.getParameter("idDistrict") == null ? 0 : Integer.parseInt(request.getParameter("idDistrict"));
+                        response.sendRedirect(request.getContextPath() + "/AdminServlet?action=verDistrito&district=" + idDistritoFiltrado);
+                    } catch (Exception e) {
+                        response.sendRedirect(request.getContextPath() + "/AdminServlet");
+                    }
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/AdminServlet");
                 }
                 break;
         }
