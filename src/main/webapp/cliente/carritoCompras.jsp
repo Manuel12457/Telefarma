@@ -244,13 +244,13 @@
                          tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content border-0">
-                                <div class="modal-header bg-tele border-0 text-white">
+                                <div class="modal-header bg-tele border-0 text-white heebo-500">
                                     <h5 class="modal-title" id="staticBackdropLabel">Subir recetas</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <span>Hay productos que requieren receta, súbalas para continuar con el pedido:</span>
+                                    <span class="gray3" style="font-family: 'Heebo', sans-serif; font-weight: 400;">Hay productos que requieren receta, súbalas para continuar con el pedido:</span>
                                     <%
                                         for (int i = 0; i < listaCarrito.size(); i++) {
                                             DtoPharmacy farmacia = listaFarmacias.get(i);
@@ -264,7 +264,7 @@
                                             }
                                             if (hayProductosConReceta) {
                                     %>
-                                    <h4 class="mt-3"><b><%= farmacia.getName() %> </b></h4>
+                                    <h4 class="mt-3 gray-heebo"><b><%= farmacia.getName() %> </b></h4>
                                     <%
                                         }
                                         for (int j = 0; j < listaProductos.size(); j++) {
@@ -272,13 +272,14 @@
                                             if (producto.getRequierePrescripcion()) {
                                     %>
                                     <div class="mt-1">
-                                                    <span class="cart-precio"> <%=producto.getName()%>
+                                                    <div class="cart-precio my-2">
+                                                        <div class="my-2"><%=producto.getName()%></div>
                                                         <input class="form-control readex-15 form-control-sm custom-file-control"
                                                                type="file" value="<%=producto.getReceta()%>"
                                                                id="conReceta" accept="image/png, image/gif, image/jpeg"
                                                                name="receta<%=i%>-<%=j%>" required
                                                                onchange="readReceta(this);">
-                                                    </span>
+                                                    </div>
                                     </div>
                                     <% } else { %>
                                     <input class="form-control form-control-sm custom-file-control" type="file"

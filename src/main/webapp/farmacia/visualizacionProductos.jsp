@@ -70,13 +70,13 @@
             %>
 
             <!--Pestañas visualización y gestión-->
-            <ul class="nav nav-tabs nav-justified mb-4 justify-content-center px-5">
+            <ul class="nav nav-tabs nav-justified mb-4 justify-content-center px-5 rubik-500">
                 <li class="nav-item" style="max-width: 42%">
                     <a class="nav-link text-white active" aria-current="page" href="#"><b>Visualización de
                         Productos</b></a>
                 </li>
                 <li class="nav-item" style="max-width: 42%">
-                    <a class="nav-link text-dark"
+                    <a class="nav-link a-gray5"
                        href="<%=request.getContextPath()%>/PharmacyServlet?action=buscarPedido">Gestión de Pedidos</a>
                 </li>
             </ul>
@@ -129,32 +129,36 @@
                                 </strong>
                             </p>
                         </div>
-                    </div>
-                    <!--Botones de editar y eliminar-->
-                    <%
-                        String modalTarget;
-                        if (producto.getPosibleEliminar()) {
-                            modalTarget = "confirmacionEliminar";
-                        } else {
-                            modalTarget = "productoEnOrden";
-                        }
-                    %>
-                    <%--estilos para que sea responsive--%>
-                    <div class="col-md-1 d-flex flex-md-column justify-content-md-center align-items-md-center justify-content-center pb-4 py-md-0">
-                        <div class="px-md-0 px-3">
-                            <a href="<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProduct()%>">
-                                <i class="far fa-edit fa-lg btn-tele p-2 rounded"></i>
-                            </a>
+                        <!--Botones de editar y eliminar-->
+                        <%
+                            String modalTarget;
+                            if (producto.getPosibleEliminar()) {
+                                modalTarget = "confirmacionEliminar";
+                            } else {
+                                modalTarget = "productoEnOrden";
+                            }
+                        %>
+                        <div class="row mt-3">
+                            <div class="col text-center">
+                                <button class="btn-icon-trans btn-tele px-md-0"
+                                        onclick="location.href='<%=request.getContextPath()%>/PharmacyServlet?action=editarProducto&idProducto=<%=producto.getIdProduct()%>'" >
+                                    <span class='text-icon-trans'>Editar</span>
+                                    <span class="icon-trans">
+                                         <i class="far fa-edit"></i>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="col text-center">
+                                <button class="btn-icon-trans btn-danger px-md-0" type="button"
+                                        data-bs-toggle="modal" data-bs-target="#<%=modalTarget%>"
+                                        data-bs-whatever="<%=producto.getIdProduct()%>">
+                                    <span class='text-icon-trans'>Eliminar</span>
+                                    <span class="icon-trans">
+                                         <i class="bi bi-trash-fill" style="margin-top: -2px"></i>
+                                    </span>
+                                </button>
 
-                        </div>
-                        <hr class="my-1" style="background-color: white">
-                        <div class="px-md-0 px-3">
-                            <button class="btn btn-danger fa-lg px-2" type="button"
-                                    data-bs-toggle="modal" data-bs-target="#<%=modalTarget%>"
-                                    data-bs-whatever="<%=producto.getIdProduct()%>">
-                                <i class="fas fa-times-circle"></i>
-                            </button>
-
+                            </div>
                         </div>
                     </div>
                 </div>

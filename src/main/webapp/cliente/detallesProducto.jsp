@@ -13,7 +13,17 @@
         <link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/res/magiczoomplus/magiczoomplus.css"/>
         <script type="text/javascript" src="<%=request.getContextPath()%>/res/magiczoomplus/magiczoomplus.js"></script>
     </head>
+    <%
+        String alertClass = null;
+        String alertMssg = null;
+        int cantidad=session.getAttribute("cantidad")==null?0:(Integer) session.getAttribute("cantidad");;
+        String enCarrito = (String) session.getAttribute("productoEnCarrito");
 
+        session.removeAttribute("productoEnCarrito");
+        session.removeAttribute("cantidad");
+        if (enCarrito != null && !enCarrito.equals("")) {
+        }
+    %>
     <body>
         <%String nombreCliente = sesion.getName() + " " + sesion.getLastName();%>
         <jsp:include page="../includes/barraSuperior.jsp">
@@ -92,52 +102,101 @@
                                     <input class="form-control border-start-0 border-end-0 text-center readex-15"
                                            type="number" style="width:46px;" id="quantity"
                                            name="quantity"
-                                           value="1" min="1" max="<%=producto.getStock()%>"/>
+                                           value="<%=Math.max(cantidad, 1)%>" min="1" max="<%=producto.getStock()%>"/>
                                     <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
                                             class="btn btn-tele" id="mas" type="button">
                                         <i class="fas fa-plus fa-xs"></i>
                                     </button>
                                     <button type="submit" class="mx-4 btn btn-rectangle-out h-100">
-                                        <span><i class="fas fa-cart-plus"></i> Añadir al carrito </span>
+                                        <span><i class="fas fa-cart-plus"></i> <%=cantidad!=0?"Actualizar ":"Añadir al "%>carrito </span>
                                     </button>
                                 </div>
                             </form>
-                            <%
-                                String alertClass = null;
-                                String alertMssg = null;
-                                String estadoRegistro = (String) session.getAttribute("productoEnCarrito");
-                                if (estadoRegistro != null) {
-                                    if (!estadoRegistro.equals("")) {
-                                        switch (estadoRegistro) {
-                                            case "0":
-                                                alertClass = "alert-success";
-                                                alertMssg = "Producto agregado a su carrito!";
-                                                break;
-                                            case "1":
-                                                alertClass = "alert-info";
-                                                alertMssg = "Se actualizó la cantidad del producto.";
-                                                break;
-                                        }
-                                    }
-
-                            %>
-                            <div class="alert <%=alertClass%> alert-dismissible fade show mt-lg-3"
-                                 role="alert">
-                                <%=alertMssg%>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                            </div>
-                            <%
-                                    session.removeAttribute("productoEnCarrito");
-                                }
-                            %>
                         </div>
                     </div>
                 </div>
             </div>
         </main>
-
+        <%
+            if (enCarrito != null && !enCarrito.equals("")) {
+                    switch (enCarrito) {
+                        case "0":
+                            alertClass = "text-success";
+                            alertMssg = "Has agregado este producto a tu carrito";
+                            break;
+                        case "1":
+                            alertClass = "text-info";
+                            alertMssg = "Se actualizó la cantidad del producto";
+                            break;
+                    }
+        %>
+        <!-- Modal para mensajes -->
+        <div class="modal fade" id="mensaje" data-bs-backdrop="static" data-bs-keyboard="false"
+             tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content border-0">
+                    <div class="modal-header text-center border-0 <%=alertClass%> rubik-500">
+                        <h5 class="modal-title text-center w-100" id="staticBackdropLabel">
+                            <i class="bi bi-check-circle-fill" style="margin-right: 0.125rem;"></i>
+                            <%=alertMssg%>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body py-0" style="background: #f5f5f5;">
+                        <div class="row">
+                            <div class="col w-25">
+                                <img class="p-2 border-1" src="${pageContext.request.contextPath}/Image?idProduct=<%=producto.getIdProduct()%>" alt="<%=producto.getName()%>"
+                                style="max-width: 100%; height: auto" >
+                            </div>
+                            <div class="col row-producto w-25" style="font-size: 15px;margin: auto;">
+                                    <%=producto.getName()%>
+                            </div>
+                            <div class="col row-precio w-25" style="font-size: 16px; margin: auto;">
+                                S/<%=String.format("%.2f",producto.getPrice())%>
+                            </div>
+                            <div class="col w-25" style="font-size: 15px;margin: auto;">
+                                <div class="heebo-500 text-center w-100">
+                                    Cantidad
+                                </div>
+                                <div class="opensans text-center w-100">
+                                    <%=cantidad%>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="modal-footer row">
+                        <div class="col w-50 d-flex text-center">
+                            <a href="<%=request.getContextPath()%>/ClientServlet?action=verFarmacia&idPharmacy=<%=producto.getPharmacy().getIdPharmacy()%>"
+                                class="btn btn-tele-white w-100 border-1" style="border-radius: 2rem; height: fit-content; flex-direction: column;">
+                                    Ir a <%=producto.getPharmacy().getName()%>
+                            </a>
+                        </div>
+                        <div class="col w-50 d-flex text-center">
+                            <a class="btn btn-tele w-100" style="border-radius: 2rem; height: fit-content; flex-direction: column;"
+                            href="<%=request.getContextPath()%>/ClientServlet?action=verCarrito">
+                                Ir a carrito
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%
+            }
+        %>
         <!--JS-->
         <script src="${pageContext.request.contextPath}/res/bootstrap/js/bootstrap.min.js"></script>
+        <%
+            if (enCarrito != null && !enCarrito.equals("")) {
+        %>
+        <!-- Script para modal -->
+        <script>
+                var myModal = new bootstrap.Modal(document.getElementById('mensaje'), {})
+                myModal.show()
+        </script>
+        <%
+            }
+        %>
+
     </body>
 </html>

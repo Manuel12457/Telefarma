@@ -90,7 +90,7 @@
                                                 <label class="form-label" for="productoDescription">Descripción</label>
                                                 <textarea type="tel" id="productoDescription" name="descripcion"
                                                           placeholder="Ingrese la descripción del producto"
-                                                          maxlength="500" class="form-control" rows="5"></textarea>
+                                                          maxlength="500" class="form-control readex-15" rows="5"></textarea>
                                                 <div class="form-text">
                                                     La descripción no puede exceder los 500 caracteres.
                                                 </div>
@@ -99,7 +99,7 @@
                                     </div>
                                     <div class="d-flex justify-content-center">
                                         <a role="button" href="<%=request.getContextPath()%>/PharmacyServlet"
-                                           class="btn btn-light mx-2">Cancelar</a>
+                                           class="btn btn-light mx-2 rubik-500 gray5">Cancelar</a>
                                         <input class="btn btn-tele mx-2" type="submit" value="Registrar producto"/>
                                     </div>
                                 </form>
@@ -112,6 +112,29 @@
 
         <%--JS--%>
         <script src="<%=request.getContextPath()%>/res/bootstrap/js/bootstrap.min.js"></script>
-        <script src="<%=request.getContextPath()%>/res/js/main.js"></script>
+        <script>
+            function readURL(input) {
+                if(input.files[0].size > 2097152){
+                    alert("El archivo es muy grande");
+                    input.value = "";
+                    $('#imagenPreview')
+                        .attr('src', "${pageContext.request.contextPath}/res/img/no-imagen.jpg")
+                        .width(100)
+                        .height(100);
+                }
+                else if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#imagenPreview')
+                            .attr('src', e.target.result)
+                            .width(100)
+                            .height(100);
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
     </body>
 </html>

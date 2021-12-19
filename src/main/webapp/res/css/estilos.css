@@ -40,13 +40,14 @@ input, select {
 
 .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
     color: #495057;
-    background-color: rgba(245, 127, 0, 0.87);
+    background-color: #f57f00;
     border-color: #dee2e6 #dee2e6 #fff
 }
 
 /*Boton Telefarma*/
 
 .btn-tele {
+    border-radius: 0.5rem;
     border-color: #f57f00;
     background-color: #f57f00;
     font-family: 'Rubik', sans-serif;
@@ -59,6 +60,21 @@ input, select {
     color: #fff;
     background-color: #ce6b00;
     border-color: #ce6b00;
+}
+
+.btn-tele-white {
+    background: white;
+    color: #f57f00;
+    border-color: #f57f00;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.btn-tele-white:hover {
+    color: white;
+    background-color: #f57f00;
+    border-color: #f57f00;
 }
 
 .btn-check:focus + .btn-tele, .btn-tele:focus {
@@ -537,18 +553,39 @@ td {
 }
 
 .f1 {
-    background-image: url('../img/national-cancer-institute-byGTytEGjBo-unsplash.jpg') !important;
+    background-image: url('../img/f1.jpg') !important;
     background-size: cover;
+}
+
+.col:hover .f1{
+    background-image: url('../img/f1-bw.jpg') !important;
+}
+.card:hover .f1{
+    background-image: url('../img/f1-bw.jpg') !important;
 }
 
 .f2 {
-    background-image: url('../img/tbel-abuseridze-eBW1nlFdZFw-unsplash.jpg') !important;
+    background-image: url('../img/f2.jpg') !important;
     background-size: cover;
 }
 
+.col:hover .f2{
+    background-image: url('../img/f2-bw.jpg') !important;
+}
+.card:hover .f2{
+    background-image: url('../img/f2-bw.jpg') !important;
+}
+
 .f3 {
-    background-image: url('../img/national-cancer-institute-cw2Zn2ZQ9YQ-unsplash.jpg') !important;
+    background-image: url('../img/f3.jpg') !important;
     background-size: cover;
+}
+
+.col:hover .f3{
+    background-image: url('../img/f3-bw.jpg') !important;
+}
+.card:hover .f3{
+    background-image: url('../img/f3-bw.jpg') !important;
 }
 
 /*Productos de una farmacia*/
@@ -841,6 +878,24 @@ strong.detalles-str{
     color: #f57f00;
 }
 
+.a-gray5{
+    color: #5b5b5b;
+}
+
+.a-gray5:hover{
+    color: #f57f00;
+}
+
+.a-grow{
+    color: white;
+    font-size: 20px;
+}
+
+.a-grow:hover{
+    color: white;
+    font-size: 25px;
+}
+
 /*Paleta*/
 .gray3{
     color: #333333;
@@ -866,6 +921,7 @@ strong.detalles-str{
     transform: perspective(1px) translateZ(0);
     box-shadow: 0 0 1px rgba(0, 0, 0, 0);
     position: relative;
+    border-radius: 1rem;
     background: #f57f00;
     -webkit-transition-property: color;
     transition-property: color;
@@ -881,6 +937,7 @@ strong.detalles-str{
     right: 0;
     bottom: 0;
     background: #ce6b00;
+    border-radius: 1rem;
     -webkit-transform: scale(0);
     transform: scale(0);
     -webkit-transition-property: transform;
@@ -991,4 +1048,89 @@ a:hover .text-ver-mas{
     color: white;
 }
 
+/*Border radius*/
+.b-r-05{
+  border-radius: 0.5rem;
+}
 
+/*Boton con icono*/
+
+.btn-icon-trans {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    width: 150px !important;
+    height: 40px !important;
+    cursor: pointer !important;
+    align-items: center !important;
+    border: none !important;
+    border-radius: 0.5rem !important;
+    font-size: 15px;
+}
+
+.span-icon-trans {
+    transition: 200ms;
+}
+
+.text-icon-trans {
+    margin-left: -25px;
+    color: white;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+}
+
+.icon-trans {
+    position: absolute;
+    transform: translateX(110px);
+    margin-top:-20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button:hover .text-icon-trans {
+    color: transparent;
+}
+
+button:hover .icon-trans {
+    width: 150px;
+    border-left: none;
+    transform: translateX(0);
+}
+
+button:focus .btn-icon-trans{
+    outline: none;
+}
+
+a:hover .text-icon-trans {
+    color: transparent;
+}
+
+a:hover .icon-trans {
+    width: 150px;
+    border-left: none;
+    transform: translateX(0);
+}
+
+a:focus .btn-icon-trans{
+    outline: none;
+}
+
+.btn-icon-trans-dis {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    width: 150px !important;
+    height: 40px !important;
+    cursor: pointer !important;
+    align-items: center !important;
+    border: none !important;
+    border-radius: 0.5rem !important;
+    font-size: 15px;
+    background: #efefef;
+    color: #5b5b5b;
+}

@@ -75,8 +75,12 @@ public class ClientServlet extends HttpServlet {
                 ArrayList<ArrayList<BPharmacy>> listaFarmacias = new ArrayList<>();
                 HashMap<Integer, Integer> mostrarBotonVerMas = new HashMap<>();
 
-                int idDistritoFiltrado = request.getParameter("idDistrito") == null ? 0 : Integer.parseInt(request.getParameter("idDistrito"));
-
+                int idDistritoFiltrado;
+                try {
+                    idDistritoFiltrado = request.getParameter("idDistrito") == null ? 0 : Integer.parseInt(request.getParameter("idDistrito"));
+                }catch (Exception e){
+                    idDistritoFiltrado=0;
+                }
                 if (idDistritoFiltrado == 0) {
                     for (BDistrict distrito : distritos) {
                         ArrayList<BPharmacy> farmaciasCliente = pharmacyDao.listarFarmaciasPorDistrito(0, limiteFarmacias, "", 0, distrito.getIdDistrict());
@@ -145,7 +149,13 @@ public class ClientServlet extends HttpServlet {
 
             case "verFarmacia":
                 limiteProductos = 16;
-                int idPharmacy = Integer.parseInt(request.getParameter("idPharmacy"));
+                int idPharmacy;
+                try {
+                    idPharmacy = Integer.parseInt(request.getParameter("idPharmacy"));
+                }catch (Exception e){
+                    response.sendRedirect(request.getContextPath()+"/ClientServlet");
+                    return;
+                }
                 request.setAttribute("idPharmacy", idPharmacy);
                 ArrayList<BProduct> listaProductos = null;
                 if (tipoBusqueda.equals("product")) {
@@ -188,8 +198,25 @@ public class ClientServlet extends HttpServlet {
                 break;
 
             case "detallesProducto":
-                idProduct = Integer.parseInt(request.getParameter("idProduct"));
+                try {
+                    idProduct = Integer.parseInt(request.getParameter("idProduct"));
+                }catch (Exception e){
+                    response.sendRedirect(request.getContextPath()+"/ClientServlet");
+                    return;
+                }
+
                 BProduct producto = productDao.obtenerProductoPorId(idProduct);
+                if (farmacias.size() > 0) {
+                    for (DtoPharmacy f : farmacias) {
+                        if(f.getIdPharmacy()==producto.getPharmacy().getIdPharmacy()){
+                            for (DtoProductoCarrito p : listaCarrito.get(f)){
+                                if(p.getIdProduct()==producto.getIdProduct()){
+                                    request.getSession().setAttribute("cantidad", p.getCantidad());
+                                }
+                            }
+                        }
+                    }
+                }
                 request.setAttribute("producto", producto);
 
                 view = request.getRequestDispatcher("/cliente/detallesProducto.jsp");
@@ -198,7 +225,13 @@ public class ClientServlet extends HttpServlet {
 
             case "verFarmaciasDistrito":
                 limiteFarmacias = 9;
-                int idDistrict = Integer.parseInt(request.getParameter("district"));
+                int idDistrict;
+                try {
+                    idDistrict = Integer.parseInt(request.getParameter("district"));
+                }catch (Exception e){
+                    response.sendRedirect(request.getContextPath()+"/ClientServlet");
+                    return;
+                }
                 listaDistritosFiltro = districtDao.listarDistritos();
                 request.setAttribute("distritosFiltrado", listaDistritosFiltro);
                 request.setAttribute("district", districtDao.obtenerDistritoPorId(idDistrict));
@@ -411,6 +444,7 @@ public class ClientServlet extends HttpServlet {
                     productoYaEnCarrito = "0";
                 }
                 request.getSession().setAttribute("productoEnCarrito", productoYaEnCarrito);
+                request.getSession().setAttribute("cantidad", quantity);
                 session.setAttribute("listaCarrito", listaCarrito);
 
                 response.sendRedirect(request.getContextPath() + "/ClientServlet?action=detallesProducto&idProduct=" + idProduct);

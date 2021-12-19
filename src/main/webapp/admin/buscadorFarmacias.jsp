@@ -34,7 +34,7 @@
                     if (request.getSession().getAttribute("actionResult") != null) {
                         String alertClass = (boolean) request.getSession().getAttribute("actionResultBoolean") ? "alert-success" : "alert-danger";
                 %>
-                <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
+                <div class="alert <%=alertClass%> alert-dismissible fade show rubik-500" role="alert">
                     <%=request.getSession().getAttribute("actionResult")%>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
@@ -49,11 +49,11 @@
                 <!--Loop de farmacias-->
                 <% for (ArrayList<BPharmacy> listaFarmaciasDistrito : listaFarmacias) { %>
                 <div class="row">
-                    <div class="container px-5 py-2" id="custom-cards-san-miguel">
+                    <div class="container px-5 py-2" >
                         <h4 class="pb-2 border-bottom dist-name"
                             style="color: #f57f00"><%= listaFarmaciasDistrito.get(0).getDistrict().getName() %>
                         </h4>
-                        <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-3">
+                        <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-3" style="flex-direction: row;">
                             <!--Loop de farmacias por distrito-->
                             <%
                                 int cardCount = 0;
@@ -64,14 +64,14 @@
                                     }
                             %>
                             <div class="col">
-                                <div class="card">
+                                <div class="card rubik-500 h-100">
                                     <!--Cabecera de farmacia-->
-                                    <div class="card-header h-100 shadow border-0 text-white f<%=cardCount%>">
+                                    <div class="card-header shadow border-0 text-white f<%=cardCount%>">
                                         <!--Botón editar-->
                                         <div class="d-flex justify-content-end ">
                                             <a role="button"
                                                href="<%=request.getContextPath()%>/AdminServlet?action=editarForm&&id=<%=farmacia.getIdPharmacy()%>"
-                                               class="btn btn-tele pe-2 pt-1"><i
+                                               class="a-grow pe-2 pt-1"><i
                                                     class="fas fa-edit"></i>
                                             </a>
                                         </div>
@@ -81,43 +81,74 @@
                                         </h2>
                                     </div>
                                     <div class="card-body">
-                                        <div class="d-flex flex-column mt-auto h-100 text-dark align-items-start">
-                                            <ul class="">
+                                        <div class="d-flex flex-column mt-auto h-75 text-dark align-items-start">
+                                            <ul class="m-auto" style="margin-left: 0 !important;">
                                                 <!--Direccion-->
-                                                <h6><i class="fas fa-map-marker-alt fa-xs"></i>&nbsp;Dirección:</h6>
+                                                <h6 class="cart-precio-tag"><i class="fas fa-map-marker-alt fa-xs"></i>&nbsp;Dirección:</h6>
                                                 <li class="d-flex align-items-center ps-4">
-                                                    <h6><%= farmacia.getAddress() %>
+                                                    <h6 class="cart-precio"><%= farmacia.getAddress() %>
                                                     </h6>
                                                 </li>
                                                 <!--Email-->
-                                                <h6><i class="fas fa-envelope fa-xs"></i>&nbsp;E-mail:</h6>
+                                                <h6 class="cart-precio-tag"><i class="fas fa-envelope fa-xs"></i>&nbsp;E-mail:</h6>
                                                 <li class="d-flex align-items-center ps-4">
-                                                    <h6><%= farmacia.getMail() %>
+                                                    <h6 class="cart-precio"><%= farmacia.getMail() %>
                                                     </h6>
                                                 </li>
                                                 <!--RUC-->
-                                                <h6><i class="fas fa-hashtag fa-xs "></i>&nbsp;RUC:</h6>
+                                                <h6 class="cart-precio-tag"><i class="fas fa-hashtag fa-xs "></i>&nbsp;RUC:</h6>
                                                 <li class="d-flex align-items-center ps-4">
-                                                    <h6><%= farmacia.getRUC() %>
+                                                    <h6 class="cart-precio"><%= farmacia.getRUC() %>
                                                     </h6>
                                                 </li>
                                             </ul>
                                         </div>
-                                        <div class="d-flex justify-content-center">
+                                        <div class="d-flex justify-content-center h-25">
                                             <%
                                                 if (Byte.compare(farmacia.getIsBanned(), (byte) 0) == 0) {
                                             %>
-                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                                    data-bs-target="#motivoBloqueo"
-                                                    data-bs-whatever="<%=farmacia.getIdPharmacy()%>">Bloquear
-                                            </button>
-                                            <button type="button" class="btn btn-light" disabled>Desbloquear</button>
+
+                                            <div class="row mt-3">
+                                                <div class="col text-center m-auto">
+                                                    <button class="btn-icon-trans btn-danger px-md-0" type="button" data-bs-toggle="modal"
+                                                            data-bs-target="#motivoBloqueo"
+                                                            data-bs-whatever="<%=farmacia.getIdPharmacy()%>">
+                                                        <span class='text-icon-trans'>Bloquear</span>
+                                                        <span class="icon-trans">
+                                                            <i class="bi bi-shield-fill-x" style="margin-top: -2px;"></i>
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                                <div class="col text-center m-auto">
+                                                    <button class="btn btn-icon-trans-dis px-md-0" disabled="disabled" type="button" >
+                                                        <span class='rubik-500' style="font-size: 14px; margin-left: -25px;">Desbloquear</span>
+                                                        <span class="icon-trans">
+                                                            <i class="bi bi-shield-fill-check" style="margin-top: -2px;"></i>
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
                                             <% } else { %>
-                                            <button type="button" class="btn btn-light" disabled>Bloquear</button>
-                                            <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                                    data-bs-target="#desbloquearFarmacia"
-                                                    data-bs-whatever="<%=farmacia.getIdPharmacy()%>">Desbloquear
-                                            </button>
+                                            <div class="row mt-3">
+                                                <div class="col text-center m-auto">
+                                                    <button class="btn btn-icon-trans-dis px-md-0" disabled="disabled" type="button">
+                                                        <span class='rubik-500' style="margin-left: -25px;">Bloquear</span>
+                                                        <span class="icon-trans">
+                                                            <i class="bi bi-shield-fill-x" style="margin-top: -2px;"></i>
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                                <div class="col text-center m-auto">
+                                                    <button class="btn-icon-trans btn-success px-md-0" type="button" data-bs-toggle="modal"
+                                                            data-bs-target="#desbloquearFarmacia"
+                                                            data-bs-whatever="<%=farmacia.getIdPharmacy()%>">
+                                                        <span class='text-icon-trans' style="font-size: 14px; margin-left: -25px;">Desbloquear</span>
+                                                        <span class="icon-trans">
+                                                            <i class="bi bi-shield-fill-check" style="margin-top: -2px;"></i>
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
                                             <% } %>
                                         </div>
                                     </div>

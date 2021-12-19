@@ -26,9 +26,9 @@
             <div class="card-header mt-5 mb-4"></div>
 
             <!--Pestañas farmacia-->
-            <ul class="nav nav-tabs nav-justified mb-4 justify-content-center px-5">
+            <ul class="nav nav-tabs nav-justified mb-4 justify-content-center px-5 rubik-500">
                 <li class="nav-item" style="max-width: 42%">
-                    <a class="nav-link text-dark"
+                    <a class="nav-link a-gray5"
                        href="<%=request.getContextPath()%>/PharmacyServlet?action=buscarProducto">Visualización de
                         Productos</a>
                 </li>
@@ -43,7 +43,7 @@
                 <div class="px-4">
                     <div class="rounded px-md-5 px-sm-0">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table readex-15">
                                 <!--Cabecera pedidos-->
                                 <thead>
                                     <tr class="text-center">
@@ -103,7 +103,7 @@
                                                 <input type="submit" name="cambiarEntregado" value="Entregado"
                                                        class="btn btn-tele"/>
                                                 <input type="submit" name="cambiarCancelado" value="Cancelar"
-                                                       class="btn btn-danger <%=orden.getDayDiff()>0?"":"disabled"%>"/>
+                                                       class="btn b-r-05 rubik-500 btn-danger <%=orden.getDayDiff()>0?"":"disabled"%>"/>
                                             </form>
                                             <%
                                             } else {
