@@ -45,7 +45,7 @@
                     <div class="job">Usuario</div>
                 </div>
             </div>
-            <a href="${pageContext.request.contextPath}/" style="color: #f57f00;">
+            <a href="${pageContext.request.contextPath}/?action=logout" style="color: #f57f00;">
                 <i class='fas fa-sign-out-alt' id="log_out"></i>
             </a>
         </div>
