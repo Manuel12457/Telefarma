@@ -65,6 +65,7 @@ public class OrdersDao extends BaseDao {
                     String[] fechaOrden = new String[2];
                     LocalDate fechaActualLD = java.time.LocalDate.now();
                     String fechaActual = fechaActualLD.toString();
+
                     switch (busqueda) {
                         case "":
                             clientOrders.setIdOrder(rs.getString(1));
@@ -81,9 +82,7 @@ public class OrdersDao extends BaseDao {
                             listaOrdenes.add(clientOrders);
                             break;
                         case "1":
-                            fechaOrden = rs.getString(3).split("\\s+");
-
-                            System.out.println(fechaOrden[0].equals(fechaActual));
+                            fechaOrden = rs.getString(4).split("\\s+");
 
                             if (fechaOrden[0].equals(fechaActual)) {
                                 clientOrders.setIdOrder(rs.getString(1));
@@ -100,13 +99,11 @@ public class OrdersDao extends BaseDao {
                                 listaOrdenes.add(clientOrders);
                             }
                             break;
+
                         case "2":
-                            fechaOrden = rs.getString(3).split("\\s+");
+                            fechaOrden = rs.getString(4).split("\\s+");
                             LocalDate fechaOrdenLD = LocalDate.parse(fechaOrden[0]);
                             LocalDate semanaPasadaLD = java.time.LocalDate.now().minusDays(7);
-
-                            System.out.println(fechaOrdenLD.isBefore(java.time.LocalDate.now()));
-                            System.out.println(fechaOrdenLD.isAfter(semanaPasadaLD));
 
                             if ((fechaOrdenLD.isBefore(fechaActualLD) || fechaOrdenLD.isEqual(fechaActualLD)) && fechaOrdenLD.isAfter(semanaPasadaLD)) {
                                 clientOrders.setIdOrder(rs.getString(1));
@@ -124,12 +121,10 @@ public class OrdersDao extends BaseDao {
                             }
                             break;
                         case "3":
-                            fechaOrden = rs.getString(3).split("\\s+");
+                            fechaOrden = rs.getString(4).split("\\s+");
                             LocalDate fechaOrdenLD3 = LocalDate.parse(fechaOrden[0]);
                             LocalDate mesPasadoLD3 = java.time.LocalDate.now().minusDays(30);
 
-                            System.out.println(fechaOrdenLD3.isBefore(java.time.LocalDate.now()));
-                            System.out.println(fechaOrdenLD3.isAfter(mesPasadoLD3));
                             if ((fechaOrdenLD3.isBefore(fechaActualLD) || fechaOrdenLD3.isEqual(fechaActualLD)) && fechaOrdenLD3.isAfter(mesPasadoLD3)) {
 
                                 clientOrders.setIdOrder(rs.getString(1));
