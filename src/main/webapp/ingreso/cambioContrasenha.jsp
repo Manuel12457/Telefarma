@@ -22,16 +22,16 @@
                             <div class="row my-2">
                                 <form method="POST" action="<%=request.getContextPath()%>/?action=cambiarContrasenha">
                                     <div class="mb-3">
-                                        <input class="form-control" type="text" name="token" value="<%=token%>" hidden>
+                                        <input class="form-control readex-15" type="text" name="token" value="<%=token%>" hidden>
                                     </div>
                                     <div class="mb-3">
-                                        <input class="form-control" type="text" name="rol" value="<%=rol%>" hidden>
+                                        <input class="form-control readex-15" type="text" name="rol" value="<%=rol%>" hidden>
                                     </div>
                                     <div class="mb-3">
-                                        <input class="form-control" type="password" name="password" placeholder="Contraseña">
+                                        <input class="form-control readex-15" type="password" name="password" placeholder="Contraseña">
                                     </div>
                                     <div class="mb-3">
-                                        <input class="form-control" type="password" name="passwordConfirm" placeholder="Confirmar contraseña">
+                                        <input class="form-control readex-15" type="password" name="passwordConfirm" placeholder="Confirmar contraseña">
                                     </div>
                                     <div class="mb-3">
                                         <button class="btn btn-tele d-block w-100" type="submit" style="background: var(--bs-orange); border-color: var(--bs-orange)">

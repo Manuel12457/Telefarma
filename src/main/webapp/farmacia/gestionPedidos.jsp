@@ -11,7 +11,19 @@
     <jsp:include page="/includes/head.jsp">
         <jsp:param name="title" value="Telefarma - Gestión de Pedidos"/>
     </jsp:include>
-
+    <head>
+        <link type="text/css" rel="stylesheet"
+              href="<%=request.getContextPath()%>/res/magiczoomplus/magiczoomplus.css"/>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/res/magiczoomplus/magiczoomplus.js"></script>
+        <style>
+            .MagicZoom{
+                max-width:450px !important; max-height: 450px !important;
+            }
+            .MagicZoom img{
+                max-width:450px !important; max-height: 450px !important;
+            }
+        </style>
+    </head>
     <body>
         <%--Cabecera de farmacia--%>
         <jsp:include page="../includes/barraSuperior.jsp">
@@ -43,7 +55,7 @@
                 <div class="px-4">
                     <div class="rounded px-md-5 px-sm-0">
                         <div class="table-responsive">
-                            <table class="table readex-15">
+                            <table class="table readex-15 table-hover">
                                 <!--Cabecera pedidos-->
                                 <thead>
                                     <tr class="text-center">
@@ -109,7 +121,7 @@
                                             } else {
                                             %>
                                             <button type="button" class="btn btn-tele disabled">Entregado</button>
-                                            <button type="button" class="btn btn-danger disabled">Cancelar</button>
+                                            <button type="button" class="btn b-r-05 rubik-500 btn-danger disabled">Cancelar</button>
                                             <%
                                                 }
                                             %>
@@ -119,7 +131,7 @@
                                                 class="fas fa-ellipsis-h text-black-50"></i></td>
                                     </tr>
                                     <!--Detalles de pedido # (dt-#)-->
-                                    <tr id="dt-<%=countOrder%>" class="collapse cell-1 row-child">
+                                    <tr id="dt-<%=countOrder%>" class="collapse cell-1 row-child text-white">
                                         <td colspan="1">Unidades</td>
                                         <td colspan="3">Producto</td>
                                         <td colspan="1">Precio por unidad</td>
@@ -130,7 +142,7 @@
                                         for (BOrderDetails details : orden.getListaDetails()) {
                                             countOrderProduct++;
                                     %>
-                                    <tr id="dt-<%=countOrder%>" class="collapse cell-1 row-child-rows">
+                                    <tr id="dt-<%=countOrder%>" class="collapse cell-1 row-child-rows text-white">
                                         <td colspan="1"><%=details.getQuantity()%>
                                         </td>
                                         <td colspan="3"><%=details.getProducto()%>
@@ -153,9 +165,11 @@
                                                             <button type="button" class="btn-close btn-close-white"
                                                                     data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
-                                                        <div class="modal-body">
-                                                            <img src="<%=request.getContextPath()%>/Image?idProduct=<%=details.getIdProduct()%>&idOrder=<%=details.getIdOrder()%>"
-                                                                 style="max-height: 450px; max-width: 450px">
+                                                        <div class="modal-body text-center">
+                                                            <a href="<%=request.getContextPath()%>/Image?idProduct=<%=details.getIdProduct()%>&idOrder=<%=details.getIdOrder()%>"
+                                                               class="MagicZoom" data-options="zoomWidth:auto; zoomHeight:auto; variableZoom:true;">
+                                                                <img  src="<%=request.getContextPath()%>/Image?idProduct=<%=details.getIdProduct()%>&idOrder=<%=details.getIdOrder()%>" alt="Receta"/>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>

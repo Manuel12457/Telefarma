@@ -25,12 +25,12 @@
                 <div class="input-group">
                     <div style="width:40%">
                         <input type="search" name="busqueda"
-                               class="form-control readex-15 rounded-start border-end-0"
+                               class="form-control readex-15 b-r-05 border-end-0" style="border-top-right-radius: 0; border-bottom-right-radius: 0;max-height: 36px;"
                                placeholder="<%=busquedaPlaceholder%>" pattern="^[a-zA-Z0-9\u00C0-\u00FF ]+$"
                                value="<%=busqueda%>"/>
                     </div>
                     <%if (tipoUsuario.equals("cliente") && !servletBusqueda.contains("buscarFarmaciaDeDistrito")) {%>
-                    <select class="btn-tele px-2 rounded-0 sct-tele readex-15 border-end-0 border-start-0"
+                    <select class="form-select btn-tele px-2 rounded-0 sct-tele readex-15 border-end-0 border-start-0" style="max-height: 36px;max-width: 150px;"
                             name="tipoBusqueda">
                         <option value="product" <%=tipoBusqueda.equals("product") ? "selected" : ""%>>Por Nombre
                         </option>
@@ -38,8 +38,8 @@
                         </option>
                     </select>
                     <%}%>
-                    <button role="button" class="btn btn-tele rounded-end sct-tele input-group-text"
-                            style="border: 1px solid #ced4da !important; border-left: none !important">
+                    <button role="button" class="btn btn-tele sct-tele input-group-text"
+                            style="border: 1px solid #ced4da !important; border-left: none !important; max-height: 36px;">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
@@ -48,13 +48,12 @@
         <!--Carrito-->
         <div class="col-md-1 col-sm-2 col-2 ms-sm-auto ms-auto d-flex justify-content-end">
             <%if (tipoUsuario.equals("cliente")) {%>
-            <a class="btn btn-tele-inverso" role="button"
+            <a class="a-orange text-decoration-none" role="button"
                href="<%=request.getContextPath()%>/ClientServlet?action=verCarrito">
-                <div style="font-size: 0.60rem"> <!--para cambios más precisos del tamaño-->
-                    <i class="fas fa-shopping-cart fa-3x"></i>
-                    <span class="badge-cart"
-                          style="-moz-border-radius: 9px; border-radius: 9px; font-size: 14px; font-weight: bolder; border-left: outset; background: rgb(235 90 58); color: #fff; padding: 0 5px; vertical-align: top; margin-left: -10px;">
-                        <%=tamanoCarrito%>
+                <div style="font-size: 0.6rem;"> <!--para cambios más precisos del tamaño-->
+                    <i class="fas fa-shopping-cart fa-3x" style="margin-top: 0.125rem"></i>
+                    <span class="badge-cart">
+                          <%=tamanoCarrito%>
                     </span>
                 </div>
             </a>
@@ -62,12 +61,12 @@
         </div>
         <!--Menú usuario-->
         <div class="col-md-1 col-sm-2 col-2 d-flex justify-content-start ps-0">
-            <button class="btn btn-tele-inverso" type="button" data-bs-toggle="offcanvas"
+            <button class="btn a-orange" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#menuDeUsuario"
                     aria-controls="menuDeUsuario">
-                <div style="font-size: 0.62rem">
+                <span style="font-size: 0.62rem">
                     <i class="fas fa-user-circle fa-3x"></i>
-                </div>
+                </span>
             </button>
         </div>
     </div>

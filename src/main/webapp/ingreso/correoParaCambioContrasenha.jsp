@@ -30,7 +30,7 @@
                                 <form method="post"
                                       action="<%=request.getContextPath()%>/?action=correoParaContrasenha">
                                     <div class="mb-3">
-                                        <input class="form-control" type="email" name="email" placeholder="Correo">
+                                        <input class="form-control readex-15" type="email" name="email" placeholder="Correo">
                                     </div>
                                     <div class="mb-3">
                                         <button class="btn btn-tele d-block w-100" type="submit"

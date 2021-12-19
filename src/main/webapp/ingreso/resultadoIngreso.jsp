@@ -19,7 +19,7 @@
                     </div>
                     <div class="card-body">
                         <div class="container" style="width: 70%">
-                            <div class="row my-4 text-center">
+                            <div class="row my-4 text-center rubik-500" style="font-weight: 400">
                                 <h4><%=mensaje%>
                                 </h4>
                                 <a class="text-center a-login" href="<%=request.getContextPath()%>/">Volver al Inicio de
