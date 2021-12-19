@@ -164,8 +164,8 @@ public class ClientServlet extends HttpServlet {
                 request.setAttribute("idPharmacy", idPharmacy);
                 ArrayList<BProduct> listaProductos = null;
                 if (tipoBusqueda.equals("product")) {
-                    listaProductos = productDao.listarProductosPorFarmacia(pagina, limiteProductos, busqueda, idPharmacy, order);
-                    pagTotales = (int) Math.ceil((double) productDao.listarProductosPorFarmacia(0, -1, busqueda, idPharmacy, "").size() / limiteProductos);
+                    listaProductos = productDao.listarProductosPorFarmacia(pagina, limiteProductos, busqueda, idPharmacy, order, false);
+                    pagTotales = (int) Math.ceil((double) productDao.listarProductosPorFarmacia(0, -1, busqueda, idPharmacy, "", false).size() / limiteProductos);
                 } else { //symptom
                     listaProductos = productDao.buscarProductoPorSintoma(pagina, limiteProductos, busqueda, idPharmacy, order, -1, idClient);
                     pagTotales = (int) Math.ceil((double) productDao.buscarProductoPorSintoma(0, -1, busqueda, idPharmacy, "", -1, idClient).size() / limiteProductos);

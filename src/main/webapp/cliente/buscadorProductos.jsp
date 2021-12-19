@@ -37,7 +37,6 @@
             <div class="card-header my-5"></div>
             <!--Resultados de búsqueda-->
             <div class="container">
-                <% if (listaProductosBusqueda.size() != 0) { %>
 
                 <!--Filtro y orden-->
                 <div class="row">
@@ -94,6 +93,7 @@
                     </div>
                 </div>
 
+                <% if (listaProductosBusqueda.size() != 0) { %>
                 <!--Catálogo-->
                 <div class="album pb-2">
                     <!--Título-->
@@ -106,6 +106,8 @@
                             "<%= busqueda %>"</h4>
                         <% } %>
                     </div>
+
+
                     <!--Productos-->
                     <div class="container">
                         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
