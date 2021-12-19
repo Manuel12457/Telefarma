@@ -130,7 +130,11 @@ public class SessionDao extends BaseDao {
 
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();) {
-            tokenExpiracion(id,5);
+            if(rol.equals("client")) {
+                tokenExpiracion(id, 5);
+            }else{
+                tokenExpiracion(id, 2880);
+            }
             stmt.executeUpdate(sql);
 
         } catch (SQLException e) {

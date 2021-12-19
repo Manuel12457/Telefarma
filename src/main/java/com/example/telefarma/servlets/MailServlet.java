@@ -100,9 +100,16 @@ public class MailServlet {
     }
 
     public static String rstPassTokenMssg(String rol, String token, String dominio) {
+        String tiempo;
+        if(rol.equals("client")){
+            tiempo = "El enlace expirará en 5 minutos\n";
+        } else{
+            tiempo = "El enlace expirará en 2 días\n";
+        }
         return "Haz click en el siguiente enlace para cambiar la contraseña:" +
                 "<br><a href='" + dominio + "/?action=cambiarContrasenha&rol=" + rol + "&token=" + token +
                 "'>Cambiar contraseña<a>" +
+                "<br>"+tiempo +"<br>"+
                 "<br><i>Si no fuiste tú, ignora este mensaje.</i>";
     }
 
