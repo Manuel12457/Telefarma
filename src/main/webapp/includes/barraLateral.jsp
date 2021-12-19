@@ -42,7 +42,7 @@
                 <!--Rol-->
                 <div class="name-job">
                     <div class="name" style="white-space: break-spaces; width: 80%;"><%=nombre%></div>
-                    <div class="job">Usuario</div>
+                    <div class="job opensans">Usuario</div>
                 </div>
             </div>
             <a href="${pageContext.request.contextPath}/?action=logout" style="color: #f57f00;">

@@ -83,7 +83,7 @@
                                         <div class="mb-0">Fecha de Recojo:&nbsp;&nbsp;
                                             <input value="<%=farmacia.getIdPharmacy()%>" name="idFarmacia<%=i%>" hidden>
                                             <input type="datetime-local" name="pickUpDate<%=i%>" min="<%=dateNow%>"
-                                                   class="readex-15" style="max-width: 180px;"
+                                                   class="readex-15 b-r-05 px-2" style="max-width: 190px;"
                                                    onchange="guardarCambios('<%=request.getContextPath()%>')"
                                                 <%String pickUpDate = farmacia.getFechaRecojo() != null ? farmacia.getFechaRecojo() : "";%>
                                                    value="<%=pickUpDate%>"
@@ -117,7 +117,7 @@
                                             <!--Precios-->
                                             <div>
                                                 <span class="cart-precio-tag"><i class="fas fa-tag"></i> Precio:&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                                <span class="cart-price cart-precio ms-sm-2 ms-0 ">S/<%=producto.getPrice()%></span>
+                                                <span class="cart-price cart-precio ms-sm-2 ms-0 ">S/<%=String.format("%.2f",producto.getPrice())%></span>
                                             </div>
                                             <div>
                                                 <input value="<%=producto.getIdProduct()%>"
@@ -140,35 +140,38 @@
 
                                     <!--Bloque 2-->
                                     <div class="pt-sm-0 pt-2 pe-md-3 pe-0 mx-sm-0 mx-auto text-sm-left text-center"
-                                         style="max-width: 10rem;">
+                                         style="width: 150px;">
                                         <!--Cantidad-->
-                                        <div class="form-group mt-sm-4 mt-0">
+                                        <div class="form-group mt-sm-4 mt-0 text-center" style="width: 150px;">
                                             <!--Label-->
                                             <span class="cart-precio">Cantidad:</span>
                                             <!--Botones-->
                                             <div class="d-flex justify-content-center">
-                                                <button onclick="this.parentNode.querySelector('input[type=number]').stepDown(); guardarCambios('<%=request.getContextPath()%>')"
+                                                <button style="width:30%;" onclick="this.parentNode.querySelector('input[type=number]').stepDown(); guardarCambios('<%=request.getContextPath()%>')"
                                                         class="btn btn-tele" id="menos" type="button">
                                                     <i class="fas fa-minus fa-xs"></i>
                                                 </button>
                                                 <input class="cart-quantity form-control border-start-0 border-end-0 text-center readex-15 px-0"
-                                                       type="number" style="width:46px;" id="contador"
+                                                       type="number" style="width:40%;" id="contador"
                                                        value="<%=producto.getCantidad()%>" min="1"
                                                        onchange="guardarCambios('<%=request.getContextPath()%>')"
                                                        max="<%= producto.getStock() %>" name="cantidad<%=i%>-<%=j%>"
                                                        required/>
-                                                <button onclick="this.parentNode.querySelector('input[type=number]').stepUp(); guardarCambios('<%=request.getContextPath()%>')"
+                                                <button style="width:30%;" onclick="this.parentNode.querySelector('input[type=number]').stepUp(); guardarCambios('<%=request.getContextPath()%>')"
                                                         class="btn btn-tele" id="mas" type="button">
                                                     <i class="fas fa-plus fa-xs"></i>
                                                 </button>
                                             </div>
                                         </div>
                                         <!--Botón borrar-->
-                                        <a class="btn btn-danger btn-sm mt-sm-4 mt-2 w-100"
-                                           href="<%=request.getContextPath()%>/ClientServlet?action=rmvFromCart&farma=<%=i%>&product=<%=j%>"
-                                           id="remove-<%=producto.getIdProduct()%>">
-                                            <i class="far fa-trash-alt"></i>
-                                        </a>
+                                        <button class="btn-icon-trans btn-danger px-md-0 my-4" type="button"
+                                                onclick="location.href='<%=request.getContextPath()%>/ClientServlet?action=rmvFromCart&farma=<%=i%>&product=<%=j%>'"
+                                                id="remove-<%=producto.getIdProduct()%>">
+                                            <span class='text-icon-trans'>Eliminar</span>
+                                            <span class="icon-trans">
+                                         <i class="far fa-trash-alt" ></i>
+                                            </span>
+                                        </button>
                                     </div>
                                 </div>
                                 <%

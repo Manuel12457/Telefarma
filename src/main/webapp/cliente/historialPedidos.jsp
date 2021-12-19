@@ -19,6 +19,20 @@
         <jsp:param name="title" value="Telefarma - Historial de Compras"/>
     </jsp:include>
 
+    <head>
+        <link type="text/css" rel="stylesheet"
+              href="<%=request.getContextPath()%>/res/magiczoomplus/magiczoomplus.css"/>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/res/magiczoomplus/magiczoomplus.js"></script>
+        <style>
+            .MagicZoom{
+                max-width:450px !important; max-height: 450px !important;
+            }
+            .MagicZoom img{
+                max-width:450px !important; max-height: 450px !important;
+            }
+        </style>
+    </head>
+
     <body class="user-menu">
         <jsp:include page="../includes/barraLateral.jsp">
             <jsp:param name="nombre" value="<%=nombreCliente%>"/>
@@ -36,7 +50,7 @@
                         <div class="card-body">
                             <div class="rounded py-2">
                                 <%--Buscador de pedidos--%>
-                                <form class="mb-4" method="post"
+                                <form class="mb-4 readex-15" method="post"
                                       action="<%=request.getContextPath()%>/ClientServlet?action=buscarHistorial">
                                     <div class="input-group justify-content-center">
                                         <div class="form-check form-check-inline">
@@ -75,7 +89,7 @@
                                 %>
                                 <%--Tabla de pedidos--%>
                                 <div class="table-responsive">
-                                    <table class="table readex-15">
+                                    <table class="table readex-15 table-hover">
                                         <!--Cabecera tabla de pedidos-->
                                         <thead>
                                             <tr class="text-center">
@@ -131,7 +145,7 @@
                                                 </td>
                                             </tr>
                                             <%--Detalles de pedidos (por idOrder)--%>
-                                            <tr id="dt-<%=count%>" class="collapse cell-1 row-child">
+                                            <tr id="dt-<%=count%>" class="collapse cell-1 row-child text-white">
                                                 <td colspan="1">Unidades</td>
                                                 <td colspan="2">Producto</td>
                                                 <td colspan="2">Precio por unidad</td>
@@ -142,7 +156,7 @@
                                             <%
                                                 for (BOrderDetails details : orden.getListaDetails()) {
                                             %>
-                                            <tr id="dt-<%=count%>" class="collapse cell-1 row-child-rows">
+                                            <tr id="dt-<%=count%>" class="collapse cell-1 row-child-rows  text-white">
                                                 <td colspan="1"><%=details.getQuantity()%>
                                                 </td>
                                                 <td colspan="2"><%=details.getProducto()%>
@@ -163,7 +177,7 @@
                                                 }
                                                 if (estado.equals("Pendiente")) {
                                             %>
-                                            <tr id="dt-<%=count%>" class="collapse cell-1 row-child">
+                                            <tr id="dt-<%=count%>" class="collapse cell-1 row-child  text-white">
                                                 <td colspan="7">
                                                     <%
                                                         if (orden.getTimeDiff() > 0) {
@@ -171,7 +185,7 @@
                                                     <form method="post"
                                                           action="<%=request.getContextPath()%>/ClientServlet?action=cancelarPedido&idOrder=<%=orden.getIdOrder()%>">
                                                         <button type="submit"
-                                                                class="btn btn-danger rubik-500">
+                                                                class="btn btn-danger rubik-500 b-r-05">
                                                             Cancelar pedido
                                                         </button>
                                                     </form>
@@ -246,9 +260,11 @@
                                 data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <img src="<%=request.getContextPath()%>/Image?idProduct=<%=details.getIdProduct()%>&idOrder=<%=details.getIdOrder()%>"
-                             style="max-height: 450px; max-width: 450px">
+                    <div class="modal-body text-center">
+                        <a href="<%=request.getContextPath()%>/Image?idProduct=<%=details.getIdProduct()%>&idOrder=<%=details.getIdOrder()%>"
+                           class="MagicZoom" data-options="zoomWidth:auto; zoomHeight:auto; variableZoom:true;">
+                            <img  src="<%=request.getContextPath()%>/Image?idProduct=<%=details.getIdProduct()%>&idOrder=<%=details.getIdOrder()%>" alt="Receta"/>
+                        </a>
                     </div>
                 </div>
             </div>

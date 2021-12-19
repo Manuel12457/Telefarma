@@ -26,13 +26,13 @@
                                       action="<%=request.getContextPath()%>/?action=registrar">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <input class="form-control mb-3" type="text" name="nombre"
+                                            <input class="form-control mb-3 readex-15" type="text" name="nombre"
                                                    placeholder="Nombre" maxlength="45"
                                                    value="<%=cliente.getName() == null ? "" : cliente.getName()%>"
                                                    pattern="^[a-zA-Z\u00C0-\u00FF ]+$" required="required">
                                         </div>
                                         <div class="col-md-6">
-                                            <input class="form-control mb-3" type="text" name="apellido"
+                                            <input class="form-control mb-3 readex-15" type="text" name="apellido"
                                                    placeholder="Apellido"
                                                    value="<%=cliente.getLastName() == null ? "" : cliente.getLastName()%>"
                                                    pattern="^[a-zA-Z\u00C0-\u00FF ]+$" maxlength="45" required="required">
@@ -40,13 +40,13 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-5 mb-3">
-                                            <input class="form-control" aria-describedby="validationServer03Feedback"
+                                            <input class="form-control readex-15" aria-describedby="validationServer03Feedback"
                                                    type="text" name="dni" placeholder="DNI" maxlength="8" minlength="8"
                                                    value="<%=cliente.getDni() == null ? "" : cliente.getDni()%>"
                                                    pattern="\d*" required="required">
                                         </div>
                                         <div class="col-md-7 mb-3">
-                                            <select class="form-select" name="distrito" id="farmaDistrict" required="required">
+                                            <select class="form-select readex-15 gray5" name="distrito" id="farmaDistrict" required="required">
                                                 <option value="" <%=(cliente.getDistrict() != null && cliente.getDistrict().getIdDistrict() == 0) ? "selected" : ""%>>Seleccione su distrito</option>
                                                 <% for (BDistrict distrito : listaDistritos) { %>
                                                 <option value="<%=distrito.getIdDistrict()%>" <%=(cliente.getDistrict() != null && cliente.getDistrict().getIdDistrict() == distrito.getIdDistrict()) ? "selected" : ""%>><%=distrito.getName()%>
@@ -56,18 +56,18 @@
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <input class="form-control" aria-describedby="validationServer03Feedback"
+                                        <input class="form-control readex-15" aria-describedby="validationServer03Feedback"
                                                type="email" name="email" placeholder="Correo"
                                                value="<%=cliente.getMail() == null ? "" : cliente.getMail()%>"
                                                maxlength="70" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
                                     </div>
                                     <div class="mb-3">
-                                        <input class="form-control" aria-describedby="validationServer03Feedback"
+                                        <input class="form-control readex-15" aria-describedby="validationServer03Feedback"
                                                type="password" name="password" placeholder="Contraseña" maxlength="60"
                                                required>
                                     </div>
                                     <div class="mb-3">
-                                        <input class="form-control" aria-describedby="validationServer03Feedback"
+                                        <input class="form-control readex-15" aria-describedby="validationServer03Feedback"
                                                type="password" name="passwordC" placeholder="Confirmar contraseña"
                                                maxlength="60" required>
                                     </div>

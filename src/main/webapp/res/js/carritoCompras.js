@@ -52,17 +52,17 @@ function updateCart() {
             var subtotal = Math.round((price * quantity) * 100) / 100
             var fila = document.getElementById("item-resumen-" + contador)
             fila.cells.item(0).innerHTML = quantity
-            fila.cells.item(2).innerHTML = "S/" + subtotal
+            fila.cells.item(2).innerHTML = "S/" + subtotal.toFixed(2)
 
             var subtotalproducto = document.getElementsByClassName("cart-subtotal-" + contador)[0]
-            subtotalproducto.innerHTML = "S/" + subtotal
+            subtotalproducto.innerHTML = "S/" + subtotal.toFixed(2)
 
             total = total + subtotal
             contador++
         }
     }
     total = Math.round(total * 100) / 100
-    document.getElementsByClassName("cart-total")[0].innerText = " S/" + total
+    document.getElementsByClassName("cart-total")[0].innerText = " S/" + total.toFixed(2)
 }
 
 function readReceta(input) {

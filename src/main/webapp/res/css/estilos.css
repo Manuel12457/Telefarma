@@ -44,6 +44,14 @@ input, select {
     border-color: #dee2e6 #dee2e6 #fff
 }
 
+.row-grayhover{
+ background: white;
+}
+
+.row-grayhover:hover{
+    background: #eaeaea;
+}
+
 /*Boton Telefarma*/
 
 .btn-tele {
@@ -62,7 +70,8 @@ input, select {
     border-color: #ce6b00;
 }
 
-.btn-tele-white {
+.btn-tele-white{
+    border-radius: 0.5rem;
     background: white;
     color: #f57f00;
     border-color: #f57f00;
@@ -664,6 +673,26 @@ td {
     color: white;
 }
 
+.badge-cart{
+    padding: 0.1rem 0.4rem;
+    -webkit-border-radius: 0.5rem;
+    -moz-border-radius: 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    font-family: 'Rubik',sans-serif;
+    background: #da2f08;
+    color: #fff;
+    width: fit-content;
+    vertical-align: top;
+    margin-left: -0.5rem;
+    border-left-style: solid;
+}
+
+a:hover .badge-cart{
+    background: #bd2806;
+}
+
 .cart-th{
     background-color: #f39737 !important;
     font-family: 'Rubik', sans-serif !important;
@@ -878,6 +907,14 @@ strong.detalles-str{
     color: #f57f00;
 }
 
+.a-orange{
+    color: #f57f00;
+}
+
+.a-orange:hover{
+    color: #ce6b00;
+}
+
 .a-gray5{
     color: #5b5b5b;
 }
@@ -895,6 +932,7 @@ strong.detalles-str{
     color: white;
     font-size: 25px;
 }
+
 
 /*Paleta*/
 .gray3{

@@ -83,15 +83,15 @@
                     if (listaProductosBusqueda.size() != 0) {
                         for (DtoProductoVisualizacion producto : listaProductosBusqueda) {
                 %>
-                <div class="row justify-content-center border shadow-sm rounded mb-3">
+                <div class="row row-grayhover justify-content-center border shadow-sm rounded mb-3">
                     <!--Imagen-->
-                    <div class="col-md-3 text-center border-end d-flex justify-content-center align-items-center">
+                    <div class="col-md-3 text-center border-end d-flex justify-content-center align-items-center" style="background: white">
                         <img class="w-100"
                              src="${pageContext.request.contextPath}/Image?idProduct=<%= producto.getIdProduct() %>"
-                             style="max-height: 250px; max-width: 250px">
+                             style="max-height: 250px; max-width: 250px" alt="<%=producto.getName()%>">
                     </div>
                     <!--Detalles-->
-                    <div class="col-md-8 py-3 px-5">
+                    <div class="col-md-9 py-3 px-5">
                         <!--Nombre-->
                         <div class="producto-detalles" style="font-size: 22px"><%=producto.getName()%>
                         </div>

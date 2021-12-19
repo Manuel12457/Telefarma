@@ -137,7 +137,7 @@
                                             <%= producto.getStock()%> disponibles
                                         </div>
                                         <div class="d-flex row-precio">
-                                            S/<%= producto.getPrice()%>
+                                            S/<%=String.format("%.2f",producto.getPrice())%>
                                         </div>
                                     </div>
                                 </div>

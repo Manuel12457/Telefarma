@@ -99,7 +99,7 @@
                                     </div>
                                     <div class="d-flex justify-content-center">
                                         <a role="button" href="<%=request.getContextPath()%>/PharmacyServlet"
-                                           class="btn btn-light mx-2 rubik-500 gray5">Cancelar</a>
+                                           class="btn btn-tele-white mx-2">Cancelar</a>
                                         <input class="btn btn-tele mx-2" type="submit" value="Registrar producto"/>
                                     </div>
                                 </form>
