@@ -46,11 +46,15 @@ public class AdminServlet extends HttpServlet {
                 request.setAttribute("distritosFiltrado", districtDao.listarDistritos());
 
                 ArrayList<ArrayList<BPharmacy>> listaFarmacias = new ArrayList<>();
+                HashMap<Integer, Integer> mostrarBotonVerMas = new HashMap<>();
                 for (BDistrict distrito : distritos) {
                     ArrayList<BPharmacy> farmaciasAdmin = pharmacyDao.listarFarmaciasPorDistrito(0, 3, busqueda, 1, distrito.getIdDistrict());
                     listaFarmacias.add(farmaciasAdmin);
+
+                    mostrarBotonVerMas.put(distrito.getIdDistrict(), pharmacyDao.listarFarmaciasPorDistrito(0, -1, "", 1, distrito.getIdDistrict()).size() > 3 ? 1 : 0);
                 }
                 request.setAttribute("listaFarmacias", listaFarmacias);
+                request.setAttribute("hashMostrarBoton", mostrarBotonVerMas);
 
                 if (pagina >= pagTotales && pagTotales > 0) {
                     response.sendRedirect(request.getContextPath() + "/AdminServlet?busqueda=" + busqueda + "&pagina=" + (pagTotales - 1));

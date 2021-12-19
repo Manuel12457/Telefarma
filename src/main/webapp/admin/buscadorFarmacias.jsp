@@ -8,6 +8,7 @@
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="distritosFiltrado" scope="request" type="java.util.ArrayList<com.example.telefarma.beans.BDistrict>"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BAdmin"/>
+<jsp:useBean id="hashMostrarBoton" scope="request" type="java.util.HashMap<java.lang.Integer,java.lang.Integer>"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -199,8 +200,8 @@
                         </div>
                         <!--Boton ver más-->
                         <%
-//                            if (hashMostrarBoton.containsKey(listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict())) {
-//                                if (hashMostrarBoton.get(listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict()) == 1) {
+                            if (hashMostrarBoton.containsKey(listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict())) {
+                                if (hashMostrarBoton.get(listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict()) == 1) {
                         %>
                         <div class="d-flex justify-content-end">
                             <a class="btn-ver-mas"
@@ -212,8 +213,8 @@
                             </a>
                         </div>
                         <%
-//                                }
-//                            }
+                                }
+                            }
                         %>
                     </div>
                 </div>
