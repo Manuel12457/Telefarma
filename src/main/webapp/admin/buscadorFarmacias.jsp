@@ -77,9 +77,12 @@
                 <% for (ArrayList<BPharmacy> listaFarmaciasDistrito : listaFarmacias) { %>
                 <div class="row">
                     <div class="container px-5 py-2">
-                        <h4 class="pb-2 border-bottom dist-name"
-                            style="color: #f57f00"><%= listaFarmaciasDistrito.get(0).getDistrict().getName() %>
-                        </h4>
+                        <a class=" text-decoration-none" href="<%=request.getContextPath()%>/AdminServlet?action=verDistrito&district=<%= listaFarmaciasDistrito.get(0).getDistrict().getIdDistrict()%>">
+                            <div class="pb-2 h4 a-orange border-bottom dist-name">
+                                <%= listaFarmaciasDistrito.get(0).getDistrict().getName() %>
+                            </div>
+                        </a>
+
                         <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-3"
                              style="flex-direction: row;">
                             <!--Loop de farmacias por distrito-->
@@ -97,7 +100,7 @@
                                     <div class="card-header shadow border-0 text-white f<%=cardCount%>">
                                         <!--Botón editar-->
                                         <div class="d-flex justify-content-end ">
-                                            <a role="button"
+                                            <a  role="button"
                                                href="<%=request.getContextPath()%>/AdminServlet?action=editarForm&&id=<%=farmacia.getIdPharmacy()%>"
                                                class="a-grow pe-2 pt-1"><i
                                                     class="fas fa-edit"></i>
@@ -209,7 +212,7 @@
                                 <span class="circle-ver-mas">
                                     <span class="icon-ver-mas arrow-ver-mas"></span>
                                 </span>
-                                <div class="text-ver-mas">Ver más</div>
+                                <div class="text-ver-mas" style="margin-left: 1.4rem;margin-top: -0.2rem">Ver distrito</div>
                             </a>
                         </div>
                         <%
@@ -238,12 +241,12 @@
         <div class="modal fade" id="desbloquearFarmacia" tabindex="-1" aria-labelledby="desban" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content border-0">
-                    <div class="modal-header bg-success text-white">
+                    <div class="modal-header rubik-500 bg-success text-white">
                         <h5 class="modal-title" id="desbanear">Desbloquear farmacia</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form method="post">
-                        <div class="modal-body">
+                        <div class="modal-body gray-heebo">
                             <div class="form-outline">
                                 <label class="form-label" for="bloqueoFarmacia">
                                     La siguiente farmacia se encuentra baneada. Si la desbanea, todos los clientes
@@ -254,8 +257,8 @@
                             ¿Está seguro que desea continuar?
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                            <button role="button" class="btn btn-success border-start-1 input-group-text">
+                            <button type="button" class="btn btn-light rubik-500 b-r-05" data-bs-dismiss="modal">Cancelar</button>
+                            <button role="button" class="btn btn-success rubik-500 b-r-05 border-start-1 input-group-text">
                                 Desbloquear
                             </button>
                         </div>
@@ -267,17 +270,17 @@
         <div class="modal fade" id="motivoBloqueo" tabindex="-1" aria-labelledby="conf_eliminar" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content border-0">
-                    <div class="modal-header bg-danger text-white">
+                    <div class="modal-header heebo-500 bg-danger text-white">
                         <h5 class="modal-title" id="conf_eliminar">Bloquear farmacia</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form method="post">
-                        <div class="modal-body">
+                        <div class="modal-body gray-heebo">
                             <div class="form-outline">
                                 <label class="form-label" for="bloqueoFarmacia">
                                     Escriba el motivo del bloqueo de la farmacia:
                                 </label>
-                                <textarea type="tel" id="bloqueoFarmacia" name="razon" class="form-control"
+                                <textarea type="tel" id="bloqueoFarmacia" name="razon" class="form-control readex-15"
                                           maxlength="350" rows="5"></textarea>
                                 <div id="passwordHelpBlock" class="form-text">
                                     La razón de bloqueo no puede exceder de los 350 caracteres
@@ -287,8 +290,8 @@
                             ¿Está seguro que desea bloquearla?
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                            <button role="button" class="btn btn-danger border-start-1 input-group-text">
+                            <button type="button" class="btn btn-light b-r-05 rubik-500" data-bs-dismiss="modal">Cancelar</button>
+                            <button role="button" class="btn btn-danger b-r-05 rubik-500 border-start-1 input-group-text">
                                 Bloquear
                             </button>
                         </div>
