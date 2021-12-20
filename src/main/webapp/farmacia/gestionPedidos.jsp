@@ -5,6 +5,7 @@
 <jsp:useBean id="pagActual" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="pagTotales" scope="request" type="java.lang.Integer"/>
 <jsp:useBean id="sesion" scope="session" type="com.example.telefarma.beans.BPharmacy"/>
+<jsp:useBean id="busqueda" scope="request" type="java.lang.String"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -195,11 +196,13 @@
                 </div>
             <%
             }else{
+                String mssg1 = busqueda.equals("") ? "Acá se mostrarán los pedidos de la farmacia" : "Ups... no encontramos resultados para tu búsqueda";
+                String mssg2 = busqueda.equals("") ? "Ten pacienca, ya llegarán :)" : "Prueba buscando otro término";
             %>
             <div class="container">
                 <jsp:include page="/includes/noResultados.jsp">
-                    <jsp:param name="noRes1" value="Acá se mostrarán los pedidos de la farmacia"/>
-                    <jsp:param name="noRes2" value="Ten pacienca, ya llegarán :)"/>
+                    <jsp:param name="noRes1" value="<%=mssg1%>"/>
+                    <jsp:param name="noRes2" value="<%=mssg2%>"/>
                 </jsp:include>
             </div>
             <%

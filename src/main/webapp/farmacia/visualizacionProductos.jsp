@@ -174,10 +174,12 @@
                 <%
                     }
                 } else {
+                        String mssg1 = busqueda.equals("") ? "Acá se mostrarán los productos registrados en la farmacia" : "Ups... no encontramos resultados para tu búsqueda";
+                        String mssg2 = busqueda.equals("") ? "Más productos, más pedidos ;)" : "Prueba buscando otro término";
                 %>
                 <jsp:include page="/includes/noResultados.jsp">
-                    <jsp:param name="noRes1" value="Acá se mostrarán los productos registrados en la farmacia"/>
-                    <jsp:param name="noRes2" value="Más productos, más pedidos ;)"/>
+                    <jsp:param name="noRes1" value="<%=mssg1%>"/>
+                    <jsp:param name="noRes2" value="<%=mssg2%>"/>
                 </jsp:include>
                 <%
                     }
