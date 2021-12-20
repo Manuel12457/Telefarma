@@ -166,4 +166,24 @@ public class PharmacyDao extends BaseDao {
 
     }
 
+    public ArrayList<Integer> farmaciasBaneadas() {
+        ArrayList<Integer> lista = new ArrayList<>();
+
+        String sql = "select idPharmacy from pharmacy where isBanned = 1;";
+
+        try (Connection conn = this.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                lista.add(rs.getInt(1));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
 }

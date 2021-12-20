@@ -13,12 +13,13 @@
 <%
     String servletBusqueda = "ClientServlet?action=buscarFarmaciaDeDistrito&district=" + district.getIdDistrict() + "&";
     String busquedaPlaceholder = "Busca una farmacia en " + district.getName();
+    String title = "Telefarma - " + district.getName();
 %>
 
 <!DOCTYPE html>
 <html lang="en">
     <jsp:include page="/includes/head.jsp">
-        <jsp:param name="title" value="Telefarma - <%=district.getName()%>"/>
+        <jsp:param name="title" value="<%=title%>"/>
     </jsp:include>
 
     <body>

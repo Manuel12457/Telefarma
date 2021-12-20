@@ -1,4 +1,5 @@
 <%@ page import="com.example.telefarma.dtos.DtoProductoVisualizacion" %>
+<%@ page import="com.example.telefarma.beans.BPharmacy" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="listaProductosBusqueda" scope="request"
              type="java.util.ArrayList<com.example.telefarma.dtos.DtoProductoVisualizacion>"/>
@@ -29,6 +30,13 @@
         <main>
             <!--Alinear cabecera con contenido-->
             <div class="card-header mt-5 mb-4"></div>
+
+            <!--Alerta de baneo-->
+            <% if (sesion.getIsBanned() == 1) { %>
+            <div class="alert alert-danger" role="alert" style="margin: 30px auto 20px; width: 90%">
+                Recuerda que la farmacia ha sido bloqueada y no se muestra a los usuarios.
+            </div>
+            <% } %>
 
             <!--Alerta de errores-->
             <%

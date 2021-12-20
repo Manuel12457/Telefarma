@@ -162,6 +162,12 @@ public class ClientServlet extends HttpServlet {
                     return;
                 }
                 request.setAttribute("idPharmacy", idPharmacy);
+
+                if (pharmacyDao.farmaciasBaneadas().contains(idPharmacy)) {
+                    response.sendRedirect(request.getContextPath() + "/ClientServlet");
+                    return;
+                }
+
                 ArrayList<BProduct> listaProductos = null;
                 if (tipoBusqueda.equals("product")) {
                     listaProductos = productDao.listarProductosPorFarmacia(pagina, limiteProductos, busqueda, idPharmacy, order);
@@ -213,6 +219,10 @@ public class ClientServlet extends HttpServlet {
                 }
 
                 BProduct producto = productDao.obtenerProductoPorId(idProduct);
+                if (pharmacyDao.farmaciasBaneadas().contains(producto.getPharmacy().getIdPharmacy())) {
+                    response.sendRedirect(request.getContextPath() + "/ClientServlet");
+                    return;
+                }
                 if (farmacias.size() > 0) {
                     for (DtoPharmacy f : farmacias) {
                         if (f.getIdPharmacy() == producto.getPharmacy().getIdPharmacy()) {

@@ -37,6 +37,13 @@
             <!--Alinear contenido con cabecera-->
             <div class="card-header mt-5 mb-4"></div>
 
+            <!--Alerta de baneo-->
+            <% if (sesion.getIsBanned() == 1) { %>
+            <div class="alert alert-danger" role="alert" style="margin: 30px auto 20px; width: 90%">
+                Recuerda que la farmacia ha sido bloqueada y no se muestra a los usuarios.
+            </div>
+            <% } %>
+
             <!--Pestañas farmacia-->
             <ul class="nav nav-tabs nav-justified mb-4 justify-content-center px-5 rubik-500">
                 <li class="nav-item" style="max-width: 42%">
