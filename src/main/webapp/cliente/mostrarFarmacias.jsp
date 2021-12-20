@@ -86,6 +86,26 @@
                 %>
 
 
+                <!--Filtrado por Distrito-->
+                <div class="col text-end mb-2 mb-lg-0">
+                    <form class="row px-5 align-items-center" method="post"
+                          action="<%=request.getContextPath()%>/ClientServlet?action=filtroDistrito">
+                        <div class="col" style="width: fit-content;">
+                            <label class="gray-heebo gray5" for="farmaDistrict">Filtrar por distrito</label>
+                        </div>
+                        <div style="width: fit-content;padding: revert;">
+                            <select class="form-select readex-15 gray5" name="idDistrict" id="farmaDistrict"
+                                    style="max-width: 300px;" onchange="this.form.submit();">
+                                <option value="" selected>Sin filtro
+                                </option>
+                                <% for (BDistrict distrito : distritosFiltrado) { %>
+                                <option value="<%=distrito.getIdDistrict()%>"><%=distrito.getName()%>
+                                </option>
+                                <% } %>
+                            </select>
+                        </div>
+                    </form>
+                </div>
                 <!--Mismo Distrito-->
                 <%
                     boolean otraFarmaciaMostrada = false;
@@ -97,26 +117,6 @@
                 <div class="row gray-heebo">
                     <div class="col">
                         <h3><i class="fas fa-thumbtack fa-xs"></i>&nbsp;Farmacias cercanas a usted</h3>
-                    </div>
-                    <!--Filtrado por Distrito-->
-                    <div class="col text-end mb-2 mb-lg-0">
-                        <form class="row px-5 align-items-center" method="post"
-                              action="<%=request.getContextPath()%>/ClientServlet?action=filtroDistrito">
-                            <div class="col" style="width: fit-content;">
-                                <label class="gray-heebo gray5" for="farmaDistrict">Filtrar por distrito</label>
-                            </div>
-                            <div style="width: fit-content;padding: revert;">
-                                <select class="form-select readex-15 gray5" name="idDistrict" id="farmaDistrict"
-                                        style="max-width: 300px;" onchange="this.form.submit();">
-                                    <option value="" selected>Sin filtro
-                                    </option>
-                                    <% for (BDistrict distrito : distritosFiltrado) { %>
-                                    <option value="<%=distrito.getIdDistrict()%>"><%=distrito.getName()%>
-                                    </option>
-                                    <% } %>
-                                </select>
-                            </div>
-                        </form>
                     </div>
                 </div>
                 <%
