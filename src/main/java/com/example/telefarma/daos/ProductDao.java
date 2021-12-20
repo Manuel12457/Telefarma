@@ -125,13 +125,14 @@ public class ProductDao extends BaseDao {
         return 0;
     }
 
-    public ArrayList<BProduct> listarProductosPorFarmacia(int pagina, int limite, String busqueda, int idPharmacy, String order) {
+    public ArrayList<BProduct> listarProductosPorFarmacia(int pagina, int limite, String busqueda, int idPharmacy, String order, boolean mostrar0) {
         ArrayList<BProduct> listaProductos = new ArrayList<>();
 
         String sql = "select p.idProduct,p.name,stock,price from product p\n" +
                 "inner join pharmacy f on (p.idPharmacy=f.idPharmacy)\n" +
-                "where lower(p.name) like ? and f.idPharmacy=" + idPharmacy + " and stock > -1\n";
+                "where lower(p.name) like ? and f.idPharmacy=" + idPharmacy + "\n";
 
+        sql = mostrar0 ? (sql + " and stock > -1\n") : sql + "and stock > 0\n";
         sql = idPharmacy != -1 ? (sql + "and p.idPharmacy = " + idPharmacy + "\n") : sql;
         sql = (!order.equals("")) ? sql + "order by " + order + "\n" : sql + "order by name\n";
         sql = (limite != -1) ? (sql + "limit " + (limite * pagina) + "," + limite + ";") : sql;
