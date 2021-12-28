@@ -184,7 +184,7 @@
 
                         <!--Costo total-->
                         <div class="col-md-3 col-xl-4 pt-3 pt-md-0">
-                            <div class="row">
+                            <div class="w-100">
                                 <!--Cabecera resumen-->
                                 <h3 class="cart-header px-4 py-3 justify-content-center">Resumen</h3>
                                 <!--Tabla resumen-->
@@ -335,7 +335,7 @@
                     </div>
                     <!--Costo total-->
                     <div class="col-md-3 col-xl-4 pt-3 pt-md-0">
-                        <div class="row">
+                        <div class="w-100">
                             <!--Cabecera resumen-->
                             <h3 class="cart-header px-4 py-3 justify-content-center">Resumen</h3>
                             <!--Total-->

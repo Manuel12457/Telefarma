@@ -40,7 +40,13 @@ public class ClientServlet extends HttpServlet {
         String estadoOrden = request.getParameter("orden") == null ? "" : request.getParameter("orden");
         String order = request.getParameter("order") == null ? "" : request.getParameter("order");
         request.setAttribute("order", order);
-        int filtroDis = request.getParameter("idDistrict") == null ? -1 : Integer.parseInt(request.getParameter("idDistrict"));
+        int filtroDis;
+        try {
+             filtroDis = request.getParameter("idDistrict") == null ? -1 : Integer.parseInt(request.getParameter("idDistrict"));
+        }catch (Exception e){
+            response.sendRedirect(request.getContextPath()+"/ClientServlet");
+            return;
+        }
         request.setAttribute("idDistritoFil", filtroDis);
 
         int limiteFarmacias, pagTotales, limiteProductos;
@@ -266,18 +272,27 @@ public class ClientServlet extends HttpServlet {
                 break;
 
             case "addToCart":
-                BProduct productoCarrito = productDao.obtenerProductoPorId(Integer.parseInt(request.getParameter("idProduct")));
-                request.setAttribute("producto", productoCarrito);
-                request.setAttribute("quantity", Integer.parseInt(request.getParameter("quantity")));
-
+                try{
+                    BProduct productoCarrito = productDao.obtenerProductoPorId(Integer.parseInt(request.getParameter("idProduct")));
+                    request.setAttribute("producto", productoCarrito);
+                    request.setAttribute("quantity", Integer.parseInt(request.getParameter("quantity")));
+                }catch (Exception e){
+                    response.sendRedirect(request.getContextPath()+"/ClientServlet");
+                    return;
+                }
                 view = request.getRequestDispatcher("/cliente/carritoCompras.jsp");
                 view.forward(request, response);
                 break;
 
             case "rmvFromCart":
-                int i = Integer.parseInt(request.getParameter("farma"));
-                int j = Integer.parseInt(request.getParameter("product"));
-
+                int i, j;
+                try{
+                    i = Integer.parseInt(request.getParameter("farma"));
+                    j = Integer.parseInt(request.getParameter("product"));
+                }catch (Exception e){
+                    response.sendRedirect(request.getContextPath()+"/ClientServlet");
+                    return;
+                }
                 DtoPharmacy farmacia = farmacias.get(i);
                 listaCarrito.get(farmacia).remove(j);
                 if (listaCarrito.get(farmacia).size() == 0) listaCarrito.remove(farmacia);
@@ -288,8 +303,14 @@ public class ClientServlet extends HttpServlet {
 
             case "verCarrito":
                 HashMap<DtoPharmacy, DtoProductoCarrito> listaRmvProduct = new HashMap<>();
+                ArrayList<DtoPharmacy> listaRmvPharmacy = new ArrayList<>();
                 for (DtoPharmacy f : farmacias) {
                     int k = 0;
+                    BPharmacy fCarrito = pharmacyDao.obtenerFarmaciaPorId(f.getIdPharmacy());
+                    if(Byte.compare(fCarrito.getIsBanned(), (byte)1)==0){
+                        listaRmvPharmacy.add(f);
+                        request.getSession().setAttribute("info", "Ha habido un cambio en la disponibilidad de los productos");
+                    }
                     for (DtoProductoCarrito pCarrito : listaCarrito.get(f)) {
                         BProduct product = productDao.obtenerProductoPorId(pCarrito.getIdProduct());
                         if (product.getStock() > 0) {
@@ -309,7 +330,6 @@ public class ClientServlet extends HttpServlet {
                     }
                 }
 
-                ArrayList<DtoPharmacy> listaRmvPharmacy = new ArrayList<>();
                 for (Map.Entry<DtoPharmacy, DtoProductoCarrito> entry : listaRmvProduct.entrySet()) {
                     listaCarrito.get(entry.getKey()).remove(entry.getValue());
                     if (listaCarrito.get(entry.getKey()).size() == 0) listaRmvPharmacy.add(entry.getKey());
@@ -495,6 +515,12 @@ public class ClientServlet extends HttpServlet {
                 ArrayList<String> idOrders = new ArrayList<>();
                 while (request.getParameter("idFarmacia" + i) != null) {
                     String pickUpDate = request.getParameter("pickUpDate" + i);
+                    int idPh = Integer.parseInt(request.getParameter("idFarmacia" + i));
+                    BPharmacy pharmacy = pharmacyDao.obtenerFarmaciaPorId(idPh);
+                    if (Byte.compare(pharmacy.getIsBanned(), (byte) 1)==0){
+                        exito="ne";
+                        break;
+                    }
                     String idOrder = ordersDao.generarOrden(idClient, pickUpDate);
                     idOrders.add(idOrder);
 
@@ -532,15 +558,25 @@ public class ClientServlet extends HttpServlet {
                         }
                         j++;
                     }
-
-                    if (exito.equals("ne")) {
-                        for (String id : idOrders) {
-                            orderDetailsDao.borrarDetails(id);
-                            ordersDao.borrarOrden(id);
-                        }
+                    if(exito.equals("ne")){
                         break;
                     }
                     i++;
+                }
+
+                if (exito.equals("ne")) {
+                    for (String id : idOrders) {
+                        BOrders o = new BOrders();
+                        o.setIdOrder(id);
+                        ordersDao.agregarOrderDetails(o);
+                        for (BOrderDetails od : o.getListaDetails()){
+                            BProduct product = productDao.obtenerProductoPorId(od.getIdProduct());
+                            product.setStock(product.getStock() + od.getQuantity());
+                            productDao.editarProducto(product);
+                        }
+                        orderDetailsDao.borrarDetails(id);
+                        ordersDao.borrarOrden(id);
+                    }
                 }
 
                 if (exito.equals("e")) {

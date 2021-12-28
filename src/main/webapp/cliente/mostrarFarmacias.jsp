@@ -54,7 +54,7 @@
                         }
 
                 %>
-                <div class="alert <%=alertClass%> alert-dismissible fade show" role="alert">
+                <div class="alert heebo-500 <%=alertClass%> alert-dismissible fade show" role="alert">
                     <%=alertMssg%>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>

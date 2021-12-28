@@ -23,7 +23,12 @@ public class AdminServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         String accion = request.getParameter("action") == null ? "" : request.getParameter("action");
-        int pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
+        int pagina;
+        try {
+            pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
+        }catch (Exception e){
+            pagina=0;
+        }
         String busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
 
         PharmacyDao pharmacyDao = new PharmacyDao();
@@ -77,7 +82,7 @@ public class AdminServlet extends HttpServlet {
                 request.setAttribute("distritosFiltrado", districtDao.listarDistritos());
                 request.setAttribute("district", districtDao.obtenerDistritoPorId(idDistrict));
                 request.setAttribute("listaFarmaciasDistrito", pharmacyDao.listarFarmaciasPorDistrito(pagina, limiteFarmacias, busqueda, 1, idDistrict));
-                pagTotales = (int) Math.ceil((double) pharmacyDao.listarFarmaciasPorDistrito(0, -1, busqueda, 0, idDistrict).size() / limiteFarmacias);
+                pagTotales = (int) Math.ceil((double) pharmacyDao.listarFarmaciasPorDistrito(0, -1, busqueda, 1, idDistrict).size() / limiteFarmacias);
                 request.setAttribute("pagTotales", pagTotales);
                 request.setAttribute("pagActual", pagina);
 
@@ -208,7 +213,12 @@ public class AdminServlet extends HttpServlet {
                 break;
 
             case "banear":
-                idPharmacy = Integer.parseInt(request.getParameter("id"));
+                try {
+                    idPharmacy = Integer.parseInt(request.getParameter("id"));
+                }catch (Exception e){
+                    response.sendRedirect(request.getContextPath()+"/AdminServlet");
+                    return;
+                }
                 if (ordersDao.conPedidosPendientes(idPharmacy)) {
                     request.getSession().setAttribute("actionResult", "La farmacia tiene al menos un pedido pendiente. Inténtalo de nuevo más tarde.");
                     request.getSession().setAttribute("actionResultBoolean", false);
@@ -224,7 +234,12 @@ public class AdminServlet extends HttpServlet {
                 break;
 
             case "desbanear":
-                idPharmacy = Integer.parseInt(request.getParameter("id"));
+                try {
+                    idPharmacy = Integer.parseInt(request.getParameter("id"));
+                }catch (Exception e){
+                response.sendRedirect(request.getContextPath()+"/AdminServlet");
+                return;
+                }
                 pharmacyDao.desBanearFarmacia(idPharmacy);
                 //-----Faltaría borrar el banReason de la farmacia?-----
                 request.getSession().setAttribute("actionResult", "La farmacia seleccionada fue desbaneada.");
@@ -239,8 +254,13 @@ public class AdminServlet extends HttpServlet {
                 f.setName(request.getParameter("nombre").trim());
                 f.setMail(request.getParameter("correo"));
                 f.setAddress(request.getParameter("direccion").trim());
-                f.setDistrict(new BDistrict(Integer.parseInt(request.getParameter("distrito"))));
-                f.setIdPharmacy(Integer.parseInt(request.getParameter("id")));
+                try{
+                    f.setDistrict(new BDistrict(Integer.parseInt(request.getParameter("distrito"))));
+                    f.setIdPharmacy(Integer.parseInt(request.getParameter("id")));
+                }catch (Exception e){
+                    response.sendRedirect(request.getContextPath()+"/AdminServlet");
+                    return;
+                }
 
                 BPharmacy fa = pharmacyDao.obtenerFarmaciaPorId(f.getIdPharmacy());
                 f.setRUC(fa.getRUC());

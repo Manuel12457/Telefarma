@@ -40,7 +40,11 @@ public class PharmacyServlet extends HttpServlet {
         switch (action) {
             case "buscarProducto":
                 int limiteProductos = 6;
-                pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
+                try{
+                    pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
+                }catch (Exception e){
+                    pagina = 0;
+                }
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
                 request.setAttribute("busqueda", busqueda);
 
@@ -65,7 +69,11 @@ public class PharmacyServlet extends HttpServlet {
 
             case "buscarPedido":
                 int limitePedidos = 12;
-                pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
+                try {
+                    pagina = request.getParameter("pagina") == null ? 0 : Integer.parseInt(request.getParameter("pagina"));
+                }catch (Exception e){
+                    pagina = 0;
+                }
                 busqueda = request.getParameter("busqueda") == null ? "" : request.getParameter("busqueda");
                 pagTotales = (int) Math.ceil((double) ordersDao.listarOrdenesFarmacia(pagina, busqueda, 1000, idFarmacia).size() / limitePedidos);
                 ArrayList<BOrders> listaOrdenes = ordersDao.listarOrdenesFarmacia(pagina, busqueda, limitePedidos, idFarmacia);
@@ -101,9 +109,11 @@ public class PharmacyServlet extends HttpServlet {
                         request.setAttribute("producto", producto);
                     } else {
                         response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
+                        return;
                     }
                 } catch (Exception e) {
                     response.sendRedirect(request.getContextPath() + "/PharmacyServlet");
+                    return;
                 }
                 view = request.getRequestDispatcher("/farmacia/editarProducto.jsp");
                 view.forward(request, response);

@@ -90,7 +90,7 @@
                                         <!--Botón editar-->
                                         <div class="d-flex justify-content-end ">
                                             <a role="button"
-                                               href="<%=request.getContextPath()%>/AdminServlet?action=editarForm&&id=<%=farmacia.getIdPharmacy()%>"
+                                               href="<%=request.getContextPath()%>/AdminServlet?action=editarForm&id=<%=farmacia.getIdPharmacy()%>"
                                                class="a-grow pe-2 pt-1"><i
                                                     class="fas fa-edit"></i>
                                             </a>

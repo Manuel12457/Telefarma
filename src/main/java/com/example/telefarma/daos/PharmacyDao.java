@@ -62,6 +62,7 @@ public class PharmacyDao extends BaseDao {
                     farmacia.setName(rs.getString(3));
                     farmacia.setMail(rs.getString(4));
                     farmacia.setAddress(rs.getString(5));
+                    farmacia.setIsBanned(rs.getByte(6));
                     farmacia.setBanReason(rs.getString(7));
                     farmacia.setDistrict(new BDistrict(rs.getInt(8), rs.getString(9)));
                 }

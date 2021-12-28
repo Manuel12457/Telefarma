@@ -926,11 +926,13 @@ strong.detalles-str{
 .a-grow{
     color: white;
     font-size: 20px;
+    height: 25px;
 }
 
 .a-grow:hover{
     color: white;
     font-size: 25px;
+    transform: translateY(-2px);
 }
 
 
